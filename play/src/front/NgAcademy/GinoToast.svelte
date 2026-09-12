@@ -7,7 +7,7 @@
      */
     import { fly } from "svelte/transition";
     import type { NgBubble } from "./NgBubble";
-    import { dismissCurrentBubble } from "./GinoStore";
+    import { dismissCurrentBubble, ngBubbleAction } from "./GinoStore";
 
     interface Props {
         bubble: NgBubble;
@@ -46,6 +46,19 @@
                     {/if}
                 </p>
                 <p class="mt-0.5 text-sm leading-6 text-slate-700">{bubble.text}</p>
+                {#if bubble.actions && bubble.actions.length > 0}
+                    <div class="mt-2 flex flex-wrap justify-end gap-2">
+                        {#each bubble.actions as action (action.id)}
+                            <button
+                                type="button"
+                                class="rounded-full bg-[#38b6ff] px-3 py-1.5 text-xs font-bold text-white shadow hover:bg-[#1e97d6]"
+                                onclick={() => ngBubbleAction(action.id)}
+                            >
+                                {action.label}
+                            </button>
+                        {/each}
+                    </div>
+                {/if}
             </div>
             <button
                 type="button"

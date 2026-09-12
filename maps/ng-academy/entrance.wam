@@ -53,6 +53,23 @@
           "duration": 5000
         }
       ]
+    },
+    {
+      "id": "74190384-7fdb-4061-89f5-31ed224b01e3",
+      "x": 320,
+      "y": 672,
+      "width": 160,
+      "height": 128,
+      "name": "gathering",
+      "visible": true,
+      "properties": [
+        {
+          "id": "7368cae6-615b-46d7-8b75-1fc9fbef8c08",
+          "type": "tooltipPropertyData",
+          "content": "نقطة تجمع قطار جينو 🚂",
+          "duration": 5000
+        }
+      ]
     }
   ],
   "entityCollections": [],

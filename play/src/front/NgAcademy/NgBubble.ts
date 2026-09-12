@@ -1,4 +1,11 @@
 /** A single speech bubble shown to the child by Gino, a teacher, or the location banner. */
+export interface NgBubbleAction {
+    /** Stable id handed back to the bubble's onAction handler. */
+    id: string;
+    /** Big, tappable, child-friendly label (emoji welcome). */
+    label: string;
+}
+
 export interface NgBubble {
     /** gino = the owl guide, teacher = an NPC teacher, location = the small "you are here" pill. */
     kind: "gino" | "teacher" | "location";
@@ -12,4 +19,6 @@ export interface NgBubble {
     portrait: string;
     /** Auto-dismiss delay in milliseconds. */
     duration: number;
+    /** Optional tappable choices (the train offer, the class picker follow-up…). */
+    actions?: NgBubbleAction[];
 }

@@ -18,6 +18,12 @@ import type { NgBubble } from "./NgBubble";
 import GinoToast from "./GinoToast.svelte";
 
 const BUBBLE_TOAST_UUID = "ng-academy-bubble";
+
+/**
+ * Tap handlers for bubble actions. Kept out of the bubble object itself so the
+ * store state stays plain data (serialisable, testable).
+ */
+let currentActionHandler: ((actionId: string) => void) | undefined;
 const SESSION_PREFIX = "ng-academy-seen:";
 const QUEUE_MAX = 3;
 
@@ -25,6 +31,7 @@ const QUEUE_MAX = 3;
 export const ngCurrentBubble = writable<NgBubble | null>(null);
 
 const queue: NgBubble[] = [];
+const bubbleActions = new WeakMap<NgBubble, (actionId: string) => void>();
 let dismissTimer: ReturnType<typeof setTimeout> | undefined;
 let lastLocationAt = 0;
 let lastLocationLabel: string | undefined;
@@ -47,6 +54,7 @@ function wasSeen(key: string): boolean {
 
 function display(bubble: NgBubble): void {
     ngCurrentBubble.set(bubble);
+    currentActionHandler = bubbleActions.get(bubble);
     toastStore.addToast(GinoToast, { bubble }, BUBBLE_TOAST_UUID);
     dismissTimer = setTimeout(() => dismissCurrentBubble(), bubble.duration);
 }
@@ -59,6 +67,7 @@ export function dismissCurrentBubble(): void {
     }
     toastStore.removeToast(BUBBLE_TOAST_UUID);
     ngCurrentBubble.set(null);
+    currentActionHandler = undefined;
     const next = queue.shift();
     if (next) {
         display(next);
@@ -73,7 +82,10 @@ function enqueue(bubble: NgBubble): void {
 }
 
 /** Shows a bubble now, or queues it if Gino is already talking. */
-export function showBubble(bubble: NgBubble): void {
+export function showBubble(bubble: NgBubble, onAction?: (actionId: string) => void): void {
+    if (onAction) {
+        bubbleActions.set(bubble, onAction);
+    }
     let busy = false;
     const unsubscribe = ngCurrentBubble.subscribe((current) => (busy = current !== null));
     unsubscribe();
@@ -161,9 +173,15 @@ export function ngHandleAreasEntered(areas: NgEnteredArea[]): void {
     });
 }
 
+/** Called by GinoToast when the child taps one of the bubble's action buttons. */
+export function ngBubbleAction(actionId: string): void {
+    currentActionHandler?.(actionId);
+}
+
 /** Test hook: forgets session memory and empties the queue. */
 export function ngResetForTests(): void {
     queue.length = 0;
+    currentActionHandler = undefined;
     lastLocationAt = 0;
     lastLocationLabel = undefined;
     if (dismissTimer !== undefined) {

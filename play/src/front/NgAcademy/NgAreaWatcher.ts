@@ -9,10 +9,17 @@
  * once-per-session rule inside GinoStore.
  */
 import type { AreaData } from "@workadventure/map-editor";
+import { toastStore } from "../Stores/ToastStoreSingleton";
 import { ngHandleAreasEntered, ngWelcome } from "./GinoStore";
+import { NG_CLASS_PICKER_TOAST_UUID, ngTrainOffer } from "./NgTrain";
+import NgClassPicker from "./NgClassPicker.svelte";
 
 interface AreaEnterEmitter {
     onEnterArea: (callback: (changed: AreaData[], all: AreaData[]) => void) => void;
+}
+
+function openClassPicker(): void {
+    toastStore.addToast(NgClassPicker, {}, NG_CLASS_PICKER_TOAST_UUID);
 }
 
 function tooltipOf(area: AreaData): string | undefined {
@@ -28,7 +35,12 @@ export function initNgAreaWatcher(emitter: AreaEnterEmitter): void {
     }
     initialized = true;
     emitter.onEnterArea((_changed, all) => {
-        ngHandleAreasEntered(all.map((area) => ({ name: area.name, tooltip: tooltipOf(area) })));
+        const infos = all.map((area) => ({ name: area.name, tooltip: tooltipOf(area) }));
+        ngHandleAreasEntered(infos);
+        // Gino's train gathers the children here (نقطة التجمع).
+        if (infos.some((info) => info.name === "gathering")) {
+            ngTrainOffer(openClassPicker);
+        }
     });
     ngWelcome();
 }
