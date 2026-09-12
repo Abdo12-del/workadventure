@@ -44,29 +44,29 @@ const isMapThirdPartyData = z.object({
 
 const MetaTagsData = z.object({
   // Meta tags values
-  title: extendApi(z.string().optional().default("WorkAdventure"), {
+  title: extendApi(z.string().optional().default("NG Academy"), {
     description: "Title shown on browser tab",
-    example: "WorkAdventure - My Awesome World",
+    example: "NG Academy - My classroom",
   }),
   description: extendApi(
     z
       .string()
       .optional()
       .default(
-        "Create your own digital office, Metaverse and meet online with the world.",
+        "NG Academy — أكاديمية الجيل الجديد: a safe, playful virtual school where children explore classrooms, the library, the lab and the stage.",
       ),
     {
       description: "Description of the webpage",
-      example: "My awesome world in WorkAdventure",
+      example: "My awesome class in NG Academy",
     },
   ),
-  author: extendApi(z.string().optional().default("WorkAdventure team"), {
+  author: extendApi(z.string().optional().default("NG Academy"), {
     description: "Author of the webpage",
     example: "My Awesome team",
   }),
-  provider: extendApi(z.string().optional().default("WorkAdventure"), {
+  provider: extendApi(z.string().optional().default("NG Academy"), {
     description: "Provider of the webpage",
-    example: "WorkAdventure SAAS platform",
+    example: "NG Academy virtual school platform",
   }),
   favIcons: extendApi(isMetaTagFavicon.array().optional(), {
     description: "Icon to load inside the index.html and on the manifest",
@@ -74,11 +74,11 @@ const MetaTagsData = z.object({
   manifestIcons: isMetaTagManifestIcon.array().optional(),
   appName: extendApi(z.string().optional(), {
     description: "Name display on the web app",
-    example: "WorkAdventure",
+    example: "NG Academy",
   }),
   shortAppName: extendApi(z.string().optional(), {
     description: "Name display on the web app when there is not enough space",
-    example: "WA",
+    example: "NG",
   }),
   themeColor: extendApi(z.string().optional(), {
     description:

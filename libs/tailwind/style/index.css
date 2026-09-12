@@ -29,6 +29,17 @@
   --color-grey: #f6f6f6;
   --color-dark: #0f1f2d;
 
+  /* NG Academy — أكاديمية الجيل الجديد (child-friendly palette) */
+  --color-ng-blue: #38b6ff; /* primary identity colour (Gino, app mark) */
+  --color-ng-blue-dark: #1e9be6;
+  --color-ng-blue-deep: #0b7cc4;
+  --color-ng-sky: #e6f6ff; /* soft page background */
+  --color-ng-ink: #12263a; /* friendly dark text */
+  --color-ng-sun: #ffc14d; /* rewards, badges, highlights */
+  --color-ng-leaf: #59c98a; /* success, participation */
+  --color-ng-coral: #ff8f6b; /* gentle alerts */
+  --color-ng-cream: #fff8ec; /* warm card background */
+
   --animate-shake: shake 0.6s ease-in-out infinite;
   --animate-pulse-bg: pulse-bg 3s ease-in-out infinite;
 

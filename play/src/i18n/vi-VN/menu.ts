@@ -57,8 +57,8 @@ const menu: DeepPartial<Translation["menu"]> = {
             echoCancellation: "Khử tiếng vọng",
             enableAdvancedNoiseReduction: "Bật khử tiếng ồn nâng cao",
             noiseSuppressionMode: "Chế độ khử tiếng ồn:",
-            workAdventureNoiseSuppression: "Khử tiếng ồn WorkAdventure",
-            workAdventureNoiseSuppressionDescription: "Xử lý micrô của bạn bằng bộ khử tiếng ồn của WorkAdventure.",
+            workAdventureNoiseSuppression: "Khử tiếng ồn NG Academy",
+            workAdventureNoiseSuppressionDescription: "Xử lý micrô của bạn bằng bộ khử tiếng ồn của NG Academy.",
             recommended: "Khuyến nghị",
             browserNoiseSuppression: "Khử tiếng ồn của trình duyệt",
             browserNoiseSuppressionDescription: "Dùng bộ khử tiếng ồn tích hợp của trình duyệt.",
@@ -71,7 +71,7 @@ const menu: DeepPartial<Translation["menu"]> = {
         privacySettings: {
             title: "Chế độ vắng mặt",
             explanation:
-                'Khi thẻ WorkAdventure trong trình duyệt không hiển thị, WorkAdventure chuyển sang "chế độ vắng mặt"',
+                'Khi thẻ NG Academy trong trình duyệt không hiển thị, NG Academy chuyển sang "chế độ vắng mặt"',
             cameraToggle: 'Giữ camera hoạt động trong "chế độ vắng mặt"',
             microphoneToggle: 'Giữ micrô hoạt động trong "chế độ vắng mặt"',
         },
@@ -120,7 +120,7 @@ const menu: DeepPartial<Translation["menu"]> = {
         gettingStarted: {
             title: "Bắt đầu",
             description:
-                "WorkAdventure cho phép bạn tạo một không gian trực tuyến để giao tiếp tự nhiên với người khác. Và mọi thứ bắt đầu bằng việc tạo không gian của riêng bạn. Hãy chọn trong bộ sưu tập lớn các bản đồ dựng sẵn của đội ngũ chúng tôi.",
+                "NG Academy cho phép bạn tạo một không gian trực tuyến để giao tiếp tự nhiên với người khác. Và mọi thứ bắt đầu bằng việc tạo không gian của riêng bạn. Hãy chọn trong bộ sưu tập lớn các bản đồ dựng sẵn của đội ngũ chúng tôi.",
         },
         createMap: {
             title: "Tạo bản đồ của bạn",

@@ -59,7 +59,7 @@ const externalModule: BaseTranslation = {
         signIn: "Sign in with Outlook",
         popupScopeToSync: "Connect my Outlook Account",
         popupScopeToSyncExplainText:
-            "We need to connect to your Outlook account to synchronize your calendar and/or tasks. This will allow you to view your meetings and tasks in WorkAdventure and join them directly from the map.",
+            "We need to connect to your Outlook account to synchronize your calendar and/or tasks. This will allow you to view your meetings and tasks in NG Academy and join them directly from the map.",
         popupScopeToSyncCalendar: "Synchronize my calendar",
         popupScopeToSyncTask: "Synchronize my tasks",
         popupCancel: "Cancel",
@@ -81,7 +81,7 @@ const externalModule: BaseTranslation = {
         signIn: "Sign in with Google",
         popupScopeToSync: "Connect my Google Account",
         popupScopeToSyncExplainText:
-            "We need to connect to your Google account to synchronize your calendar and/or tasks. This will allow you to view your meetings and tasks in WorkAdventure and join them directly from the map.",
+            "We need to connect to your Google account to synchronize your calendar and/or tasks. This will allow you to view your meetings and tasks in NG Academy and join them directly from the map.",
         popupScopeToSyncCalendar: "Synchronize my calendar",
         popupScopeToSyncTask: "Synchronize my tasks",
         popupCancel: "Cancel",

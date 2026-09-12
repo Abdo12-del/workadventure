@@ -57,8 +57,8 @@ const menu: DeepPartial<Translation["menu"]> = {
             echoCancellation: "ตัดเสียงสะท้อน",
             enableAdvancedNoiseReduction: "เปิดใช้การลดเสียงรบกวนขั้นสูง",
             noiseSuppressionMode: "โหมดตัดเสียงรบกวน:",
-            workAdventureNoiseSuppression: "การตัดเสียงรบกวนของ WorkAdventure",
-            workAdventureNoiseSuppressionDescription: "ประมวลผลไมโครโฟนของคุณด้วยระบบตัดเสียงรบกวนของ WorkAdventure",
+            workAdventureNoiseSuppression: "การตัดเสียงรบกวนของ NG Academy",
+            workAdventureNoiseSuppressionDescription: "ประมวลผลไมโครโฟนของคุณด้วยระบบตัดเสียงรบกวนของ NG Academy",
             recommended: "แนะนำ",
             browserNoiseSuppression: "การตัดเสียงรบกวนของเบราว์เซอร์",
             browserNoiseSuppressionDescription: "ใช้ระบบตัดเสียงรบกวนในตัวของเบราว์เซอร์",
@@ -70,8 +70,7 @@ const menu: DeepPartial<Translation["menu"]> = {
         },
         privacySettings: {
             title: "โหมดไม่อยู่",
-            explanation:
-                'เมื่อแท็บ WorkAdventure ในเบราว์เซอร์ของคุณไม่ได้แสดงอยู่ WorkAdventure จะสลับเป็น "โหมดไม่อยู่"',
+            explanation: 'เมื่อแท็บ NG Academy ในเบราว์เซอร์ของคุณไม่ได้แสดงอยู่ NG Academy จะสลับเป็น "โหมดไม่อยู่"',
             cameraToggle: 'เปิดกล้องต่อไปใน "โหมดไม่อยู่"',
             microphoneToggle: 'เปิดไมโครโฟนต่อไปใน "โหมดไม่อยู่"',
         },
@@ -120,7 +119,7 @@ const menu: DeepPartial<Translation["menu"]> = {
         gettingStarted: {
             title: "เริ่มต้นใช้งาน",
             description:
-                "WorkAdventure ช่วยให้คุณสร้างพื้นที่ออนไลน์เพื่อสื่อสารกับผู้อื่นได้อย่างเป็นธรรมชาติ และทุกอย่างเริ่มต้นจากการสร้างพื้นที่ของคุณเอง เลือกจากแผนที่สำเร็จรูปมากมายที่ทีมของเราจัดทำไว้",
+                "NG Academy ช่วยให้คุณสร้างพื้นที่ออนไลน์เพื่อสื่อสารกับผู้อื่นได้อย่างเป็นธรรมชาติ และทุกอย่างเริ่มต้นจากการสร้างพื้นที่ของคุณเอง เลือกจากแผนที่สำเร็จรูปมากมายที่ทีมของเราจัดทำไว้",
         },
         createMap: {
             title: "สร้างแผนที่ของคุณ",

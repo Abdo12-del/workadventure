@@ -57,8 +57,8 @@ const menu: DeepPartial<Translation["menu"]> = {
             echoCancellation: "エコーキャンセル",
             enableAdvancedNoiseReduction: "高度なノイズ低減を有効にする",
             noiseSuppressionMode: "ノイズ抑制モード:",
-            workAdventureNoiseSuppression: "WorkAdventure ノイズ抑制",
-            workAdventureNoiseSuppressionDescription: "WorkAdventure のノイズ抑制でマイク音声を処理します。",
+            workAdventureNoiseSuppression: "NG Academy ノイズ抑制",
+            workAdventureNoiseSuppressionDescription: "NG Academy のノイズ抑制でマイク音声を処理します。",
             recommended: "推奨",
             browserNoiseSuppression: "ブラウザーのノイズ抑制",
             browserNoiseSuppressionDescription: "ブラウザー内蔵のノイズ抑制を使用します。",
@@ -70,8 +70,7 @@ const menu: DeepPartial<Translation["menu"]> = {
         },
         privacySettings: {
             title: "離席モード",
-            explanation:
-                "ブラウザの WorkAdventure タブが表示されていない間、WorkAdventure は離席モードに切り替わります。",
+            explanation: "ブラウザの NG Academy タブが表示されていない間、NG Academy は離席モードに切り替わります。",
             cameraToggle: "離席モードでカメラをアクティブに保つ",
             microphoneToggle: "離席モードでマイクをアクティブに保つ",
         },
@@ -120,7 +119,7 @@ const menu: DeepPartial<Translation["menu"]> = {
         gettingStarted: {
             title: "入門",
             description:
-                "WorkAdventure を使用すると、他のユーザと自然にコミュニケーションできるオンラインスペースを作成することができます",
+                "NG Academy を使用すると、他のユーザと自然にコミュニケーションできるオンラインスペースを作成することができます",
         },
         createMap: {
             title: "マップを作成します",

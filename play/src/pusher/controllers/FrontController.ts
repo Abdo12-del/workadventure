@@ -9,6 +9,7 @@ import { MetaTagsBuilder } from "../services/MetaTagsBuilder";
 import { adminService } from "../services/AdminService";
 import { getStringPalette, wrapWithStyleTag } from "../services/GenerateCustomColors";
 import { notWaHost } from "../middlewares/NotWaHost";
+import { BRAND_BACKGROUND_COLOR, BRAND_DEFAULT_LANG } from "../../common/Brand";
 import { version } from "../../../package.json";
 import {
     FRONT_ENVIRONMENT_VARIABLES,
@@ -299,16 +300,17 @@ export class FrontController extends BaseHttpController {
         const metaTagsData = await builder.getMeta(req.header("User-Agent"));
 
         const manifest = {
-            short_name: metaTagsData.title,
-            name: metaTagsData.title,
+            short_name: metaTagsData.shortAppName,
+            name: metaTagsData.appName,
             icons: metaTagsData.manifestIcons,
             start_url: url.replace(`${req.protocol}://${req.hostname}`, ""),
-            background_color: metaTagsData.themeColor,
+            background_color: BRAND_BACKGROUND_COLOR,
             display_override: ["window-control-overlay", "minimal-ui"],
             display: "standalone",
             orientation: "portrait-primary",
             scope: "/",
-            lang: "en",
+            lang: BRAND_DEFAULT_LANG,
+            dir: "rtl",
             theme_color: metaTagsData.themeColor,
             shortcuts: [
                 {
@@ -327,16 +329,7 @@ export class FrontController extends BaseHttpController {
             ],
             description: metaTagsData.description,
             screenshots: [],
-            related_applications: [
-                {
-                    platform: "web",
-                    url: "https://workadventu.re",
-                },
-                {
-                    platform: "play",
-                    url: "https://play.workadventu.re",
-                },
-            ],
+            related_applications: [],
         };
 
         res.contentType("application/manifest+json").json(manifest);

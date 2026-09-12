@@ -232,7 +232,7 @@ export class MapValidator {
                 message: "The tiles on your map are not the same size as the characters.",
                 details: `Your tiles are ${map.tileheight ?? "undefined"}x${
                     map.tilewidth ?? "undefined"
-                } pixels wide, but characters in WorkAdventure are 32x32 pixels. The characters will appear larger or smaller than your tiles. We recommend using tiles of 32x32 pixels.`,
+                } pixels wide, but characters in NG Academy are 32x32 pixels. The characters will appear larger or smaller than your tiles. We recommend using tiles of 32x32 pixels.`,
             });
         }
 

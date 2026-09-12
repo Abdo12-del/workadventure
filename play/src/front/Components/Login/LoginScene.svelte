@@ -4,7 +4,6 @@
     import { LoginSceneName } from "../../Phaser/Login/LoginScene";
     import { MAX_USERNAME_LENGTH } from "../../Enum/EnvironmentVariable";
     import logoImg from "../images/logo.svg";
-    import poweredByWorkAdventureImg from "../images/Powered_By_WorkAdventure_Big.png";
     import bgMap from "../images/map-exemple.png";
     import { gameManager } from "../../Phaser/Game/GameManager";
     import { LL, locale } from "../../../i18n/i18n-svelte";
@@ -167,11 +166,6 @@
             </section>
         {/if}
     </div>
-    {#if logo !== logoImg && gameManager.currentStartedRoom.showPoweredBy !== false}
-        <section class="text-right flex powered-by justify-center items-end">
-            <img draggable="false" src={poweredByWorkAdventureImg} alt="Powered by WorkAdventure" class="h-14" />
-        </section>
-    {/if}
 </form>
 <div
     class="absolute left-0 top-0 w-full h-full z-20 bg-contrast opacity-80"

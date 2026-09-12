@@ -8,6 +8,8 @@
   },
   "scripts": {
     "postinstall": "patch-package || echo 'patch-package not found. Maybe you are installing only a subproject without it (e.g. a scoped `npm ci --workspace`); patches are only needed for the play build.'",
+    "bootstrap": "./bootstrap.sh",
+    "bootstrap:proto": "./bootstrap.sh --proto-only",
     "prepare": "husky install || echo 'Husky not found. Maybe you are installing only a subproject.'",
     "generate-env-docs": "npm run generate --workspace=contrib/tools/generate-env-docs",
     "check-env-docs": "npm run check --workspace=contrib/tools/generate-env-docs",

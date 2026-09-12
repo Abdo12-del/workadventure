@@ -165,7 +165,7 @@ const actionbar: DeepPartial<Translation["actionbar"]> = {
         },
         calendar: {
             title: "Kalender",
-            desc: "Glejśo swóje pśichodne zetkanja a pśidajśo se jim direktnje z WorkAdventure.",
+            desc: "Glejśo swóje pśichodne zetkanja a pśidajśo se jim direktnje z NG Academy.",
         },
         todolist: {
             title: "Lisćina nadawkow",

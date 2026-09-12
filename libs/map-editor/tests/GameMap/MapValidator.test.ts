@@ -171,7 +171,7 @@ describe("Map validator", () => {
 
         expect(errors.map[0].message).toBe("The tiles on your map are not the same size as the characters.");
         expect(errors.map[0].details).toBe(
-            "Your tiles are 16x16 pixels wide, but characters in WorkAdventure are 32x32 pixels. The characters will appear larger or smaller than your tiles. We recommend using tiles of 32x32 pixels.",
+            "Your tiles are 16x16 pixels wide, but characters in NG Academy are 32x32 pixels. The characters will appear larger or smaller than your tiles. We recommend using tiles of 32x32 pixels.",
         );
         expect(errors.map[0].type).toBe("warning");
     });

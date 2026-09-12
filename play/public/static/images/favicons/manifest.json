@@ -1,6 +1,6 @@
 {
-    "short_name": "WA",
-    "name": "WorkAdventure",
+    "short_name": "NG",
+    "name": "NG Academy",
     "icons": [
         {
             "src": "/static/images/favicons/apple-icon-57x57.png",
@@ -64,25 +64,25 @@
             "src": "/static/images/favicons/android-icon-48x48.png",
             "sizes": "48x48",
             "type": "image\/png",
-            "density": "1"
+            "density": "1.5"
         },
         {
             "src": "/static/images/favicons/android-icon-72x72.png",
             "sizes": "72x72",
             "type": "image\/png",
-            "density": "1.5"
+            "density": "2.0"
         },
         {
             "src": "/static/images/favicons/android-icon-96x96.png",
             "sizes": "96x96",
             "type": "image\/png",
-            "density": "2.0"
+            "density": "3.0"
         },
         {
             "src": "/static/images/favicons/android-icon-144x144.png",
             "sizes": "144x144",
             "type": "image\/png",
-            "density": "3.0"
+            "density": "4.0"
         },
         {
             "src": "/static/images/favicons/android-icon-192x192.png",
@@ -117,30 +117,25 @@
         }
     ],
     "start_url": "/",
-    "background_color": "#000000",
+    "background_color": "#ffffff",
     "display_override": ["window-control-overlay", "minimal-ui"],
     "display": "standalone",
     "orientation": "portrait-primary",
     "scope": "/",
-    "lang": "en",
-    "theme_color": "#000000",
+    "lang": "ar",
+    "dir": "rtl",
+    "theme_color": "#38b6ff",
     "shortcuts": [
       {
-        "name": "WorkAdventures",
-        "short_name": "WA",
-        "description": "WorkAdventure application, your virtual office",
+        "name": "NG Academy",
+        "short_name": "NG",
+        "description": "NG Academy — أكاديمية الجيل الجديد: your virtual school",
         "url": "/",
         "icons": [{ "src": "/static/images/favicons/android-icon-192x192.png", "sizes": "192x192", "type": "image/png" }]
       }
     ],
-    "description": "WorkAdventure application, your virtual office",
+    "description": "NG Academy — أكاديمية الجيل الجديد: a safe, playful virtual school for children.",
     "screenshots": [],
-    "related_applications": [{
-        "platform": "web",
-        "url": "https://workadventu.re"
-      }, {
-        "platform": "play",
-        "url": "https://play.workadventu.re"
-    }],
+    "related_applications": [],
     "prefer_related_applications": false
 }

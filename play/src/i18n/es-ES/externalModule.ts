@@ -34,7 +34,7 @@ const externalModule: DeepPartial<Translation["externalModule"]> = {
     discord: {
         integration: "INTEGRACIÓN",
         explainText:
-            "Al conectar tu cuenta de Discord aquí, podrás recibir tus mensajes directamente en el chat de WorkAdventure. Después de sincronizar un servidor, crearemos las salas que contiene, solo tendrás que unirte a ellas en el chat de WorkAdventure.",
+            "Al conectar tu cuenta de Discord aquí, podrás recibir tus mensajes directamente en el chat de NG Academy. Después de sincronizar un servidor, crearemos las salas que contiene, solo tendrás que unirte a ellas en el chat de NG Academy.",
         login: "Conectar con Discord",
         fetchingServer: "Obteniendo tus servidores de Discord... 👀",
         qrCodeTitle: "Escanea el código QR con tu aplicación de Discord para iniciar sesión.",
@@ -55,13 +55,13 @@ const externalModule: DeepPartial<Translation["externalModule"]> = {
         tokenPlaceholder: "Tu token de Discord",
         loginWithQrCode: "Iniciar sesión con código QR",
         guilds: "Servidores de Discord",
-        guildExplain: "Selecciona los canales que deseas agregar a la interfaz de chat de WorkAdventure.\n",
+        guildExplain: "Selecciona los canales que deseas agregar a la interfaz de chat de NG Academy.\n",
     },
     outlook: {
         signIn: "Iniciar sesión con Outlook",
         popupScopeToSync: "Conectar mi cuenta de Outlook",
         popupScopeToSyncExplainText:
-            "Necesitamos conectarnos a tu cuenta de Outlook para sincronizar tu calendario y/o tus tareas. Esto te permitirá ver tus reuniones y tareas en WorkAdventure y unirte a ellas directamente desde el mapa.",
+            "Necesitamos conectarnos a tu cuenta de Outlook para sincronizar tu calendario y/o tus tareas. Esto te permitirá ver tus reuniones y tareas en NG Academy y unirte a ellas directamente desde el mapa.",
         popupScopeToSyncCalendar: "Sincronizar mi calendario",
         popupScopeToSyncTask: "Sincronizar mis tareas",
         popupCancel: "Cancelar",
@@ -83,7 +83,7 @@ const externalModule: DeepPartial<Translation["externalModule"]> = {
         signIn: "Iniciar sesión con Google",
         popupScopeToSync: "Conectar mi cuenta de Google",
         popupScopeToSyncExplainText:
-            "Necesitamos conectarnos a tu cuenta de Google para sincronizar tu calendario y/o tus tareas. Esto te permitirá ver tus reuniones y tareas en WorkAdventure y unirte a ellas directamente desde el mapa.",
+            "Necesitamos conectarnos a tu cuenta de Google para sincronizar tu calendario y/o tus tareas. Esto te permitirá ver tus reuniones y tareas en NG Academy y unirte a ellas directamente desde el mapa.",
         popupScopeToSyncCalendar: "Sincronizar mi calendario",
         popupScopeToSyncTask: "Sincronizar mis tareas",
         popupCancel: "Cancelar",

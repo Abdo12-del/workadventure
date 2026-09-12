@@ -678,7 +678,7 @@ const chat: DeepPartial<Translation["chat"]> = {
     },
     remoteUserNotConnected: "ผู้ใช้ยังไม่ได้ยืนยันตัวตน ไม่สามารถส่งข้อความได้",
     matrixSettings: {
-        title: "Matrix และ WorkAdventure",
+        title: "Matrix และ NG Academy",
         subtitle: "ตัวตนในแชทและโปรไฟล์ Matrix ของคุณ",
         close: "ปิด",
         identitySection: "ตัวตน",
@@ -687,7 +687,7 @@ const chat: DeepPartial<Translation["chat"]> = {
         copy: "คัดลอก",
         copied: "คัดลอกแล้ว",
         profileSection: "โปรไฟล์ Matrix",
-        accountDataSection: "WorkAdventure (ในเกม)",
+        accountDataSection: "NG Academy (ในเกม)",
         displayName: "ชื่อที่แสดง",
         avatar: "อวาตาร์ (MXC)",
         localName: "ชื่อในเกมท้องถิ่น",
@@ -711,7 +711,7 @@ const chat: DeepPartial<Translation["chat"]> = {
         publishWokaToMatrixProfileButton: "ใช้ชื่อและรูป WOKA กับโปรไฟล์ Matrix",
         publishWokaToMatrixProfilePublishing: "กำลังอัปเดตโปรไฟล์…",
         publishWokaToMatrixProfileConfirmWarning:
-            "การดำเนินการนี้จะแทนที่ชื่อที่แสดงและอวาตาร์ของโปรไฟล์ Matrix บนเซิร์ฟเวอร์ ชื่อหรือรูปที่ตั้งไว้ที่อื่น (เช่น ใน Element) จะถูกเขียนทับ ดำเนินการต่อเฉพาะเมื่อคุณต้องการให้ชื่อ WorkAdventure และ WOKA เป็นโปรไฟล์ Matrix สาธารณะของคุณ",
+            "การดำเนินการนี้จะแทนที่ชื่อที่แสดงและอวาตาร์ของโปรไฟล์ Matrix บนเซิร์ฟเวอร์ ชื่อหรือรูปที่ตั้งไว้ที่อื่น (เช่น ใน Element) จะถูกเขียนทับ ดำเนินการต่อเฉพาะเมื่อคุณต้องการให้ชื่อ NG Academy และ WOKA เป็นโปรไฟล์ Matrix สาธารณะของคุณ",
         publishWokaToMatrixProfileCancelButton: "ยกเลิก",
         publishWokaToMatrixProfileConfirmActionButton: "เขียนทับและนำไปใช้",
         actionDone: "เสร็จสิ้น",
