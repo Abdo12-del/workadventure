@@ -90,6 +90,7 @@ export const DISABLE_ANONYMOUS: boolean = env.DISABLE_ANONYMOUS;
 export const PROMETHEUS_AUTHORIZATION_TOKEN = env.PROMETHEUS_AUTHORIZATION_TOKEN;
 export const PROMETHEUS_PORT = env.PROMETHEUS_PORT === env.PUSHER_HTTP_PORT ? 0 : env.PROMETHEUS_PORT;
 export const CHILD_SAFE_MODE: boolean = env.CHILD_SAFE_MODE;
+export const NG_API_URL: string | undefined = env.NG_API_URL;
 export const ENABLE_CHAT: boolean = env.ENABLE_CHAT;
 export const ENABLE_CHAT_UPLOAD: boolean = env.ENABLE_CHAT_UPLOAD;
 export const ENABLE_CHAT_ONLINE_LIST: boolean = env.ENABLE_CHAT_ONLINE_LIST;
@@ -246,6 +247,7 @@ export const FRONT_ENVIRONMENT_VARIABLES: FrontConfigurationInterface = {
     ENABLE_CHAT_DISCONNECTED_LIST,
     CHILD_SAFE_MODE,
     EMBEDDED_DOMAINS_WHITELIST,
+    NG_API_URL,
     MATRIX_ADMIN_USER,
     MATRIX_DOMAIN,
     ENABLE_SAY: env.ENABLE_SAY || true,

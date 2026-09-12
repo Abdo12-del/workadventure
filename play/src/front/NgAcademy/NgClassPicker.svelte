@@ -2,7 +2,7 @@
     /**
      * NG Academy — أكاديمية الجيل الجديد
      * "أين فصلي؟" — seven big rounded buttons; the answer is remembered on the
-     * device so the train knows the destination next times too.
+     * device so the line knows the destination next times too.
      */
     import { fly } from "svelte/transition";
     import { toastStore } from "../Stores/ToastStoreSingleton";
@@ -10,14 +10,14 @@
         NG_CLASS_PICKER_TOAST_UUID,
         NG_CLASSROOM_LABELS,
         NG_CLASSROOM_SLUGS,
+        ngLineJoin,
         ngSetMyClass,
-        ngTrainRide,
-    } from "./NgTrain";
+    } from "./NgLine";
 
     function choose(slug: (typeof NG_CLASSROOM_SLUGS)[number]): void {
         ngSetMyClass(slug);
         toastStore.removeToast(NG_CLASS_PICKER_TOAST_UUID);
-        ngTrainRide(slug).catch((e) => console.error(e));
+        ngLineJoin(slug).catch((e) => console.error(e));
     }
 </script>
 

@@ -546,7 +546,7 @@ function buildEntrance() {
       22,
     ),
     area("entrance", "gate", "بوابة المدرسة", 10, 22, 5, 3),
-    area("entrance", "gathering", "نقطة تجمع قطار جينو 🚂", 10, 21, 5, 4),
+    area("entrance", "gathering", "نقطة تجمع صف جينو 🦉", 10, 21, 5, 4),
   ];
   writeJson("entrance.tmj", map.toJSON());
   writeJson(

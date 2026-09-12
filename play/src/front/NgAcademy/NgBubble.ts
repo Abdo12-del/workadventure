@@ -19,6 +19,6 @@ export interface NgBubble {
     portrait: string;
     /** Auto-dismiss delay in milliseconds. */
     duration: number;
-    /** Optional tappable choices (the train offer, the class picker follow-up…). */
+    /** Optional tappable choices (the line offer, the class picker follow-up…). */
     actions?: NgBubbleAction[];
 }

@@ -44,3 +44,13 @@ docker compose up -d ng-postgres ng-academy-api
 npm test -w ng-academy-api   # 14 اختبارًا: تدفق الرابط السحري، جلسات الأطفال،
                              # عقد Admin API، وحراسة الأدوار لكل مسار مدرسة
 ```
+
+## الأنشطة والشارات (المرحلة 7)
+
+- ‏`GET /ng/activities` — كتالوج المهام (يومي/أسبوعي/مصغّر) لأي مستخدم موثَّق.
+- ‏`POST /ng/activities/:activityId/complete` بجسم `{ "studentUserId": "..." }` —
+  للمعلم/المدير/المالك فقط؛ يمنح شارة باسم النشاط ويضيف نقاطه إلى تقدم الطفل.
+- ‏`GET /ng/my/achievements` — شارات ونقاط صاحب الجلسة فقط (بلا صدارة وبلا بيانات آخرين).
+- الـAPI يرسل رؤوس CORS (`Access-Control-Allow-Origin: *` + معالجة OPTIONS) حتى
+  يستطيع متصفح الطفل الاستطلاع من نطاق الواجهة (متغير `NG_API_URL` في pusher).
+- لإضافة مهام في Postgres:‏ `INSERT INTO activities (title, kind, points) VALUES ('...', 'daily', 2);`

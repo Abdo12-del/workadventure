@@ -67,6 +67,8 @@ export interface FrontConfigurationInterface {
     // Child safety (NG Academy)
     CHILD_SAFE_MODE: boolean;
     EMBEDDED_DOMAINS_WHITELIST: string[];
+    /** NG Academy — أكاديمية الجيل الجديد: base URL of the ng-academy-api (empty = achievements watcher off). */
+    NG_API_URL?: string;
     // Woka settings
     DEFAULT_WOKA_NAME: string | undefined;
     DEFAULT_WOKA_TEXTURE: string | undefined;

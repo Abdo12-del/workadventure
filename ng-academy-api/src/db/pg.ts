@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import pg from "pg";
 import type {
   AchievementRow,
+  ActivityRow,
   AttendanceKind,
   AttendanceRow,
   ClassRow,
@@ -262,6 +263,47 @@ export class PgRepository implements Repository {
       value: r.value,
       at: r.at.toISOString(),
     }));
+  }
+
+  async listActivities(): Promise<ActivityRow[]> {
+    const res = await this.pool.query(
+      `SELECT id, title, kind, points FROM activities ORDER BY title`,
+    );
+    return res.rows.map((r) => ({
+      id: r.id,
+      title: r.title,
+      kind: r.kind,
+      points: r.points,
+    }));
+  }
+
+  async completeActivity(input: {
+    activityId: string;
+    studentUserId: string;
+    byUserId: string | undefined;
+    at: string;
+  }): Promise<{ achievement: AchievementRow; points: number }> {
+    const activityRes = await this.pool.query(
+      `SELECT title, kind, points FROM activities WHERE id = $1`,
+      [input.activityId],
+    );
+    const activity = activityRes.rows[0] as
+      | { title: string; kind: string; points: number }
+      | undefined;
+    if (!activity) throw new Error(`unknown activity ${input.activityId}`);
+    const achievement = await this.grantBadge({
+      studentUserId: input.studentUserId,
+      badgeName: activity.title,
+      reason: `أكمل نشاطًا (${activity.kind})`,
+      grantedBy: input.byUserId,
+      at: input.at,
+    });
+    const current = await this.listProgress(input.studentUserId);
+    const points =
+      (current.find((row) => row.metric === "points")?.value ?? 0) +
+      activity.points;
+    await this.upsertProgress(input.studentUserId, "points", points, input.at);
+    return { achievement, points };
   }
 
   async createMagicToken(

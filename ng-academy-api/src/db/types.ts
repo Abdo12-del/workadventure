@@ -57,6 +57,15 @@ export interface ProgressRow {
   at: string;
 }
 
+export type ActivityKind = "daily" | "weekly" | "micro";
+
+export interface ActivityRow {
+  id: string;
+  title: string;
+  kind: ActivityKind;
+  points: number;
+}
+
 export interface MagicTokenRow {
   hash: string;
   email: string;
@@ -95,6 +104,15 @@ export interface Repository {
     at: string,
   ): Promise<ProgressRow>;
   listProgress(studentUserId: string): Promise<ProgressRow[]>;
+  /* activities & encouragement (requirement 9: encourage, never compete) */
+  listActivities(): Promise<ActivityRow[]>;
+  completeActivity(input: {
+    activityId: string;
+    studentUserId: string;
+    byUserId: string | undefined;
+    at: string;
+  }): Promise<{ achievement: AchievementRow; points: number }>;
+
   /* magic links */
   createMagicToken(
     hash: string,

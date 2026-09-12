@@ -16,8 +16,8 @@ import { bbbFactory } from "../../WebRtc/BBBFactory";
 import { JITSI_PRIVATE_MODE, JITSI_URL } from "../../Enum/EnvironmentVariable";
 import { JitsiCoWebsite } from "../../WebRtc/CoWebsite/JitsiCoWebsite";
 import { initNgAreaWatcher } from "../../NgAcademy/NgAreaWatcher";
-import { ngTrainSetDriver } from "../../NgAcademy/NgTrain";
-import { ngTrainDriverFromScene } from "../../NgAcademy/NgTrainSceneAdapter";
+import { ngLineSetDriver } from "../../NgAcademy/NgLine";
+import { ngLineDriverFromScene } from "../../NgAcademy/NgLineSceneAdapter";
 import {
     audioManagerFileStore,
     audioManagerVisibilityStore,
@@ -485,9 +485,9 @@ export class GameMapPropertiesListener {
         });
 
         // NG Academy — أكاديمية الجيل الجديد: Gino/teacher bubbles on area entry,
-        // and the Gino-train driver (walk + room change) bound to this scene.
+        // and the Gino-line driver (walk + room change + leader marker) bound to this scene.
         initNgAreaWatcher(this.gameMapFrontWrapper);
-        ngTrainSetDriver(ngTrainDriverFromScene(this.scene));
+        ngLineSetDriver(ngLineDriverFromScene(this.scene));
 
         this.gameMapFrontWrapper.onLeaveArea((oldAreas) => {
             for (const area of oldAreas) {

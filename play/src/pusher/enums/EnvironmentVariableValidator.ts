@@ -236,6 +236,12 @@ export const EnvironmentVariables = z.object({
         .describe(
             "Child-safe mode (NG Academy default: true). When enabled, the front refuses to open or embed any URL outside same-origin, the platform's own services, the current map host and EMBEDDED_DOMAINS_WHITELIST. External links, co-websites and iframes pointing elsewhere are silently blocked for the child and logged in console.",
         ),
+    NG_API_URL: z
+        .string()
+        .optional()
+        .describe(
+            "Base URL of the NG Academy API (ng-academy-api). When set, the child's browser polls it for newly earned badges/achievements so Gino can celebrate them. Leave empty to disable.",
+        ),
     ENABLE_CHAT: BoolAsString.optional()
         .transform((val) => toBool(val, true))
         .describe("Enable/disable the chat feature. Defaults to true"),

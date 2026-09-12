@@ -49,31 +49,27 @@ export function registerAdminApiRoutes(
 
   app.get("/api/map", async (req, reply) => {
     if (!checkAdminToken(req.headers.authorization)) {
-      return reply
-        .code(401)
-        .send({
-          status: "error",
-          type: "error",
-          title: "Unauthorized",
-          subtitle: "",
-          image: "",
-          code: "UNAUTHORIZED",
-        });
+      return reply.code(401).send({
+        status: "error",
+        type: "error",
+        title: "Unauthorized",
+        subtitle: "",
+        image: "",
+        code: "UNAUTHORIZED",
+      });
     }
     const query = z
       .object({ playUri: z.string(), userId: z.string().optional() })
       .safeParse(req.query);
     if (!query.success) {
-      return reply
-        .code(400)
-        .send({
-          status: "error",
-          type: "error",
-          title: "Bad request",
-          subtitle: "",
-          image: "",
-          code: "BAD_REQUEST",
-        });
+      return reply.code(400).send({
+        status: "error",
+        type: "error",
+        title: "Bad request",
+        subtitle: "",
+        image: "",
+        code: "BAD_REQUEST",
+      });
     }
     const slug = roomSlugFromPlayUri(query.data.playUri);
     const wam = SCHOOL_ROOMS[slug];
@@ -107,16 +103,14 @@ export function registerAdminApiRoutes(
 
   app.get("/api/room/access", async (req, reply) => {
     if (!checkAdminToken(req.headers.authorization)) {
-      return reply
-        .code(401)
-        .send({
-          status: "error",
-          type: "error",
-          title: "Unauthorized",
-          subtitle: "",
-          image: "",
-          code: "UNAUTHORIZED",
-        });
+      return reply.code(401).send({
+        status: "error",
+        type: "error",
+        title: "Unauthorized",
+        subtitle: "",
+        image: "",
+        code: "UNAUTHORIZED",
+      });
     }
     const query = z
       .object({
@@ -126,16 +120,14 @@ export function registerAdminApiRoutes(
       })
       .safeParse(req.query);
     if (!query.success) {
-      return reply
-        .code(400)
-        .send({
-          status: "error",
-          type: "error",
-          title: "Bad request",
-          subtitle: "",
-          image: "",
-          code: "BAD_REQUEST",
-        });
+      return reply.code(400).send({
+        status: "error",
+        type: "error",
+        title: "Bad request",
+        subtitle: "",
+        image: "",
+        code: "BAD_REQUEST",
+      });
     }
     const { userIdentifier, playUri, accessToken } = query.data;
 

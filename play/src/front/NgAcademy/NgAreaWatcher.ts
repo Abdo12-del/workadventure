@@ -11,7 +11,8 @@
 import type { AreaData } from "@workadventure/map-editor";
 import { toastStore } from "../Stores/ToastStoreSingleton";
 import { ngHandleAreasEntered, ngWelcome } from "./GinoStore";
-import { NG_CLASS_PICKER_TOAST_UUID, ngTrainOffer } from "./NgTrain";
+import { NG_CLASS_PICKER_TOAST_UUID, ngLineOffer } from "./NgLine";
+import { ngAchievementsStart } from "./NgAchievements";
 import NgClassPicker from "./NgClassPicker.svelte";
 
 interface AreaEnterEmitter {
@@ -37,12 +38,14 @@ export function initNgAreaWatcher(emitter: AreaEnterEmitter): void {
     emitter.onEnterArea((_changed, all) => {
         const infos = all.map((area) => ({ name: area.name, tooltip: tooltipOf(area) }));
         ngHandleAreasEntered(infos);
-        // Gino's train gathers the children here (نقطة التجمع).
+        // Gino's line forms here (نقطة تجمع الصف).
         if (infos.some((info) => info.name === "gathering")) {
-            ngTrainOffer(openClassPicker);
+            ngLineOffer(openClassPicker);
         }
     });
     ngWelcome();
+    // Phase 7: celebrate newly earned badges in-world (no-op unless NG_API_URL is set).
+    ngAchievementsStart();
 }
 
 /** Test hook. */

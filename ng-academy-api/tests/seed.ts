@@ -55,6 +55,20 @@ export async function seedSchool(): Promise<Seed> {
   });
   repo.children.set(parent.id, [student.id]);
 
+  // Phase 7: a tiny catalogue of encouraging activities.
+  repo.addActivity({
+    id: "a-daily-math",
+    title: "تمارين الرياضيات اليومية",
+    kind: "daily",
+    points: 2,
+  });
+  repo.addActivity({
+    id: "a-micro-read",
+    title: "قراءة قصة قصيرة",
+    kind: "micro",
+    points: 1,
+  });
+
   const classId = "c-math";
   repo.addClass(
     {

@@ -4,6 +4,7 @@
  */
 import type {
   AchievementRow,
+  ActivityRow,
   AttendanceKind,
   AttendanceRow,
   ClassRow,
@@ -26,6 +27,7 @@ export class MemoryRepository implements Repository {
   achievements: AchievementRow[] = [];
   progress: ProgressRow[] = [];
   tokens = new Map<string, MagicTokenRow>();
+  activities = new Map<string, ActivityRow>();
 
   addUser(user: UserRow): UserRow {
     this.users.set(user.id, user);
@@ -34,6 +36,11 @@ export class MemoryRepository implements Repository {
 
   addClass(row: ClassRow, studentUserIds: string[] = []): ClassRow {
     this.classes.set(row.id, { ...row, studentUserIds });
+    return row;
+  }
+
+  addActivity(row: ActivityRow): ActivityRow {
+    this.activities.set(row.id, row);
     return row;
   }
 
@@ -134,6 +141,33 @@ export class MemoryRepository implements Repository {
 
   async listProgress(studentUserId: string): Promise<ProgressRow[]> {
     return this.progress.filter((p) => p.studentUserId === studentUserId);
+  }
+
+  async listActivities(): Promise<ActivityRow[]> {
+    return [...this.activities.values()];
+  }
+
+  async completeActivity(input: {
+    activityId: string;
+    studentUserId: string;
+    byUserId: string | undefined;
+    at: string;
+  }): Promise<{ achievement: AchievementRow; points: number }> {
+    const activity = this.activities.get(input.activityId);
+    if (!activity) throw new Error(`unknown activity ${input.activityId}`);
+    const achievement = await this.grantBadge({
+      studentUserId: input.studentUserId,
+      badgeName: activity.title,
+      reason: `أكمل نشاطًا (${activity.kind})`,
+      grantedBy: input.byUserId,
+      at: input.at,
+    });
+    const current = await this.listProgress(input.studentUserId);
+    const points =
+      (current.find((row) => row.metric === "points")?.value ?? 0) +
+      activity.points;
+    await this.upsertProgress(input.studentUserId, "points", points, input.at);
+    return { achievement, points };
   }
 
   async createMagicToken(

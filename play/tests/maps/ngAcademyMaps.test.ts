@@ -249,8 +249,8 @@ describe("NG Academy school world — teachers & Gino config coherence", () => {
     });
 });
 
-describe("NG Academy school world — the train gathering point", () => {
-    it("the entrance has a gathering area where Gino's train waits", () => {
+describe("NG Academy school world — the line gathering point", () => {
+    it("the entrance has a gathering area where Gino's line forms", () => {
         const wam = wams.get("entrance.wam");
         const names = ((wam?.areas as { name: string }[]) ?? []).map((a) => a.name);
         expect(names).toContain("gathering");
