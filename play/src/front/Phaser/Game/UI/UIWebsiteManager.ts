@@ -6,6 +6,7 @@ import { uiWebsitesStore } from "../../../Stores/UIWebsiteStore";
 import { analyticsClient } from "../../../Administration/AnalyticsClient";
 import { stripUrlToOrigin } from "../../../Administration/CowebsiteAnalyticsProperties";
 import { gameManager } from "../GameManager";
+import { assertEmbeddableForChildren, isUrlAllowedForChildren, warnBlocked } from "../../../ChildSafety/ChildSafety";
 
 class UIWebsiteManager {
     constructor() {
@@ -18,12 +19,23 @@ class UIWebsiteManager {
             }
 
             if (websiteEvent.url) {
-                website.url = new URL(websiteEvent.url, gameManager.getCurrentGameScene().getMapUrl()).toString();
+                const resolvedUrl = new URL(websiteEvent.url, gameManager.getCurrentGameScene().getMapUrl()).toString();
 
-                // The resolved URL, not the event's: a map may pass a relative one, and
-                // it is relative to the TMJ file rather than to the app. Reporting the
-                // raw value would name the app's own origin for every one of them.
-                analyticsClient.trackAdminEvent("scripting.website_opened", { url: stripUrlToOrigin(website.url) });
+                // Child safety: a modified UI website must stay inside the allowed domains.
+                // Never throw here: this is an rxjs `next` handler, and throwing would kill
+                // the whole modify stream — skip the change instead.
+                if (isUrlAllowedForChildren(resolvedUrl)) {
+                    website.url = resolvedUrl;
+
+                    // The resolved URL, not the event's: a map may pass a relative one, and
+                    // it is relative to the TMJ file rather than to the app. Reporting the
+                    // raw value would name the app's own origin for every one of them.
+                    analyticsClient.trackAdminEvent("scripting.website_opened", {
+                        url: stripUrlToOrigin(website.url),
+                    });
+                } else {
+                    warnBlocked("WA.ui.website (modify)", resolvedUrl);
+                }
             }
 
             if (websiteEvent.visible !== undefined) {
@@ -75,6 +87,12 @@ class UIWebsiteManager {
     }
 
     public open(websiteConfig: CreateUIWebsiteEvent): UIWebsiteEvent {
+        // If a relative URL is passed, it is relative to the TMJ file.
+        websiteConfig.url = new URL(websiteConfig.url, gameManager.getCurrentGameScene().getMapUrl()).toString();
+
+        // Child safety: refuse iframes pointing outside the allowed domains.
+        assertEmbeddableForChildren("WA.ui.website", websiteConfig.url);
+
         const newWebsite: UIWebsiteEvent = {
             ...websiteConfig,
             id: uuidv4(),
@@ -82,8 +100,6 @@ class UIWebsiteManager {
             allowPolicy: websiteConfig.allowPolicy ?? "",
             allowApi: websiteConfig.allowApi ?? false,
         };
-        // If a relative URL is passed, it is relative to the TMJ file.
-        websiteConfig.url = new URL(websiteConfig.url, gameManager.getCurrentGameScene().getMapUrl()).toString();
         uiWebsitesStore.add(newWebsite);
 
         // Analytics tracking opening a website

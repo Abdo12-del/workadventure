@@ -1,12 +1,19 @@
 import { CardsService, GoogleWorkSpaceService, KlaxoonService } from "@workadventure/shared-utils";
 import { analyticsClient } from "../Administration/AnalyticsClient";
 import { stripUrlToOrigin } from "../Administration/CowebsiteAnalyticsProperties";
+import { isUrlAllowedForChildren, warnBlocked } from "../ChildSafety/ChildSafety";
 import { gameManager } from "../Phaser/Game/GameManager";
 
 class ScriptUtils {
     public openTab(url: string) {
         // Get URL from the website
         url = this.getWebsiteUrl(url);
+
+        // Child safety: never let a script send children to a non-allowlisted website.
+        if (!isUrlAllowedForChildren(url)) {
+            warnBlocked("WA.nav.openTab", url);
+            return;
+        }
 
         // Open the url in a new tab
         window.open(url);
@@ -16,6 +23,12 @@ class ScriptUtils {
     }
 
     public goToPage(url: string) {
+        // Child safety: navigations away from the academy are refused in child-safe mode.
+        if (!isUrlAllowedForChildren(url)) {
+            warnBlocked("WA.nav.goToPage", url);
+            return;
+        }
+
         // Test if the url is a valid URL
         // eslint-disable-next-line
         const urlPattern = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/g;

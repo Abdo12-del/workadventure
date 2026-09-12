@@ -211,6 +211,7 @@ import { requestedScreenSharingState } from "../../Stores/ScreenSharingStore";
 import { EnterLeaveScriptingService } from "../Helpers/EnterLeaveScriptingService";
 import { GameMapFrontWrapper } from "./GameMap/GameMapFrontWrapper";
 import { gameManager } from "./GameManager";
+import { trustHost as childSafetyTrustHost } from "../../ChildSafety/ChildSafety";
 import { EmoteManager } from "./EmoteManager";
 import { OutlineManager } from "./UI/OutlineManager";
 import { soundManager } from "./SoundManager";
@@ -452,6 +453,8 @@ export class GameScene extends DirtyScene {
         // TODO: How to get mapUrl from WAM here?
         if (_room.mapUrl) {
             this.mapUrlFile = _room.mapUrl;
+            // Child safety: the server delivering the map and its assets is trusted for embeds/images.
+            childSafetyTrustHost(new URL(_room.mapUrl).hostname);
         } else if (_room.wamUrl) {
             this.wamUrlFile = _room.wamUrl;
         }
@@ -587,6 +590,8 @@ export class GameScene extends DirtyScene {
                     try {
                         this.wamFile = wamFileMigration.migrate(response.data);
                         this.mapUrlFile = new URL(this.wamFile.mapUrl, absoluteWamFileUrl).toString();
+                        // Child safety: trust the host that serves the (possibly redirected) map assets.
+                        childSafetyTrustHost(new URL(this.mapUrlFile).hostname);
                         this.doLoadTMJFile(this.mapUrlFile);
                         this.loadEntityCollections();
                     } catch (error) {

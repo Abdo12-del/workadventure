@@ -231,6 +231,11 @@ export const EnvironmentVariables = z.object({
         .describe(
             "The port to access the Prometheus metrics. If not set, the default port is used AND an authorization token is required.",
         ),
+    CHILD_SAFE_MODE: BoolAsString.optional()
+        .transform((val) => toBool(val, true))
+        .describe(
+            "Child-safe mode (NG Academy default: true). When enabled, the front refuses to open or embed any URL outside same-origin, the platform's own services, the current map host and EMBEDDED_DOMAINS_WHITELIST. External links, co-websites and iframes pointing elsewhere are silently blocked for the child and logged in console.",
+        ),
     ENABLE_CHAT: BoolAsString.optional()
         .transform((val) => toBool(val, true))
         .describe("Enable/disable the chat feature. Defaults to true"),

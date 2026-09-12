@@ -4,6 +4,7 @@ import type { CowebsiteOpenedAnalyticsContext } from "../Administration/Cowebsit
 import { buildCowebsiteOpenedProperties } from "../Administration/CowebsiteAnalyticsProperties";
 import { analyticsClient } from "../Administration/AnalyticsClient";
 import { TimedEventsByKey } from "../Administration/TimedAnalyticsEvent";
+import { isUrlAllowedForChildren, warnBlocked } from "../ChildSafety/ChildSafety";
 
 export function createCoWebsiteStore() {
     const { subscribe, update } = writable<Array<CoWebsite>>([]);
@@ -34,6 +35,12 @@ export function createCoWebsiteStore() {
      * context-less rows.
      */
     const add = (coWebsite: CoWebsite, position?: number, analyticsContext: CowebsiteOpenedAnalyticsContext = {}) => {
+        // Child safety: a co-website pointing outside the allowed domains never reaches the store,
+        // so nothing is displayed to the child (the attempt is logged for teachers/developers).
+        if (!isUrlAllowedForChildren(coWebsite.getUrl())) {
+            warnBlocked("co-website", coWebsite.getUrl());
+            return;
+        }
         if (position || position === 0) {
             update((currentArray) => {
                 const newArray = [...currentArray];

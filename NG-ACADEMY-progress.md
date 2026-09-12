@@ -88,12 +88,73 @@
 
 ---
 
-## التالي: المرحلة 2 — تقوية أمان الطفل (Child-safety hardening)
+## المرحلة 2 — تقوية أمان الطفل (Child-safety hardening) ✅
 
-- افتراضيات `.env` آمنة: `ENABLE_CHAT=false`، `ENABLE_CHAT_UPLOAD=false`، `DISABLE_NOTIFICATIONS=true`،
-  `ENABLE_REPORT_ISSUES_MENU=false`، `DISABLE_ANONYMOUS=true` (مع مسار الرابط السحري لاحقًا)، `SKIP_CAMERA_PAGE=true`.
-- تعطيل PostHog/Analytics الخارجية افتراضيًا لبيانات الأطفال.
-- قائمة نطاقات مسموحة للمحتوى المضمَّن + `hideUrl` في مناطق `openWebsite`.
-- اختبارات E2E/وحدة تثبت: لا دردشة خاصة، لا روابط خارجية، لا إشعارات متصفح.
+الهدف: لا روابط خارجية، لا محتوى مضمَّن من نطاقات غير موثوقة، ولا دردشة نصية حرة — مع
+إبقاء التجربة صامتة وآمنة للطفل (الحجب لا يُظهر رسائل تقنية، فقط سجل للمعلم/المطور في `console.warn`).
 
-ثم المرحلة 3: بناء عالم المدرسة (خرائط Tiled+WAM للمدخل والفصول السبعة والمكتبة والمختبر والمسرح والإنجازات والساحة).
+### السياسة الجديدة: `play/src/front/ChildSafety/ChildSafety.ts`
+
+- متغير واحد جديد: `CHILD_SAFE_MODE` (BoolAsString، **الافتراضي true**) — أُضيف إلى
+  `FrontConfigurationInterface`، validator الـpusher، قائمة `FRONT_ENVIRONMENT_VARIABLES`، و`Enum/EnvironmentVariable` في الواجهة.
+- قائمة السماح الوحيدة هي **`EMBEDDED_DOMAINS_WHITELIST` الموجودة أصلًا** (يستخدمها validator
+  وpusher في `verifyUrlAsDomainInWhiteList`) — أعيد استخدامها كضابط السماح للأطفال بلا ازدواجية.
+- `isUrlAllowedForChildren(url)` تسمح فقط بـ: نفس النطاق (origin)، خدمات المنصة
+  (PUSHER/UPLOADER/ICON/JITSI)، مضيف الخريطة الحالية (`trustHost` وقت التشغيل)، والقائمة + نطاقاتها الفرعية.
+  وترفض `javascript:` و`data:` و`blob:` وأي URL غير صالح أو نطاق مشابه مخادع (`trusted.org.evil.com`).
+- `warnBlocked()` + `ChildSafetyBlockedError` (يُرمَى في مسارات الـanswerer حيث الخطأ يصل للسكربت لا للطفل).
+
+### نقاط التنفيذ (كل مسارات الفتح/التضمين)
+
+| المسار | الملف | السلوك عند الحجب |
+| --- | --- | --- |
+| `WA.nav.openTab` / `goToPage` | `front/Api/ScriptUtils.ts` | لا `window.open` ولا تنقّل؛ تحذير console |
+| co-websites (الدردشة، الخصائص، الكيانات…) | `front/Stores/CoWebsiteStore.ts` `add()` | لا يُسجَّل في الـstore إطلاقًا |
+| `WA.ui.openWebsite` (إنشاء وتعديل) | `front/Phaser/Game/UI/UIWebsiteManager.ts` | إنشاء: استثناء للسكربت؛ تعديل: تخطّي التغيير (بدون قتل بث rxjs) |
+| مواقع مضمَّنة في الخريطة (إنشاء وتعديل) | `front/Phaser/Game/EmbeddedWebsiteManager.ts` | نفس نمط UIWebsiteManager |
+| الثقة بمضيف الخريطة | `front/Phaser/Game/GameScene.ts` | `trustHost(hostname)` عند تحميل الخريطة وعند إعادة توجيه WAM |
+
+الدردشة النصية أصلًا محكومة بـ`ENABLE_CHAT` (front + `Room.ts`) — ضُبطت افتراضيات الأطفال في `.env.template`.
+
+### افتراضيات `.env.template` للأطفال
+
+`CHILD_SAFE_MODE=true`، `EMBEDDED_DOMAINS_WHITELIST=` (فارغة)، `ENABLE_CHAT=false`،
+`ENABLE_CHAT_UPLOAD=false`، `DISABLE_NOTIFICATIONS=true` (كانت كذلك)، `SKIP_CAMERA_PAGE=true`،
+`ENABLE_REPORT_ISSUES_MENU=false` (كانت كذلك)، وPostHog/Sentry فارغة أصلًا = تحليلات خارجية معطلة.
+ملاحظة: `DISABLE_ANONYMOUS` تُركت معلَّقة (`# DISABLE_ANONYMOUS=true` للإنتاج) لأن
+`docker-compose-no-oidc.yaml` يعتمد على الدخول المجهول — يُفعَّل إلزاميًا في المرحلة 5 مع الرابط السحري.
+أُعيد توليد `docs/others/self-hosting/env-variables.md` (صف `CHILD_SAFE_MODE` الجديد).
+
+### اختبارات الوحدة: `play/tests/front/ChildSafety/ChildSafety.test.ts` — 12/12 ✅
+
+نفس النطاق/النسبي ✅، خدمات المنصة ✅، القائمة + النطاقات الفرعية ✅، النطاقات المشابهة المخادعة ❌،
+`javascript:`/`data:`/`blob:` ❌، URL غير صالح ❌، `trustHost` ✅، الوضع معطَّل = سماح كامل ✅،
+`openTab` لا يفتح خارجي ويفتح داخلي ✅، `goToPage` محجوب ✅، `CoWebsiteStore.add` يرفض/يقبل ✅.
+محاكاة env عبر `vi.hoisted` (حيّة: السياسة تقرأ القيم عند كل نداء). في `vitest.setup.ts`
+جُعل `CHILD_SAFE_MODE=false` حتى لا تتأثر الاختبارات الموجودة، وبوابات الاختبار الخاصة تحاكي `true`.
+
+### بوابة قبول المرحلة 2
+
+| الفحص | النتيجة |
+| --- | --- |
+| `play` typecheck | ✅ |
+| `play` eslint (الملفات المعدلة + الجديدة) | ✅ |
+| `play` prettier --check | ✅ |
+| `play` svelte-check | ✅ 0 أخطاء / 0 تحذيرات |
+| `play` i18n:check | ✅ |
+| `play` vitest (كامل) | ✅ 128 ملفًا / 867 اختبارًا (كانت 127/855) |
+| generate-env-docs | ✅ متزامن |
+
+ملاحظة بيئة: أعادت المنصة بناء الـsandbox هذه الجولة (فُقدت `node_modules` والملفات المولَّدة)؛
+استُعيد الفرع من `origin` (`git fetch` + `reset --mixed 11d333c`) وأُعيد التمهيد عبر
+`./bootstrap.sh --proto-only` + `npm ci --ignore-scripts` + `patch-package` + `typesafe-i18n` —
+وهو ما يثبت أن bootstrap المرحلة 0 يعمل من الصفر.
+
+---
+
+## التالي: المرحلة 3 — بناء عالم المدرسة
+
+- خرائط Tiled/WAM: المدخل + الاستقبال، الفصول السبعة (عربي، إنجليزي، رياضيات، علوم، شطرنج،
+  قراءة/كتابة، مهارات تواصل)، قاعة الإبداع، المكتبة، مختبر العلوم، المسرح، قاعة الإنجازات، الساحة.
+- مناطق بخصائص `openWebsite`/`silent`/`jitsiRoom` (غرف الحصص الصوتية) مرتبطة بقائمة السماح.
+- بوابة القبول: اختبار تحميل الخرائط في بيئة التطوير + فحص مخطط WAM (schema) لكل خريطة.

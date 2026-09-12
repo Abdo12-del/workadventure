@@ -56,6 +56,8 @@ if (typeof window !== "undefined" && window.env === undefined) {
         ENABLE_OPENID: false,
         OPID_PROFILE_SCREEN_PROVIDER: undefined,
         ENABLE_CHAT_UPLOAD: false,
+        CHILD_SAFE_MODE: false,
+        EMBEDDED_DOMAINS_WHITELIST: [],
         FALLBACK_LOCALE: "en",
         OPID_WOKA_NAME_POLICY: undefined,
         ENABLE_REPORT_ISSUES_MENU: undefined,

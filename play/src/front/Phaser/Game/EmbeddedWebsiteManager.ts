@@ -3,6 +3,7 @@ import type { Subscription } from "rxjs";
 import { iframeListener } from "../../Api/IframeListener";
 import { analyticsClient } from "../../Administration/AnalyticsClient";
 import { stripUrlToOrigin } from "../../Administration/CowebsiteAnalyticsProperties";
+import { assertEmbeddableForChildren, isUrlAllowedForChildren, warnBlocked } from "../../ChildSafety/ChildSafety";
 import type { CreateEmbeddedWebsiteEvent, ModifyEmbeddedWebsiteEvent } from "../../Api/Events/EmbeddedWebsiteEvent";
 import type { GameScene } from "./GameScene";
 
@@ -85,13 +86,22 @@ export class EmbeddedWebsiteManager {
                 gameScene.markDirty();
 
                 if (embeddedWebsiteEvent.url !== undefined) {
-                    website.url = embeddedWebsiteEvent.url;
                     const newUrl = new URL(embeddedWebsiteEvent.url, this.gameScene.mapUrlFile);
                     const absoluteUrl = newUrl.toString();
-                    website.iframe.src = absoluteUrl;
 
-                    // Analytics tracking for new url website
-                    analyticsClient.trackAdminEvent("scripting.website_opened", { url: stripUrlToOrigin(newUrl) });
+                    // Child safety: never point a child's iframe at a non-allowlisted domain.
+                    // Skip (do not throw): throwing here would kill the modify stream.
+                    if (!isUrlAllowedForChildren(absoluteUrl)) {
+                        warnBlocked("embedded website (modify)", absoluteUrl);
+                    } else {
+                        website.url = embeddedWebsiteEvent.url;
+                        website.iframe.src = absoluteUrl;
+
+                        // Analytics tracking for new url website
+                        analyticsClient.trackAdminEvent("scripting.website_opened", {
+                            url: stripUrlToOrigin(newUrl),
+                        });
+                    }
                 }
 
                 if (embeddedWebsiteEvent.visible !== undefined) {
@@ -153,6 +163,9 @@ export class EmbeddedWebsiteManager {
         if (this.embeddedWebsites.has(name)) {
             throw new Error('An embedded website with the name "' + name + '" already exists in your map');
         }
+
+        // Child safety: embedded in-map iframes must stay inside the allowed domains.
+        assertEmbeddableForChildren("embedded website", new URL(url, this.gameScene.mapUrlFile));
 
         const embeddedWebsiteEvent: CreateEmbeddedWebsiteEvent = {
             name,

@@ -64,6 +64,9 @@ export interface FrontConfigurationInterface {
     GRPC_MAX_MESSAGE_SIZE: number;
     TURN_CREDENTIALS_RENEWAL_TIME: number;
     BACKGROUND_TRANSFORMER_ENGINE: "tasks-vision" | "selfie-segmentation" | undefined;
+    // Child safety (NG Academy)
+    CHILD_SAFE_MODE: boolean;
+    EMBEDDED_DOMAINS_WHITELIST: string[];
     // Woka settings
     DEFAULT_WOKA_NAME: string | undefined;
     DEFAULT_WOKA_TEXTURE: string | undefined;
