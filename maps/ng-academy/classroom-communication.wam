@@ -34,16 +34,16 @@
       ]
     },
     {
-      "id": "95192cf5-dd32-4b32-8b4d-9075b0cc74f9",
+      "id": "38e82bc9-7320-4811-8318-176c01c0d5bf",
       "x": 160,
       "y": 32,
       "width": 256,
       "height": 96,
-      "name": "teacher",
+      "name": "teacher-communication",
       "visible": true,
       "properties": [
         {
-          "id": "94472cb8-0a5e-436f-806f-4b8eeb6946d1",
+          "id": "53e054ff-7d68-45af-8a41-a74d2ba31bc1",
           "type": "tooltipPropertyData",
           "content": "منطقة المعلم",
           "duration": 5000

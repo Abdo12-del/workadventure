@@ -34,16 +34,16 @@
       ]
     },
     {
-      "id": "8ae7102e-30fe-4cea-8aef-56b3a304fcef",
+      "id": "158fe37c-fa74-451d-8094-acc871c5e2bc",
       "x": 160,
       "y": 32,
       "width": 256,
       "height": 96,
-      "name": "teacher",
+      "name": "teacher-chess",
       "visible": true,
       "properties": [
         {
-          "id": "89ce6e02-1876-4531-8d86-b05e6292fdb9",
+          "id": "92f630fc-aba4-47b9-899e-909e2b16b9ed",
           "type": "tooltipPropertyData",
           "content": "منطقة المعلم",
           "duration": 5000

@@ -34,16 +34,16 @@
       ]
     },
     {
-      "id": "b5cc5a59-cfd2-4f08-848f-6c337994b74e",
+      "id": "c3ef554b-b3da-4634-8d15-e3d495b6d043",
       "x": 160,
       "y": 32,
       "width": 256,
       "height": 96,
-      "name": "teacher",
+      "name": "teacher-math",
       "visible": true,
       "properties": [
         {
-          "id": "367d6869-d236-459f-80ee-148778e1adec",
+          "id": "886d1b7b-fa83-4205-8e48-31a40f3c240e",
           "type": "tooltipPropertyData",
           "content": "منطقة المعلم",
           "duration": 5000

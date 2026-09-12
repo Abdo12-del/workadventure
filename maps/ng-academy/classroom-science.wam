@@ -34,16 +34,16 @@
       ]
     },
     {
-      "id": "279e9eef-0fd0-48cf-8503-06c58d8ae0b3",
+      "id": "5cfdb16f-0bce-4583-83cc-baff9cf423c0",
       "x": 160,
       "y": 32,
       "width": 256,
       "height": 96,
-      "name": "teacher",
+      "name": "teacher-science",
       "visible": true,
       "properties": [
         {
-          "id": "44e1a588-da12-44ff-893c-8ab63f5fc811",
+          "id": "bfcca1b1-a58e-436c-8d14-90357f7cb224",
           "type": "tooltipPropertyData",
           "content": "منطقة المعلم",
           "duration": 5000

@@ -34,16 +34,16 @@
       ]
     },
     {
-      "id": "0554c9a7-a03a-46f7-8703-b5d74d81af57",
+      "id": "abb0ba86-9a2d-47b0-8fbb-df32018c112c",
       "x": 160,
       "y": 32,
       "width": 256,
       "height": 96,
-      "name": "teacher",
+      "name": "teacher-arabic",
       "visible": true,
       "properties": [
         {
-          "id": "d29b119b-827e-4463-8b0c-b2a9a460e774",
+          "id": "5039a09e-689b-4f89-8565-6d5725664953",
           "type": "tooltipPropertyData",
           "content": "منطقة المعلم",
           "duration": 5000

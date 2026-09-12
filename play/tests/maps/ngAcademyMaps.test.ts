@@ -3,6 +3,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import Ajv from "ajv";
 import { describe, expect, it } from "vitest";
+import { NG_GINO_EXPLAIN, NG_TEACHERS } from "../../src/front/NgAcademy/NgAcademyConfig";
 
 /**
  * Phase 3 acceptance tests for the NG Academy school world (maps/ng-academy).
@@ -217,5 +218,33 @@ describe("NG Academy school world — child-safety invariants", () => {
         const silent = map.layers.find((l) => layerProp(l, "silent") === true);
         expect(silent).toBeDefined();
         expect(silent?.data?.some((gid) => gid !== 0)).toBe(true);
+    });
+});
+
+describe("NG Academy school world — teachers & Gino config coherence", () => {
+    const allAreaNames = new Set<string>();
+    for (const [, wam] of wams) {
+        for (const area of (wam.areas as { name: string }[]) ?? []) {
+            allAreaNames.add(area.name);
+        }
+    }
+
+    it("every classroom has exactly one teacher zone, known to the front config", () => {
+        for (const slug of ["arabic", "chess", "communication", "english", "math", "reading", "science"]) {
+            const wam = wams.get(`classroom-${slug}.wam`);
+            const names = ((wam?.areas as { name: string }[]) ?? []).map((a) => a.name);
+            expect(names, `teacher zone in classroom-${slug}`).toContain(`teacher-${slug}`);
+            expect(NG_TEACHERS[`teacher-${slug}`], `config for teacher-${slug}`).toBeDefined();
+            expect(NG_TEACHERS[`teacher-${slug}`].portrait).not.toMatch(/https?:\/\//);
+        }
+    });
+
+    it("every Gino explanation and teacher key matches a real area name", () => {
+        for (const key of Object.keys(NG_GINO_EXPLAIN)) {
+            expect(allAreaNames.has(key), `explain area ${key}`).toBe(true);
+        }
+        for (const key of Object.keys(NG_TEACHERS)) {
+            expect(allAreaNames.has(key), `teacher area ${key}`).toBe(true);
+        }
     });
 });

@@ -15,6 +15,7 @@ import { SimpleCoWebsite } from "../../WebRtc/CoWebsite/SimpleCoWebsite";
 import { bbbFactory } from "../../WebRtc/BBBFactory";
 import { JITSI_PRIVATE_MODE, JITSI_URL } from "../../Enum/EnvironmentVariable";
 import { JitsiCoWebsite } from "../../WebRtc/CoWebsite/JitsiCoWebsite";
+import { initNgAreaWatcher } from "../../NgAcademy/NgAreaWatcher";
 import {
     audioManagerFileStore,
     audioManagerVisibilityStore,
@@ -480,6 +481,9 @@ export class GameMapPropertiesListener {
             }
             this.onEnterAreasHandler(newAreas, areas);
         });
+
+        // NG Academy — أكاديمية الجيل الجديد: Gino/teacher bubbles on area entry.
+        initNgAreaWatcher(this.gameMapFrontWrapper);
 
         this.gameMapFrontWrapper.onLeaveArea((oldAreas) => {
             for (const area of oldAreas) {

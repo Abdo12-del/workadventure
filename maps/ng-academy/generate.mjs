@@ -647,7 +647,15 @@ function buildClassroom([file, title, roomName, lessonLabel]) {
     area(file, "lesson", lessonLabel, 3, 5, 12, 6, [
       livekitProp(file, "lesson", roomName),
     ]),
-    area(file, "teacher", "منطقة المعلم", 5, 1, 8, 3),
+    area(
+      file,
+      `teacher-${file.replace("classroom-", "")}`,
+      "منطقة المعلم",
+      5,
+      1,
+      8,
+      3,
+    ),
   ];
   writeJson(`${file}.tmj`, map.toJSON());
   writeJson(
