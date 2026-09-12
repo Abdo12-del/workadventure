@@ -19,6 +19,7 @@
     "play",
     "back",
     "map-storage",
+    "ng-academy-api",
     "libs/*",
     "benchmark",
     "uploader",

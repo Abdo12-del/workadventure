@@ -561,3 +561,51 @@ services:
 #    network_mode: host
 #volumes:
 #  synapsedata:
+
+  # ---------------------------------------------------------------------------
+  # NG Academy — أكاديمية الجيل الجديد (phase 5)
+  # School backend: WA Admin API contract + magic-link auth + school data.
+  # Wire the pusher to it by uncommenting ADMIN_API_URL in .env
+  # (keep it commented while the API container is not running: the pusher
+  #  waits for the admin API at boot when ADMIN_API_URL is set).
+  # ---------------------------------------------------------------------------
+  ng-postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ng
+      POSTGRES_PASSWORD: ng
+      POSTGRES_DB: ng
+    volumes:
+      - ng-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ng"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  ng-academy-api:
+    image: ghcr.io/thecodingmachine/nodejs:v2-24-trixie
+    command: npm run dev
+    working_dir: /usr/src/app/ng-academy-api
+    volumes:
+      - .:/usr/src/app
+    tmpfs: /tmp
+    environment:
+      PORT: "3100"
+      DATABASE_URL: "postgres://ng:ng@ng-postgres:5432/ng"
+      JWT_SECRET: "$SECRET_KEY"
+      ADMIN_API_TOKEN: "${ADMIN_API_TOKEN:-ng-academy-admin-token}"
+      NG_MAPS_BASE_URL: "${NG_MAPS_BASE_URL:-http://maps.workadventure.localhost/ng-academy}"
+      NG_APP_URL: "${NG_APP_URL:-http://play.workadventure.localhost}"
+      NODE_ENV: development
+      STARTUP_COMMAND_1: "cd /usr/src/app && npm install --workspace ng-academy-api --include-workspace-root --ignore-scripts"
+    depends_on:
+      ng-postgres:
+        condition: service_healthy
+    labels:
+      traefik.enable: true
+      traefik.http.routers.ng-academy-api.rule: Host("ng-api.workadventure.localhost")
+      traefik.http.services.ng-academy-api.loadbalancer.server.port: "3100"
+
+volumes:
+  ng-pgdata:

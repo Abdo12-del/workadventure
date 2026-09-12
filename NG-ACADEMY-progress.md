@@ -234,11 +234,55 @@
 
 ---
 
-## التالي: المرحلة 5 — ng-academy-api (النظام الخلفي)
+## المرحلة 5 — ng-academy-api (النظام الخلفي) ✅
 
-- مساحة عمل Node+TS+Postgres+Zod تنفّذ عقد WA Admin API + تسجيل الدخول بالرابط السحري
-  لبريد ولي الأمر + أدوار student/parent/teacher/admin/owner كـJWT tags.
-- جداول: users, profiles, students, parents, teachers, courses, classes, schedules,
-  attendance, activities, badges, achievements, child_progress, virtual_rooms, virtual_events.
-- تفعيل `DISABLE_ANONYMOUS=true` في إعداد النشر بعد جاهزية المسار.
-- بوابة القبول: اختبارات تكامل API (تسجيل دخول، أدوار، حضور) + docker-compose محلي.
+مساحة عمل جديدة `ng-academy-api/` (Fastify + Zod + pg + TS)، مضافة إلى workspaces الجذر:
+
+### عقد WA Admin API (ما يستدعيه الـpusher فعلًا)
+
+- `GET /api/capabilities` → `{}` (لا إمكانات اختيارية؛ يبقى سلوك WA المحلي للبقية).
+- `GET /api/map` → `MapDetailsData` لكل غرف المدرسة الـ13 (التحقق في الاختبارات عبر
+  `isMapDetailsData` المستورد من `@workadventure/messages` — انطباق العقد مضمون).
+- `GET /api/room/access` → دخول بوسوم الأدوار `ng-<role>` + **تسجيل الحضور صامتًا**
+  عند دخول الطالب فصله (متطلب 10) + `canRecord` للمعلم/الإدارة فقط.
+- `GET /api/room/tags` → مصفوفة وسوم.
+- المصادقة بين الـpusher والخادم عبر `ADMIN_API_TOKEN` (401 عند غيابها).
+
+### المصادقة والأدوار (متطلبات 5، 11، 16)
+
+- رابط سحري لمرة واحدة (15 دقيقة، مخزّن مجزأ SHA-256) إلى بريد **ولي الأمر** فقط؛
+  الاستجابة 202 دائمًا (لا تعداد حسابات)، ولا روابط لحسابات الأطفال إطلاقًا.
+- `POST /ng/children/:id/session`: ولي الأمر يفتح جلسة طفله — الطفل بلا بريد/كلمة سر.
+- JWT HS256 بـnode:crypto فقط (بلا اعتماد إضافي)؛ الدور يسافر كوسم WA (`ng-student`…).
+- حراسة أدوار لكل مسار مدرسة: الحضور لولي الأمر/المعلم/الإدارة فقط، التسجيل للمعلم/الإدارة،
+  الشارات تشجيع بلا ترتيب، وقوائم الفصول محدودة بالدور.
+
+### قاعدة البيانات
+
+`src/db/schema.sql` يُطبَّق عند الإقلاع (idempotent): الجداول الـ15 المطلوبة + magic_tokens،
+بلا حقول هاتف/عنوان/بيانات حساسة (متطلب 11). تنفيذان للمستودع: `PgRepository` (إنتاج)
+و`MemoryRepository` (اختبارات/عرض بلا Postgres).
+
+### النشر والتشغيل
+
+- خدمتا `ng-postgres` و`ng-academy-api` في `docker-compose.yaml` (healthcheck + traefik
+  ‏ng-api.workadventure.localhost) + توثيق `ADMIN_API_URL`/`NG_MAPS_BASE_URL` في `.env.template`
+  (يبقى ADMIN_API_URL فارغًا افتراضيًا حتى لا ينتظر الـpusher خادمًا غير شغال).
+
+### بوابة قبول المرحلة 5
+
+`ng-academy-api` vitest — **14 اختبارًا ✅** في 3 ملفات: تدفق الرابط السحري (إصدار/استهلاك
+واحد/صمت الغرباء/رفض المزور)، جلسات الأطفال (ولي الأمر فقط)، عقد Admin API (capabilities،
+انطباق MapDetailsData، وصول الغرفة + الحضور الصامت، 401/403)، وحراسة أدوار مسارات المدرسة.
+‏`ng-academy-api` typecheck ✅ | prettier ✅ | `play` typecheck ✅ (لا تغيير في play).
+
+---
+
+## التالي: المرحلة 6 — رحلة الطفل وبطاقة الفصل
+
+- شاشة دخول الطفل: رسالة ولي الأمر → اختيار الطفل → «مرحبًا بك 👋» → «إلى أين تريد الذهاب؟»
+  بالخيارات الخمسة (🏫 المدرسة 📚 فصولي 🏆 إنجازاتي 📅 جدولي  ملفي).
+- بطاقة الفصل (لوحة جانبية داخل العالم): المادة/المعلم/الوقت/زر دخول الحصة/الحصة التالية/
+  التسجيلات/الأنشطة/الواجب — كأداة co-website أو overlay من ng-academy-api.
+- ربط الواجهة بجلسة الطفل (JWT) وبياناته من `/ng/classes` و`/ng/schedule`.
+- بوابة القبول: اختبارات مكوّنات Svelte للرحلة + E2E يدوي موثق بالصور.
