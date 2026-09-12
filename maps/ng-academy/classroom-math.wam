@@ -1,0 +1,59 @@
+{
+  "version": "2.1.0",
+  "mapUrl": "./classroom-math.tmj",
+  "entities": {},
+  "areas": [
+    {
+      "id": "72ab54df-b35b-40c8-8f13-58848ce0fc22",
+      "x": 96,
+      "y": 160,
+      "width": 384,
+      "height": 192,
+      "name": "lesson",
+      "visible": true,
+      "properties": [
+        {
+          "id": "008b8b7b-efdd-4f84-8ce4-83a91ab9f457",
+          "type": "tooltipPropertyData",
+          "content": "حصة الرياضيات",
+          "duration": 5000
+        },
+        {
+          "id": "3ed482c7-6485-44e8-8b36-9b0fb4133464",
+          "type": "livekitRoomProperty",
+          "roomName": "lesson-math",
+          "buttonLabel": "دخول الحصة",
+          "triggerMessage": "اضغط للانضمام إلى حصة الصوت",
+          "livekitRoomConfig": {
+            "startWithAudioMuted": false,
+            "startWithVideoMuted": true,
+            "disableChat": true
+          },
+          "livekitRoomAdminTag": ""
+        }
+      ]
+    },
+    {
+      "id": "b5cc5a59-cfd2-4f08-848f-6c337994b74e",
+      "x": 160,
+      "y": 32,
+      "width": 256,
+      "height": 96,
+      "name": "teacher",
+      "visible": true,
+      "properties": [
+        {
+          "id": "367d6869-d236-459f-80ee-148778e1adec",
+          "type": "tooltipPropertyData",
+          "content": "منطقة المعلم",
+          "duration": 5000
+        }
+      ]
+    }
+  ],
+  "entityCollections": [],
+  "metadata": {
+    "name": "فصل الرياضيات",
+    "description": "فصل الرياضيات — حصة صوتية بإشراف المعلم، بلا دردشة نصية."
+  }
+}

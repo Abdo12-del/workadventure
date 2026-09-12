@@ -1,0 +1,59 @@
+{
+  "version": "2.1.0",
+  "mapUrl": "./classroom-chess.tmj",
+  "entities": {},
+  "areas": [
+    {
+      "id": "db5f9d6c-387d-4aa5-817f-0e6f869bbf5d",
+      "x": 96,
+      "y": 160,
+      "width": 384,
+      "height": 192,
+      "name": "lesson",
+      "visible": true,
+      "properties": [
+        {
+          "id": "f2ee231a-9ef3-4d70-80c7-b1ba0ebf3088",
+          "type": "tooltipPropertyData",
+          "content": "حصة الشطرنج",
+          "duration": 5000
+        },
+        {
+          "id": "4c6d18ce-a32f-42d3-88af-a47c5251f0e4",
+          "type": "livekitRoomProperty",
+          "roomName": "lesson-chess",
+          "buttonLabel": "دخول الحصة",
+          "triggerMessage": "اضغط للانضمام إلى حصة الصوت",
+          "livekitRoomConfig": {
+            "startWithAudioMuted": false,
+            "startWithVideoMuted": true,
+            "disableChat": true
+          },
+          "livekitRoomAdminTag": ""
+        }
+      ]
+    },
+    {
+      "id": "8ae7102e-30fe-4cea-8aef-56b3a304fcef",
+      "x": 160,
+      "y": 32,
+      "width": 256,
+      "height": 96,
+      "name": "teacher",
+      "visible": true,
+      "properties": [
+        {
+          "id": "89ce6e02-1876-4531-8d86-b05e6292fdb9",
+          "type": "tooltipPropertyData",
+          "content": "منطقة المعلم",
+          "duration": 5000
+        }
+      ]
+    }
+  ],
+  "entityCollections": [],
+  "metadata": {
+    "name": "فصل الشطرنج",
+    "description": "فصل الشطرنج — حصة صوتية بإشراف المعلم، بلا دردشة نصية."
+  }
+}

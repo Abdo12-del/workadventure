@@ -1,0 +1,59 @@
+{
+  "version": "2.1.0",
+  "mapUrl": "./classroom-english.tmj",
+  "entities": {},
+  "areas": [
+    {
+      "id": "8c529c1b-b286-4dce-8264-2652ca8ff8a7",
+      "x": 96,
+      "y": 160,
+      "width": 384,
+      "height": 192,
+      "name": "lesson",
+      "visible": true,
+      "properties": [
+        {
+          "id": "528fa62c-0b13-4811-8908-95e0ec45157a",
+          "type": "tooltipPropertyData",
+          "content": "حصة اللغة الإنجليزية",
+          "duration": 5000
+        },
+        {
+          "id": "b03361b2-b4fb-43c3-8bd4-e03a6f5d6f2a",
+          "type": "livekitRoomProperty",
+          "roomName": "lesson-english",
+          "buttonLabel": "دخول الحصة",
+          "triggerMessage": "اضغط للانضمام إلى حصة الصوت",
+          "livekitRoomConfig": {
+            "startWithAudioMuted": false,
+            "startWithVideoMuted": true,
+            "disableChat": true
+          },
+          "livekitRoomAdminTag": ""
+        }
+      ]
+    },
+    {
+      "id": "f8566479-4ad0-4499-88ba-3583a31fc66c",
+      "x": 160,
+      "y": 32,
+      "width": 256,
+      "height": 96,
+      "name": "teacher",
+      "visible": true,
+      "properties": [
+        {
+          "id": "2121ee20-3202-42bb-8a2d-203cfe01df1f",
+          "type": "tooltipPropertyData",
+          "content": "منطقة المعلم",
+          "duration": 5000
+        }
+      ]
+    }
+  ],
+  "entityCollections": [],
+  "metadata": {
+    "name": "فصل اللغة الإنجليزية",
+    "description": "فصل اللغة الإنجليزية — حصة صوتية بإشراف المعلم، بلا دردشة نصية."
+  }
+}

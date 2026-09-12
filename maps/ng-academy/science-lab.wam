@@ -1,0 +1,42 @@
+{
+  "version": "2.1.0",
+  "mapUrl": "./science-lab.tmj",
+  "entities": {},
+  "areas": [
+    {
+      "id": "49096c76-0e6c-40b5-8c80-071a22177454",
+      "x": 64,
+      "y": 96,
+      "width": 448,
+      "height": 256,
+      "name": "lab",
+      "visible": true,
+      "properties": [
+        {
+          "id": "e3ee0ef8-8673-4f6e-89c4-43babbb88671",
+          "type": "tooltipPropertyData",
+          "content": "طاولات التجارب 🔬",
+          "duration": 5000
+        },
+        {
+          "id": "2f68d071-7374-4295-86c7-8697805e2782",
+          "type": "livekitRoomProperty",
+          "roomName": "lab-session",
+          "buttonLabel": "دخول الحصة",
+          "triggerMessage": "اضغط للانضمام إلى حصة الصوت",
+          "livekitRoomConfig": {
+            "startWithAudioMuted": false,
+            "startWithVideoMuted": true,
+            "disableChat": true
+          },
+          "livekitRoomAdminTag": ""
+        }
+      ]
+    }
+  ],
+  "entityCollections": [],
+  "metadata": {
+    "name": "مختبر العلوم",
+    "description": "مختبر التجارب: طاولات عمل وجلسة صوتية بإشراف المعلم."
+  }
+}

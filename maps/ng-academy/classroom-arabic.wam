@@ -1,0 +1,59 @@
+{
+  "version": "2.1.0",
+  "mapUrl": "./classroom-arabic.tmj",
+  "entities": {},
+  "areas": [
+    {
+      "id": "e440d61f-cac8-4801-86cd-64bf9d69920c",
+      "x": 96,
+      "y": 160,
+      "width": 384,
+      "height": 192,
+      "name": "lesson",
+      "visible": true,
+      "properties": [
+        {
+          "id": "b1f52965-8930-4969-844d-7aab33b41ab0",
+          "type": "tooltipPropertyData",
+          "content": "حصة اللغة العربية",
+          "duration": 5000
+        },
+        {
+          "id": "47644b27-c1fb-4c35-83b5-863bebc664b1",
+          "type": "livekitRoomProperty",
+          "roomName": "lesson-arabic",
+          "buttonLabel": "دخول الحصة",
+          "triggerMessage": "اضغط للانضمام إلى حصة الصوت",
+          "livekitRoomConfig": {
+            "startWithAudioMuted": false,
+            "startWithVideoMuted": true,
+            "disableChat": true
+          },
+          "livekitRoomAdminTag": ""
+        }
+      ]
+    },
+    {
+      "id": "0554c9a7-a03a-46f7-8703-b5d74d81af57",
+      "x": 160,
+      "y": 32,
+      "width": 256,
+      "height": 96,
+      "name": "teacher",
+      "visible": true,
+      "properties": [
+        {
+          "id": "d29b119b-827e-4463-8b0c-b2a9a460e774",
+          "type": "tooltipPropertyData",
+          "content": "منطقة المعلم",
+          "duration": 5000
+        }
+      ]
+    }
+  ],
+  "entityCollections": [],
+  "metadata": {
+    "name": "فصل اللغة العربية",
+    "description": "فصل اللغة العربية — حصة صوتية بإشراف المعلم، بلا دردشة نصية."
+  }
+}

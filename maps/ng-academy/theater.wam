@@ -1,0 +1,59 @@
+{
+  "version": "2.1.0",
+  "mapUrl": "./theater.tmj",
+  "entities": {},
+  "areas": [
+    {
+      "id": "d85f309c-fe64-4677-839b-c3396f177aec",
+      "x": 128,
+      "y": 64,
+      "width": 448,
+      "height": 128,
+      "name": "stage",
+      "visible": true,
+      "properties": [
+        {
+          "id": "a2faf11a-dcd7-4b9a-8314-3604291f7e2d",
+          "type": "tooltipPropertyData",
+          "content": "خشبة المسرح 🎭",
+          "duration": 5000
+        },
+        {
+          "id": "fb17deb8-896e-496a-83c8-dd22d4fbb1da",
+          "type": "livekitRoomProperty",
+          "roomName": "theater-stage",
+          "buttonLabel": "دخول الحصة",
+          "triggerMessage": "اضغط للانضمام إلى حصة الصوت",
+          "livekitRoomConfig": {
+            "startWithAudioMuted": false,
+            "startWithVideoMuted": true,
+            "disableChat": true
+          },
+          "livekitRoomAdminTag": ""
+        }
+      ]
+    },
+    {
+      "id": "11f3971f-f302-455e-8c94-946f3bd57f00",
+      "x": 128,
+      "y": 224,
+      "width": 448,
+      "height": 224,
+      "name": "audience",
+      "visible": true,
+      "properties": [
+        {
+          "id": "87444873-85e3-4740-8c4e-43cad39c5d29",
+          "type": "tooltipPropertyData",
+          "content": "مقاعد الجمهور",
+          "duration": 5000
+        }
+      ]
+    }
+  ],
+  "entityCollections": [],
+  "metadata": {
+    "name": "المسرح",
+    "description": "خشبة للعروض المدرسية وجلسة صوتية، ومقاعد للجمهور."
+  }
+}

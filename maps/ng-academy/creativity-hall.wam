@@ -1,0 +1,42 @@
+{
+  "version": "2.1.0",
+  "mapUrl": "./creativity-hall.tmj",
+  "entities": {},
+  "areas": [
+    {
+      "id": "cde33b10-4025-41d4-8273-38bdeb79ce15",
+      "x": 160,
+      "y": 128,
+      "width": 256,
+      "height": 192,
+      "name": "makerspace",
+      "visible": true,
+      "properties": [
+        {
+          "id": "0ef17eb7-d87a-4d60-8f70-1858e6c2fb7f",
+          "type": "tooltipPropertyData",
+          "content": "مساحة الإبداع 🎨",
+          "duration": 5000
+        },
+        {
+          "id": "662cd7c2-4d14-43f3-8056-46df64f9d3da",
+          "type": "livekitRoomProperty",
+          "roomName": "creativity-session",
+          "buttonLabel": "دخول الحصة",
+          "triggerMessage": "اضغط للانضمام إلى حصة الصوت",
+          "livekitRoomConfig": {
+            "startWithAudioMuted": false,
+            "startWithVideoMuted": true,
+            "disableChat": true
+          },
+          "livekitRoomAdminTag": ""
+        }
+      ]
+    }
+  ],
+  "entityCollections": [],
+  "metadata": {
+    "name": "قاعة الإبداع",
+    "description": "طاولات عمل ومجلس مريح لأنشطة الرسم والابتكار."
+  }
+}

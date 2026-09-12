@@ -1,0 +1,29 @@
+{
+  "version": "2.1.0",
+  "mapUrl": "./library.tmj",
+  "entities": {},
+  "areas": [
+    {
+      "id": "c8adb658-d864-4f3b-8016-1e930fdfeedd",
+      "x": 192,
+      "y": 256,
+      "width": 192,
+      "height": 128,
+      "name": "reading",
+      "visible": true,
+      "properties": [
+        {
+          "id": "61d35c61-75da-4bd0-8150-d6e3d189349c",
+          "type": "tooltipPropertyData",
+          "content": "ركن القراءة الهادئ 📚",
+          "duration": 5000
+        }
+      ]
+    }
+  ],
+  "entityCollections": [],
+  "metadata": {
+    "name": "المكتبة",
+    "description": "مكان هادئ للقراءة: الأثاث كتب وأرائك، والمنطقة صامتة."
+  }
+}
