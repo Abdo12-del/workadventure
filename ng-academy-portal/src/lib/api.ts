@@ -141,7 +141,11 @@ export class NgPortalApi {
       ...(init.headers as Record<string, string> | undefined),
     };
     const token = this.getToken();
-    if (token) headers["Authorization"] = `Bearer ${token}`;
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+      // Mirror for locked-down preview proxies that strip Authorization.
+      headers["x-ng-token"] = token;
+    }
     const response = await fetch(`${this.baseUrl}${path}`, {
       ...init,
       headers,

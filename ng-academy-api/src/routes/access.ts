@@ -10,16 +10,25 @@ import type { NgRole } from "../config.js";
 import { verifyJwt, type NgJwtPayload } from "../auth/jwt.js";
 import type { UserRow } from "../db/types.js";
 
+/**
+ * Session JWT transport: Bearer first; some locked-down preview proxies strip
+ * the Authorization header, so the portal mirrors the JWT in x-ng-token as a
+ * fallback. Every route must read the token through this helper.
+ */
+export function ngBearerToken(req: FastifyRequest): string | null {
+  const header = req.headers.authorization;
+  if (header?.startsWith("Bearer ")) return header.slice("Bearer ".length);
+  const fallback = req.headers["x-ng-token"];
+  return typeof fallback === "string" && fallback ? fallback : null;
+}
+
 export async function authenticate(
   req: FastifyRequest,
   deps: AppDeps,
 ): Promise<{ user: UserRow; jwt: NgJwtPayload } | null> {
-  const header = req.headers.authorization;
-  if (!header?.startsWith("Bearer ")) return null;
-  const payload = verifyJwt(
-    header.slice("Bearer ".length),
-    deps.config.JWT_SECRET,
-  );
+  const raw = ngBearerToken(req);
+  if (!raw) return null;
+  const payload = verifyJwt(raw, deps.config.JWT_SECRET);
   if (!payload) return null;
   const user = await deps.repo.getUserById(payload.sub);
   if (!user) return null;

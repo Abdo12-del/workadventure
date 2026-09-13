@@ -7,6 +7,7 @@ import { z } from "zod";
 import type { AppDeps } from "../app.js";
 import { signJwt, verifyJwt } from "../auth/jwt.js";
 import { requestMagicLink, verifyMagicLink } from "../auth/magicLink.js";
+import { ngBearerToken } from "./access.js";
 
 const JWT_TTL_MS = 12 * 60 * 60 * 1000; // a school day
 
@@ -63,14 +64,11 @@ export function registerAuthRoutes(app: FastifyInstance, deps: AppDeps): void {
   });
 
   app.get("/ng/me", async (req, reply) => {
-    const header = req.headers.authorization;
-    if (!header?.startsWith("Bearer ")) {
+    const raw = ngBearerToken(req);
+    if (!raw) {
       return reply.code(401).send({ error: "non-authenticated" });
     }
-    const payload = verifyJwt(
-      header.slice("Bearer ".length),
-      config.JWT_SECRET,
-    );
+    const payload = verifyJwt(raw, config.JWT_SECRET);
     if (!payload) {
       return reply.code(401).send({ error: "token invalid" });
     }
@@ -96,13 +94,9 @@ export function registerAuthRoutes(app: FastifyInstance, deps: AppDeps): void {
    * handle emails, passwords or magic links themselves.
    */
   app.post("/ng/children/:childId/session", async (req, reply) => {
-    const header = req.headers.authorization;
-    if (!header?.startsWith("Bearer "))
-      return reply.code(401).send({ error: "unauthenticated" });
-    const payload = verifyJwt(
-      header.slice("Bearer ".length),
-      config.JWT_SECRET,
-    );
+    const raw = ngBearerToken(req);
+    if (!raw) return reply.code(401).send({ error: "unauthenticated" });
+    const payload = verifyJwt(raw, config.JWT_SECRET);
     if (!payload || payload.role !== "parent")
       return reply.code(403).send({ error: "parents only" });
     const params = z.object({ childId: z.string() }).safeParse(req.params);
