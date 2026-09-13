@@ -2,10 +2,37 @@
 
 ![WorkAdventure office image](README-MAP.png)
 
+# NG Academy — أكاديمية الجيل الجديد 🦉
+
+> **هذا المستودع نسخة محوّلة من WorkAdventure إلى مدرسة افتراضية آمنة وممتعة
+> للأطفال (6–12 سنة).** المحرك لم يُعَد بناؤه — بُني فوقه «العقل الأكاديمي»:
+> عالم مدرسة بـ13 خريطة، البومة المرشدة **جينو**، صفوف وشارات مشجعة، أمان صارم
+> للطفل، بوابة لولي الأمر/المعلم/الإدارة، وAPI أكاديمي كامل.
+
+| المكوّن         | المكان                                                 | الدور                                                                                         |
+| --------------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| عالم الطفل      | ‏`play/` (المحرك الأصلي) + `play/src/front/NgAcademy/` | العالم هو الصفحة الرئيسية للطفل: جينو، الفقاعات، صف الاصطفاف، الاحتفال بالشارات               |
+| خرائط المدرسة   | ‏`maps/ng-academy/`                                    | مدخل + 7 فصول + مكتبة + مختبر + مسرح + قاعة إبداع + قاعة إنجازات (مولَّدة بسكربت، 181KB كلها) |
+| ‏API الأكاديمية | ‏`ng-academy-api/`                                     | Admin API لـWorkAdventure + رابط سحري + أدوار + حضور صامت + أنشطة/شارات + مسارات البوابة      |
+| بوابة الكبار    | ‏`ng-academy-portal/`                                  | ولي الأمر/المعلم/الإدارة — تصميم تقليدي منفصل تمامًا عن واجهة الطفل (~24KB)                   |
+| الهوية والأصول  | ‏`brand/`, `play/public/static/images/ng/`             | الشعار، جينو، الألوان (#38b6ff)، أفاتارات كرتونية فقط                                         |
+
+**التوثيق (عربي):** ‏[خطة التحويل والفحص](NG-ACADEMY-خطة-التحويل.md) •
+‏[سجل التنفيذ والمراحل](NG-ACADEMY-progress.md) •
+‏[تشغيل بيئة التطوير](docs/agent/dev-setup.md)
+
+**تشغيل سريع (تطوير):** ‏`./bootstrap.sh` ثم `docker compose up -d` — العالم على
+‏`play.workadventure.localhost`، والـAPI على `ng-api.workadventure.localhost`، وبوابة
+الكبار على `ng-portal.workadventure.localhost/portal/` (جرّب
+‏`npm run dev:memory --workspace ng-academy-api` لتجربة الرابط السحري بلا Postgres).
+**الإنتاج:** ‏`docker compose -f docker-compose.yaml -f docker-compose.ng-production.yaml up -d`
+(انظر رأس ملف الـoverlay للمتغيرات المطلوبة).
+
+---
+
 # WorkAdventure
 
-
-WorkAdventure is a platform that allows you to design **fully customizable collaborative virtual worlds** (metaverse). 
+WorkAdventure is a platform that allows you to design **fully customizable collaborative virtual worlds** (metaverse).
 
 With your own avatar, you can **interact spontaneously** with your colleagues, clients, partners (using a **video-chat system**, triggered when you approach someone).
 Imagine **all types of immersive experiences** (recruitments, onboarding, trainings, digital workplace, internal/external events) on desktop, mobile or tablet.
@@ -16,20 +43,16 @@ _The little plus? The platform is **GDPR** and **open source**!_
 
 **Pricing for our [SaaS version](https://workadventu.re/pricing/?utm_source=github)!**
 
-
 [![Workadventure live demo example](https://workadventu.re/wp-content/uploads/2024/02/Button-Live-Demo.png)](https://play.staging.workadventu.re/@/tcm/workadventure/wa-village/?utm_source=github)
 [![Workadventure Website](https://workadventu.re/wp-content/uploads/2024/02/Button-Website.png)](https://workadventu.re/?utm_source=github)
 
-
 ###### Support our team!
+
 [![Discord Logo](https://workadventu.re/wp-content/uploads/2024/02/Icon-Discord.png)](https://discord.com/invite/G6Xh9ZM9aR)
 [![X Social Logo](https://workadventu.re/wp-content/uploads/2024/02/Icon-X.png)](https://twitter.com/Workadventure_)
 [![LinkedIn Logo](https://workadventu.re/wp-content/uploads/2024/02/Icon-LinkedIn.png)](https://www.linkedin.com/company/workadventu-re/)
 
-
 ![Stats repo](https://github-readme-stats.vercel.app/api?username={username}&theme=transparent)
-
-
 
 ## Community resources
 
@@ -84,11 +107,11 @@ $ docker-compose -f docker-compose.yaml -f docker-compose-no-oidc.yaml up
 Note: on some OSes, you will need to add this line to your `/etc/hosts` file:
 
 **/etc/hosts**
+
 ```
 127.0.0.1 oidc.workadventure.localhost redis.workadventure.localhost play.workadventure.localhost traefik.workadventure.localhost matrix.workadventure.localhost extra.workadventure.localhost icon.workadventure.localhost map-storage.workadventure.localhost uploader.workadventure.localhost maps.workadventure.localhost api.workadventure.localhost front.workadventure.localhost
 ```
 
-
 ### Troubleshooting
 
-See our [troubleshooting guide](docs/others/troubleshooting.md). 
+See our [troubleshooting guide](docs/others/troubleshooting.md).

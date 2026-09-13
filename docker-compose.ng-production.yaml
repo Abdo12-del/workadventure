@@ -1,0 +1,40 @@
+# NG Academy — أكاديمية الجيل الجديد
+# Production overlay for the NG services.
+#
+#   docker compose -f docker-compose.yaml -f docker-compose.ng-production.yaml up -d ng-postgres ng-academy-api
+#
+# Prerequisites (host, once / after every portal change):
+#   npm ci --ignore-scripts && npm run build --workspace ng-academy-portal
+#
+# The API then serves the built portal itself under /portal/ (PORTAL_DIST) —
+# single origin, no extra CORS surface — and the vite dev portal service is
+# moved behind the "dev-portal" compose profile so it stays out of production.
+#
+# Required environment (fail fast when missing): SECRET_KEY, ADMIN_API_TOKEN,
+# NG_POSTGRES_PASSWORD, NG_APP_URL, NG_PORTAL_URL, NG_MAPS_BASE_URL.
+services:
+  ng-postgres:
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ng
+      POSTGRES_PASSWORD: "${NG_POSTGRES_PASSWORD:?set NG_POSTGRES_PASSWORD in .env}"
+      POSTGRES_DB: ng
+
+  ng-academy-api:
+    command: npm run start
+    restart: unless-stopped
+    environment:
+      PORT: "3100"
+      NODE_ENV: production
+      DATABASE_URL: "postgres://ng:${NG_POSTGRES_PASSWORD:?set NG_POSTGRES_PASSWORD in .env}@ng-postgres:5432/ng"
+      JWT_SECRET: "${SECRET_KEY:?set SECRET_KEY in .env}"
+      ADMIN_API_TOKEN: "${ADMIN_API_TOKEN:?set ADMIN_API_TOKEN in .env}"
+      NG_MAPS_BASE_URL: "${NG_MAPS_BASE_URL:?set NG_MAPS_BASE_URL in .env}"
+      NG_APP_URL: "${NG_APP_URL:?set NG_APP_URL in .env}"
+      NG_PORTAL_URL: "${NG_PORTAL_URL:?set NG_PORTAL_URL in .env}"
+      PORTAL_DIST: "/usr/src/app/ng-academy-portal/dist"
+      STARTUP_COMMAND_1: "cd /usr/src/app && npm ci --workspace ng-academy-api --include-workspace-root --ignore-scripts --omit=dev"
+
+  # Dev-only vite server: excluded from production runs (profile "dev-portal").
+  ng-academy-portal:
+    profiles: ["dev-portal"]

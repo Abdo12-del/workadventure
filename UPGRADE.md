@@ -2,6 +2,19 @@
 
 This document provides instructions for upgrading WorkAdventure between versions.
 
+> ## ⚠️ NG Academy fork note (read first)
+>
+> This repository is the **NG Academy** transformation of WorkAdventure (see
+> `NG-ACADEMY-progress.md` for the full change log). Before pulling upstream
+> WorkAdventure releases, review the NG touch points, because upstream changes
+> to these files must be merged with the NG customizations, not overwrite them:
+>
+> - Branding/i18n: `play/src/common/Brand.ts`, `play/src/i18n/*`, `play/index.html`, PWA assets.
+> - Child safety: `play/src/front/ChildSafety/*`, `CHILD_SAFE_MODE` wiring in pusher enums/validator, `.env.template` NG defaults.
+> - NG modules (additive, low conflict risk): `play/src/front/NgAcademy/*`, `maps/ng-academy/*`, `ng-academy-api/*`, `ng-academy-portal/*`.
+> - Engine touch points (merge carefully): `GameMapPropertiesListener.ts` (NG watcher wiring), `MediaStore.ts` / `createBackgroundTransformer.ts` (lazy MediaPipe, phase 9), pusher `EnvironmentVariable*` (NG_API_URL + perf defaults).
+> - Performance budgets are enforced by `play/tests/front/NgAcademy/ngPerfBudget.test.ts` — an upstream change that re-adds static `@mediapipe` imports or heavy assets will fail the test suite on purpose.
+
 ## Upgrading from v1.33.x to v1.34.0
 
 ### Analytics environment variables renamed (BREAKING CHANGE)
@@ -10,12 +23,12 @@ Video quality samples used to travel through their own queue and their own
 `VIDEO_ANALYTICS_*` settings. They now ride the single generic analytics queue, so
 the settings lost their `VIDEO_` prefix:
 
-| Before | After |
-| --- | --- |
+| Before                              | After                         |
+| ----------------------------------- | ----------------------------- |
 | `VIDEO_ANALYTICS_FLUSH_INTERVAL_MS` | `ANALYTICS_FLUSH_INTERVAL_MS` |
-| `VIDEO_ANALYTICS_TIMEOUT_MS` | `ANALYTICS_TIMEOUT_MS` |
-| `VIDEO_ANALYTICS_MAX_QUEUE_SIZE` | `ANALYTICS_MAX_QUEUE_SIZE` |
-| `VIDEO_ANALYTICS_MAX_BATCH_SIZE` | `ANALYTICS_MAX_BATCH_SIZE` |
+| `VIDEO_ANALYTICS_TIMEOUT_MS`        | `ANALYTICS_TIMEOUT_MS`        |
+| `VIDEO_ANALYTICS_MAX_QUEUE_SIZE`    | `ANALYTICS_MAX_QUEUE_SIZE`    |
+| `VIDEO_ANALYTICS_MAX_BATCH_SIZE`    | `ANALYTICS_MAX_BATCH_SIZE`    |
 
 **The old names are not read any more, and nothing warns you about it.** If you set
 any of them, rename them in your `.env` or deployment configuration before
@@ -39,8 +52,9 @@ Version 1.27.3 introduces a significant architectural change in how TURN credent
 If you are using `contrib/docker/docker-compose.prod.yaml` or a similar Docker Compose setup:
 
 1. **Locate your `TURN_STATIC_AUTH_SECRET` configuration**
-   
+
    In your `.env` file or environment configuration, you should have:
+
    ```bash
    TURN_STATIC_AUTH_SECRET=your-secret-here
    ```
@@ -48,6 +62,7 @@ If you are using `contrib/docker/docker-compose.prod.yaml` or a similar Docker C
 2. **Update your docker-compose configuration**
 
    **Before (v1.27.2 and earlier):**
+
    ```yaml
    services:
      play:
@@ -57,17 +72,18 @@ If you are using `contrib/docker/docker-compose.prod.yaml` or a similar Docker C
          - TURN_PASSWORD
          # TURN_STATIC_AUTH_SECRET was NOT here
          - STUN_SERVER
-     
+
      back:
        environment:
          - TURN_SERVER
          - TURN_USER
          - TURN_PASSWORD
-         - TURN_STATIC_AUTH_SECRET  # ← Was configured here
+         - TURN_STATIC_AUTH_SECRET # ← Was configured here
          - STUN_SERVER
    ```
 
    **After (v1.27.3 and later):**
+
    ```yaml
    services:
      play:
@@ -75,9 +91,9 @@ If you are using `contrib/docker/docker-compose.prod.yaml` or a similar Docker C
          - TURN_SERVER
          - TURN_USER
          - TURN_PASSWORD
-         - TURN_STATIC_AUTH_SECRET  # ← Now configured here
+         - TURN_STATIC_AUTH_SECRET # ← Now configured here
          - STUN_SERVER
-     
+
      back:
        environment:
          - TURN_SERVER
@@ -90,6 +106,7 @@ If you are using `contrib/docker/docker-compose.prod.yaml` or a similar Docker C
 3. **Keep your `.env` file unchanged**
 
    Your `.env` file does not need to be modified. The `TURN_STATIC_AUTH_SECRET` value remains the same:
+
    ```bash
    TURN_STATIC_AUTH_SECRET=your-secret-here
    ```
@@ -97,6 +114,7 @@ If you are using `contrib/docker/docker-compose.prod.yaml` or a similar Docker C
 4. **Restart your services**
 
    After updating your docker-compose configuration:
+
    ```bash
    docker-compose down
    docker-compose up -d
@@ -128,6 +146,7 @@ After upgrading, verify that TURN credentials are working correctly:
 5. Verify that peer-to-peer connections are established successfully
 
 If you see errors related to TURN credentials or ICE servers, double-check that:
+
 - The `TURN_STATIC_AUTH_SECRET` is present in the `play` service environment
 - The `TURN_SERVER` configuration is correct
 - The play service has been restarted after the configuration change
@@ -135,5 +154,5 @@ If you see errors related to TURN credentials or ICE servers, double-check that:
 #### Additional Information
 
 For more details about this change, see:
-- [Pull request description for the TURN credentials migration](https://github.com/workadventure/workadventure/pull/5361)
 
+- [Pull request description for the TURN credentials migration](https://github.com/workadventure/workadventure/pull/5361)
