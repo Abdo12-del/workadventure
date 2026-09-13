@@ -45,6 +45,9 @@ function uuid(scope, name) {
  *   0 floorA   1 floorB   2 floorYard  3 carpet   4 wall   5 wallTop
  *   6 stage    7 desk     8 chair      9 board   10 shelf 11 plant
  *  12 doormat 13 labtable 14 sofa     15 floorHall
+ *  Math-classroom row (16..23):
+ *  16 abacus   17 boardMath 18 numberLine 19 posterShapes
+ *  20 posterNumbers 21 rugMath 22 teacherDesk 23 clock
  * ------------------------------------------------------------------ */
 const PAL = {
   floorA: [234, 247, 255],
@@ -80,7 +83,54 @@ const PAL = {
   sofa: [255, 138, 122],
   sofaDark: [224, 100, 88],
   hall: [255, 246, 232],
+  clockFace: [255, 255, 255],
+  apple: [224, 60, 60],
+  ink: [30, 60, 90],
+  beadRed: [255, 138, 122],
+  beadGreen: [88, 179, 104],
+  beadYellow: [255, 214, 107],
+  beadBlue: [43, 143, 214],
 };
+
+/* 3x5 pixel font for digits and basic math signs (posters, boards, number line). */
+const GLYPHS = {
+  0: ["111", "101", "101", "101", "111"],
+  1: ["010", "110", "010", "010", "111"],
+  2: ["111", "001", "111", "100", "111"],
+  3: ["111", "001", "111", "001", "111"],
+  4: ["101", "101", "111", "001", "001"],
+  5: ["111", "100", "111", "001", "111"],
+  6: ["111", "100", "111", "101", "111"],
+  7: ["111", "001", "010", "010", "010"],
+  8: ["111", "101", "111", "101", "111"],
+  9: ["111", "101", "111", "001", "111"],
+  "+": ["000", "010", "111", "010", "000"],
+  "-": ["000", "000", "111", "000", "000"],
+  "=": ["000", "111", "000", "111", "000"],
+  "×": ["101", "101", "010", "101", "101"],
+};
+
+function drawText(px, x0, y0, text, color, scale = 1) {
+  let cx = x0;
+  for (const ch of String(text)) {
+    const glyph = GLYPHS[ch];
+    if (glyph) {
+      for (let r = 0; r < 5; r++)
+        for (let c = 0; c < 3; c++)
+          if (glyph[r][c] === "1")
+            for (let sy = 0; sy < scale; sy++)
+              for (let sx = 0; sx < scale; sx++)
+                px(cx + c * scale + sx, y0 + r * scale + sy, color);
+    }
+    cx += 4 * scale;
+  }
+}
+
+function disc(px, cx, cy, r, color) {
+  for (let y = cy - r; y <= cy + r; y++)
+    for (let x = cx - r; x <= cx + r; x++)
+      if ((x - cx) * (x - cx) + (y - cy) * (y - cy) <= r * r) px(x, y, color);
+}
 
 function makeTile(draw) {
   const buf = Buffer.alloc(TILE * TILE * 4);
@@ -225,11 +275,98 @@ const TILES = [
     px(8, 8, PAL.floorB);
     px(24, 24, PAL.floorB);
   },
+  // 16 abacus — a pupil desk with their own abacus on top (المعداد)
+  (px, rect) => {
+    rect(0, 0, 32, 32, PAL.floorA);
+    rect(2, 6, 28, 18, PAL.desk);
+    rect(2, 6, 28, 2, PAL.deskEdge);
+    rect(2, 22, 28, 2, PAL.deskEdge);
+    rect(7, 9, 18, 13, PAL.shelfLine); // frame
+    rect(8, 10, 16, 11, PAL.hall); // inner
+    for (const rodX of [11, 16, 21]) rect(rodX, 10, 1, 11, PAL.shelfLine); // rods
+    rect(10, 12, 3, 3, PAL.beadRed); // beads per rod
+    rect(15, 15, 3, 3, PAL.beadGreen);
+    rect(15, 18, 3, 3, PAL.beadYellow);
+    rect(20, 11, 3, 3, PAL.beadBlue);
+    rect(20, 14, 3, 3, PAL.beadRed);
+  },
+  // 17 boardMath — whiteboard with a real sum on it
+  (px, rect) => {
+    rect(0, 0, 32, 32, PAL.wall);
+    rect(2, 5, 28, 19, PAL.board);
+    rect(2, 5, 28, 2, PAL.boardFrame);
+    rect(2, 22, 28, 2, PAL.boardFrame);
+    drawText(px, 5, 10, "2+3=5", PAL.ink);
+    rect(10, 24, 12, 2, PAL.shelfLine); // marker tray
+    px(12, 24, PAL.beadRed);
+    px(16, 24, PAL.beadBlue);
+  },
+  // 18 numberLine — floor strip 0..8 (evens), ticks on the line
+  (px, rect) => {
+    rect(0, 0, 32, 32, PAL.floorB);
+    rect(0, 22, 32, 2, PAL.boardFrame);
+    for (let x = 1; x < 32; x += 6) rect(x, 20, 1, 6, PAL.boardFrame);
+    drawText(px, 1, 11, "02468", PAL.ink);
+  },
+  // 19 posterShapes — wall poster: circle, triangle, square
+  (px, rect) => {
+    rect(0, 0, 32, 32, PAL.wall);
+    rect(4, 4, 24, 24, PAL.board);
+    rect(4, 4, 24, 2, PAL.boardFrame);
+    disc(px, 10, 12, 3, PAL.beadRed); // circle
+    for (let r = 0; r < 6; r++)
+      rect(18 - r, 8 + r, 1 + r * 2, 1, PAL.beadGreen); // triangle
+    rect(18, 18, 7, 7, PAL.beadBlue); // square
+    rect(7, 18, 7, 7, PAL.beadYellow);
+  },
+  // 20 posterNumbers — wall poster: big 1 2 3
+  (px, rect) => {
+    rect(0, 0, 32, 32, PAL.wall);
+    rect(4, 4, 24, 24, PAL.board);
+    rect(4, 4, 24, 2, PAL.boardFrame);
+    drawText(px, 5, 11, "1", PAL.beadRed, 2);
+    drawText(px, 13, 11, "2", PAL.beadBlue, 2);
+    drawText(px, 21, 11, "3", PAL.beadGreen, 2);
+  },
+  // 21 rugMath — the abacus corner rug
+  (px, rect) => {
+    rect(0, 0, 32, 32, PAL.carpet);
+    rect(0, 0, 32, 2, PAL.carpetEdge);
+    rect(0, 30, 32, 2, PAL.carpetEdge);
+    rect(0, 0, 2, 32, PAL.carpetEdge);
+    rect(30, 0, 2, 32, PAL.carpetEdge);
+    drawText(px, 6, 6, "+", PAL.pot);
+    drawText(px, 22, 6, "=", PAL.pot);
+    drawText(px, 6, 21, "×", PAL.pot);
+    drawText(px, 22, 21, "-", PAL.pot);
+  },
+  // 22 teacherDesk — desk with an apple and a book pile
+  (px, rect) => {
+    rect(0, 0, 32, 32, PAL.floorA);
+    rect(1, 8, 30, 16, PAL.desk);
+    rect(1, 8, 30, 2, PAL.deskEdge);
+    rect(1, 22, 30, 2, PAL.deskEdge);
+    disc(px, 7, 14, 3, PAL.apple); // apple
+    px(7, 10, PAL.plantDark);
+    px(8, 10, PAL.plant);
+    rect(18, 12, 9, 3, PAL.bookB); // books
+    rect(19, 15, 8, 3, PAL.bookC);
+    rect(18, 18, 9, 3, PAL.bookA);
+  },
+  // 23 clock — wall clock
+  (px, rect) => {
+    rect(0, 0, 32, 32, PAL.wall);
+    disc(px, 16, 16, 11, PAL.wallDark);
+    disc(px, 16, 16, 9, PAL.clockFace ?? PAL.board);
+    rect(15, 9, 2, 8, PAL.ink); // hand to 12
+    rect(16, 15, 6, 2, PAL.ink); // hand to 3
+    rect(15, 15, 2, 2, PAL.beadRed);
+  },
 ];
 
 function buildTilesetPng() {
   const COLS = 8;
-  const ROWS = 2;
+  const ROWS = 3;
   const w = COLS * TILE;
   const h = ROWS * TILE;
   const raw = Buffer.alloc(w * h * 4);
@@ -248,7 +385,7 @@ function buildTilesetPng() {
  * Tiled helpers
  * ------------------------------------------------------------------ */
 const NG = (id) => id + 1; // ng-tileset firstgid = 1
-const SZ = (id) => id + 17; // Special_Zones firstgid = 17 (after 16 ng tiles)
+const SZ = (id) => id + 25; // Special_Zones firstgid = 25 (after 24 ng tiles)
 const SZ_BLOCK = SZ(0);
 const SZ_START = SZ(1);
 const SZ_SILENT = SZ(2);
@@ -259,19 +396,19 @@ const TILESETS = [
     columns: 8,
     firstgid: 1,
     image: "assets/ng-tileset.png",
-    imageheight: 64,
+    imageheight: 96,
     imagewidth: 256,
     margin: 0,
     name: "ng-tileset",
     spacing: 0,
-    tilecount: 16,
+    tilecount: 24,
     tileheight: 32,
     tilewidth: 32,
     type: "tileset",
   },
   {
     columns: 6,
-    firstgid: 17,
+    firstgid: 25,
     image: "../assets/Special_Zones.png",
     imageheight: 64,
     imagewidth: 192,
@@ -606,25 +743,64 @@ function buildClassroom([file, title, roomName, lessonLabel]) {
   const layers = wallsAndCollisions(map);
 
   const furniture = map.grid();
-  // whiteboard + teacher desk on top
-  for (let x = 6; x <= 11; x++) map.set(furniture, x, 1, NG(9));
-  map.set(furniture, 8, 3, NG(7));
-  map.set(furniture, 2, 2, NG(11));
-  map.set(furniture, 15, 2, NG(11));
   // pupils desks: 3 columns x 2 rows (desk + chair)
-  for (const [dx, dy] of [
+  const DESKS = [
     [4, 6],
     [8, 6],
     [12, 6],
     [4, 9],
     [8, 9],
     [12, 9],
-  ]) {
-    map.set(furniture, dx, dy, NG(7));
-    map.set(furniture, dx + 1, dy, NG(7));
-    map.set(furniture, dx, dy + 1, NG(8));
-    map.set(furniture, dx + 1, dy + 1, NG(8));
-    map.rect(layers.collisions, dx, dy, 2, 1, SZ_BLOCK);
+  ];
+  const isMath = file === "classroom-math";
+
+  if (isMath) {
+    /* ---- فصل الحساب: صُمّم بعناية (غرف NG، الدفعة الأولى) ----
+     * جدار السبورة: سبورة رياضيات عريضة (مسألة حقيقية 2+3=5)، ساعة،
+     * وملصقان (أرقام كبيرة وأشكال هندسية). مكتب المعلمة بتفاحة وكتب.
+     * كل طالب له معداده الخاص على مقعده (بلاطة 16)، وشريط خط الأعداد
+     * 0-8 على الأرض، وركن المعداد بسجادة ومحطتين ورف كتب. */
+    for (let x = 3; x <= 11; x++) map.set(furniture, x, 1, NG(17)); // boardMath
+    map.set(furniture, 1, 1, NG(20)); // posterNumbers
+    map.set(furniture, 13, 1, NG(23)); // clock
+    map.set(furniture, 15, 1, NG(19)); // posterShapes
+    map.set(furniture, 8, 3, NG(22)); // teacherDesk
+    map.set(furniture, 2, 2, NG(11)); // plant left
+    map.set(furniture, 15, 3, NG(11)); // plant right
+    map.rect(layers.collisions, 8, 3, 1, 1, SZ_BLOCK);
+
+    for (const [dx, dy] of DESKS) {
+      map.set(furniture, dx, dy, NG(16)); // معداد الطالب على مقعده
+      map.set(furniture, dx + 1, dy, NG(7));
+      map.set(furniture, dx, dy + 1, NG(8));
+      map.set(furniture, dx + 1, dy + 1, NG(8));
+      map.rect(layers.collisions, dx, dy, 2, 1, SZ_BLOCK);
+    }
+
+    for (let x = 2; x <= 15; x++) map.set(furniture, x, 11, NG(18)); // numberLine
+
+    // ركن المعداد (14..16, 6..9): سجادة + محطتا معداد + رف
+    for (let y = 6; y <= 9; y++)
+      for (let x = 14; x <= 16; x++) map.set(floor, x, y, NG(21));
+    map.set(furniture, 14, 7, NG(16));
+    map.set(furniture, 16, 8, NG(16));
+    map.set(furniture, 16, 5, NG(10)); // shelf over the corner
+    map.rect(layers.collisions, 14, 7, 1, 1, SZ_BLOCK);
+    map.rect(layers.collisions, 16, 8, 1, 1, SZ_BLOCK);
+    map.rect(layers.collisions, 16, 5, 1, 1, SZ_BLOCK);
+  } else {
+    // whiteboard + teacher desk on top
+    for (let x = 6; x <= 11; x++) map.set(furniture, x, 1, NG(9));
+    map.set(furniture, 8, 3, NG(7));
+    map.set(furniture, 2, 2, NG(11));
+    map.set(furniture, 15, 2, NG(11));
+    for (const [dx, dy] of DESKS) {
+      map.set(furniture, dx, dy, NG(7));
+      map.set(furniture, dx + 1, dy, NG(7));
+      map.set(furniture, dx, dy + 1, NG(8));
+      map.set(furniture, dx + 1, dy + 1, NG(8));
+      map.rect(layers.collisions, dx, dy, 2, 1, SZ_BLOCK);
+    }
   }
 
   map.addLayer("floor", floor);
@@ -647,7 +823,8 @@ function buildClassroom([file, title, roomName, lessonLabel]) {
   map.addLayer("collisions", layers.collisions);
 
   const areas = [
-    area(file, "lesson", lessonLabel, 3, 5, 12, 6, [
+    // lesson (livekit) keeps clear of the math abacus corner (no mic while playing)
+    area(file, "lesson", lessonLabel, 3, 5, isMath ? 11 : 12, 6, [
       livekitProp(file, "lesson", roomName),
     ]),
     area(
@@ -660,6 +837,19 @@ function buildClassroom([file, title, roomName, lessonLabel]) {
       3,
     ),
   ];
+  if (isMath) {
+    areas.push(
+      area(
+        file,
+        "abacus",
+        "ركن المعداد 🧮 — حرّك الخرزات وابنِ الأرقام!",
+        14,
+        6,
+        3,
+        4,
+      ),
+    );
+  }
   writeJson(`${file}.tmj`, map.toJSON());
   writeJson(
     `${file}.wam`,

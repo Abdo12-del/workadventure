@@ -256,3 +256,45 @@ describe("NG Academy school world — the line gathering point", () => {
         expect(names).toContain("gathering");
     });
 });
+
+describe("NG Academy school world — the math classroom (rooms, first batch)", () => {
+    interface NgArea {
+        name: string;
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+    }
+
+    it("has an abacus corner that stays out of the lesson microphones", () => {
+        const areas = ((wams.get("classroom-math.wam")?.areas as NgArea[] | undefined) ?? []).map((a) => a);
+        const names = areas.map((a) => a.name);
+        expect(names).toContain("abacus");
+        expect(names).toContain("teacher-math");
+        const abacus = areas.find((a) => a.name === "abacus");
+        const lesson = areas.find((a) => a.name === "lesson");
+        expect(abacus && lesson).toBeTruthy();
+        if (abacus && lesson) {
+            // no mic while playing: the corner begins where the livekit lesson area ends
+            expect(abacus.x).toBeGreaterThanOrEqual(lesson.x + lesson.width);
+            expect(abacus.width).toBe(96); // 3×4 tiles of rug
+            expect(abacus.height).toBe(128);
+        }
+    });
+
+    it("gives every pupil desk its own abacus and decorates the room", () => {
+        const tmj = tmjs.get("classroom-math.wam");
+        expect(tmj).toBeTruthy();
+        const furniture = tmj?.layers.find((l) => l.name === "furniture")?.data ?? [];
+        const floor = tmj?.layers.find((l) => l.name === "floor")?.data ?? [];
+        const count = (data: number[], gid: number) => data.filter((v) => v === gid).length;
+        expect(count(furniture, 17)).toBe(8); // abacus: 6 pupil desks + 2 corner stations
+        expect(count(furniture, 18)).toBe(9); // boardMath blackboard wall (x3..11)
+        expect(count(furniture, 19)).toBe(14); // numberLine strip 0-8 along the floor
+        expect(count(furniture, 23)).toBe(1); // teacherDesk with the apple
+        expect(count(furniture, 24)).toBe(1); // clock
+        expect(count(furniture, 20)).toBe(1); // posterShapes
+        expect(count(furniture, 21)).toBe(1); // posterNumbers
+        expect(count(floor, 22)).toBe(12); // rugMath 3×4 under the corner
+    });
+});
