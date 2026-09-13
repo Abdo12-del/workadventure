@@ -141,3 +141,18 @@
         </p>
     {/if}
 </div>
+
+<div class="ng-card" style="max-width: 520px; margin: 1rem auto 3rem;">
+    <details>
+        <summary style="cursor: pointer; font-weight: 700;">أين العالم الماشي (مدرسة الطفل)؟</summary>
+        <p class="ng-muted" style="margin-top: 0.5rem; line-height: 1.9">
+            هذه البوابة هي طرف الكبار: لوحات الإدارة وولي الأمر والمعلم. العالم الذي يمشي فيه
+            الطفل تطبيق مستقل (محرك WorkAdventure) يعمل من حزمة الخوادم: نفّذ
+            <code dir="ltr">docker compose up -d</code>
+            ثم افتح
+            <a dir="ltr" href="http://play.workadventure.localhost">play.workadventure.localhost</a>
+            في المتصفح. الخطوات كاملة مع سطر hosts واستكشاف الأخطاء في
+            <code dir="ltr">docs/owner-quickstart-ar.md</code>.
+        </p>
+    </details>
+</div>
