@@ -22,6 +22,11 @@ function safeGetToken(): string | null {
   }
 }
 
+/** Current session token (memory first, storage mirror second) for the world gate. */
+export function ngCurrentToken(): string | null {
+  return memoryToken ?? safeGetToken();
+}
+
 export function ngStoreToken(token: string | null): void {
   memoryToken = token;
   try {
@@ -271,91 +276,9 @@ export class NgPortalApi {
     );
   }
 
-  /* ---- admin ---- */
-
-  adminOverview(): Promise<NgOverview> {
-    return this.request("/ng/admin/overview");
-  }
-
-  adminUsers(role?: string): Promise<{ users: NgAdminUser[] }> {
-    return this.request(
-      `/ng/admin/users${role ? `?role=${encodeURIComponent(role)}` : ""}`,
-    );
-  }
-
-  adminCreateUser(input: {
-    email: string;
-    role: string;
-    displayName: string;
-    parentUserId?: string;
-  }): Promise<NgAdminUser> {
-    return this.request("/ng/admin/users", {
-      method: "POST",
-      body: JSON.stringify(input),
-    });
-  }
-
-  adminCreateCourse(input: {
-    title: string;
-    subject: string;
-  }): Promise<unknown> {
-    return this.request("/ng/admin/courses", {
-      method: "POST",
-      body: JSON.stringify(input),
-    });
-  }
-
-  adminCreateClass(input: {
-    name: string;
-    subject: string;
-    teacherUserId?: string;
-    studentUserIds?: string[];
-    roomUrl?: string;
-    livekitRoom?: string;
-  }): Promise<NgClass> {
-    return this.request("/ng/admin/classes", {
-      method: "POST",
-      body: JSON.stringify(input),
-    });
-  }
-
-  adminAddStudents(
-    classId: string,
-    studentUserIds: string[],
-  ): Promise<{ students: { id: string; name: string }[] }> {
-    return this.request(
-      `/ng/admin/classes/${encodeURIComponent(classId)}/students`,
-      {
-        method: "POST",
-        body: JSON.stringify({ studentUserIds }),
-      },
-    );
-  }
-
-  adminCreateActivity(input: {
-    title: string;
-    kind: string;
-    points: number;
-  }): Promise<NgActivity> {
-    return this.request("/ng/admin/activities", {
-      method: "POST",
-      body: JSON.stringify(input),
-    });
-  }
-
-  adminRooms(): Promise<{ rooms: NgRoom[] }> {
-    return this.request("/ng/admin/rooms");
-  }
-
-  adminCreateRoom(input: {
-    name: string;
-    wamUrl: string;
-    purpose: string;
-  }): Promise<NgRoom> {
-    return this.request("/ng/admin/rooms", {
-      method: "POST",
-      body: JSON.stringify(input),
-    });
+  /* ---- world gate (the admin dashboards now live INSIDE the world) ---- */
+  worldConfig(): Promise<{ worldUrl: string }> {
+    return this.request("/ng/config");
   }
 }
 

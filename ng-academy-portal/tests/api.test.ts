@@ -70,10 +70,11 @@ describe("portal API client", () => {
     expect(url).toBe("/ng/auth/magic-link/verify");
     expect(JSON.parse(init.body as string)).toEqual({ token: "abc12345" });
 
-    const usersMock = stubFetch({ users: [] });
-    await api.adminUsers("teacher");
-    const [usersUrl] = usersMock.mock.calls[0] as unknown as [string];
-    expect(usersUrl).toBe("/ng/admin/users?role=teacher");
+    const configMock = stubFetch({ worldUrl: "http://localhost:3104" });
+    const config = await api.worldConfig();
+    const [configUrl] = configMock.mock.calls[0] as unknown as [string];
+    expect(configUrl).toBe("/ng/config");
+    expect(config.worldUrl).toBe("http://localhost:3104");
   });
 
   it("escapes child ids in per-student paths", async () => {

@@ -11,7 +11,7 @@
     import Login from "./pages/Login.svelte";
     import ParentDashboard from "./pages/Parent.svelte";
     import TeacherDashboard from "./pages/Teacher.svelte";
-    import AdminDashboard from "./pages/Admin.svelte";
+    import AdminWorldGate from "./pages/AdminWorldGate.svelte";
 
     onMount(() => {
         ngRefreshMe().catch(() => {});
@@ -57,14 +57,14 @@
     {:else if screen === "teacher"}
         <TeacherDashboard />
     {:else if screen === "admin"}
-        <AdminDashboard />
+        <AdminWorldGate />
     {:else}
         {#if $ngMe?.role === "parent"}
             <ParentDashboard />
         {:else if $ngMe?.role === "teacher"}
             <TeacherDashboard />
         {:else}
-            <AdminDashboard />
+            <AdminWorldGate />
         {/if}
     {/if}
 </main>

@@ -114,6 +114,11 @@ export function ngCelebrate(text: string): void {
     showBubble(ginoBubble(text, 8000));
 }
 
+/** The admin office area is for admin/owner sessions; Gino tells others kindly. */
+export function ngAdminOfficeDenied(): void {
+    showBubble(ginoBubble("هذا مكتب الإدارة 🔒 — يفتحه المالك والإدارة فقط من داخل العالم.", 7000));
+}
+
 export interface NgEnteredArea {
     name: string;
     tooltip?: string;

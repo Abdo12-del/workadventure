@@ -259,6 +259,7 @@ describe("NG Academy school world — the line gathering point", () => {
         const wam = wams.get("entrance.wam");
         const names = ((wam?.areas as { name: string }[]) ?? []).map((a) => a.name);
         expect(names).toContain("gathering");
+        expect(names).toContain("ng-admin-office");
     });
 });
 

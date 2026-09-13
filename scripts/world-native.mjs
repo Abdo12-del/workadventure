@@ -19,7 +19,7 @@
  * LiveKit and no docker required: voice bubbles simply stay off until a
  * LiveKit host is configured.
  */
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
@@ -42,6 +42,7 @@ const ports = {
     ms: Number(process.env.NG_MS_HTTP_PORT || 3000),
     back: Number(process.env.NG_BACK_HTTP_PORT || 8080),
     play: Number(process.env.NG_PLAY_PORT || 3104),
+    api: Number(process.env.NG_API_PORT || 3100),
 };
 const grpc = { back: 50051, ms: 50053 };
 const pub = {
@@ -147,6 +148,7 @@ run("back", "back", ["npx", "tsx", "src/server.ts"], {
 
 run("play", "play", ["npx", "vite", "--port", String(ports.play)], {
     NODE_ENV: "development",
+    NG_API_URL: process.env.NG_API_URL || `http://localhost:${ports.api}`,
     PUSHER_URL: pub.back,
     FRONT_URL: pub.play,
     UPLOADER_URL: pub.play,
@@ -166,10 +168,31 @@ run("play", "play", ["npx", "vite", "--port", String(ports.play)], {
     WOKA_TURN_SOUND: "false",
 });
 
+/* The adult portal (login + world gate) rides along when its dist exists. */
+const portalDist = path.join(root, "ng-academy-portal", "dist");
+if (!fs.existsSync(portalDist)) {
+    console.log("[portal-api] dist missing — building the portal once…");
+    try {
+        spawnSync("npm", ["run", "build", "--workspace", "ng-academy-portal"], { cwd: root, stdio: "inherit" });
+    } catch {
+        console.log("[portal-api] build failed — run: npm ci --workspace ng-academy-portal && npm run build --workspace ng-academy-portal");
+    }
+}
+if (fs.existsSync(portalDist)) {
+    run("portal-api", "ng-academy-api", ["npx", "tsx", "watch", "src/devServer.ts"], {
+        NODE_ENV: "development",
+        PORT: String(ports.api),
+        PORTAL_DIST: portalDist,
+        NG_PORTAL_URL: process.env.NG_PORTAL_PUBLIC_URL || `http://localhost:${ports.api}/portal/`,
+        NG_APP_URL: pub.play,
+    });
+}
+
 console.log("");
 console.log("  NG Academy world (no docker) is starting…");
 console.log(`  walk in : ${pub.play}`);
 console.log(`  maps    : ${pub.maps}/ng-academy/entrance.wam`);
+console.log(`  portal  : ${process.env.NG_PORTAL_PUBLIC_URL || `http://localhost:${ports.api}/portal/`} (adults + world gate)`);
 console.log("");
 
 for (const sig of ["SIGINT", "SIGTERM"]) {

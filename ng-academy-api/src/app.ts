@@ -36,7 +36,7 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
       reply
         .header("Access-Control-Allow-Origin", "*")
         .header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
-        .header("Access-Control-Allow-Headers", "Authorization,Content-Type")
+        .header("Access-Control-Allow-Headers", "Authorization,Content-Type,X-NG-Token")
         .header("Access-Control-Max-Age", "86400")
         .code(204);
       return reply.send();

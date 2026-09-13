@@ -8,6 +8,13 @@ afterEach(async () => {
 });
 
 describe("magic-link authentication (parent email)", () => {
+  it("publishes the world url for the portal world-gate", async () => {
+    seed = await seedSchool();
+    const res = await seed.app.inject({ method: "GET", url: "/ng/config" });
+    expect(res.statusCode).toBe(200);
+    expect(res.json().worldUrl).toContain("play");
+  });
+
   it("sends a single-use link and issues a role JWT", async () => {
     seed = await seedSchool();
     const requested = await seed.app.inject({

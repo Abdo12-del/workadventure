@@ -63,6 +63,10 @@ export function registerAuthRoutes(app: FastifyInstance, deps: AppDeps): void {
     });
   });
 
+  app.get("/ng/config", async () => ({
+    worldUrl: config.NG_APP_URL,
+  }));
+
   app.get("/ng/me", async (req, reply) => {
     const raw = ngBearerToken(req);
     if (!raw) {

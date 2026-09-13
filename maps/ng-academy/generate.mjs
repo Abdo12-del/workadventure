@@ -879,6 +879,9 @@ function buildEntrance() {
     ),
     area("entrance", "gate", "بوابة المدرسة", 10, 22, 5, 3),
     area("entrance", "gathering", "نقطة تجمع صف جينو 🦉", 10, 21, 5, 4),
+    // The admin office: standing here as admin/owner opens the in-world
+    // management panels (owner decision: the map is the interface).
+    area("entrance", "ng-admin-office", "مكتب الإدارة — قف هنا لفتح لوحات الإدارة 🗄️", 18, 17, 5, 4),
   ];
   writeJson("entrance.tmj", map.toJSON());
   writeJson(
