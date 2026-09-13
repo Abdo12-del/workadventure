@@ -364,7 +364,8 @@ export const EnvironmentVariables = z.object({
         .transform((val) => toNumber(val, 4))
         .describe("Maximum number of users in a bubble/group. Defaults to 4"),
     MAX_DISPLAYED_VIDEOS: PositiveIntAsString.optional()
-        .transform((val) => toNumber(val, 16))
+        // NG Academy (requirement 17): school tablets must never render 16 streams.
+        .transform((val) => toNumber(val, 4))
         .describe(
             "An approximation of the maximum number of videos displayed at once. If there are more videos to display, the user will have to scroll. The number of videos can sometimes be slightly greater (MAX_DISPLAYED_VIDEOS + number of videos to display % number of videos per row). This is useful to avoid overloading the Livekit server when a lot of people are in the same room.",
         ),
@@ -490,7 +491,9 @@ export const EnvironmentVariables = z.object({
         .regex(/^\d*\.?\d+$/, { message: "Must be a positive number" })
         .or(z.literal(""))
         .optional()
-        .transform((val) => toNumber(val, 2 / 3))
+        // NG Academy (requirement 17): half-density video is indistinguishable on a
+        // small tablet screen and much cheaper on weak GPUs.
+        .transform((val) => toNumber(val, 0.5))
         .describe(
             "Pixel density multiplier for LiveKit adaptive streams. 1 means LiveKit will use a better simulcast layer as soon as the video box is bigger than the stream. Lower values delay upgrades to larger simulcast layers. Defaults to 0.666666 (i.e. allow a 50% upscale of the video before switching to the higher simulcast layer)",
         ),

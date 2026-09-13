@@ -1081,7 +1081,7 @@ async function runLocalVideoTrackUpdate(
 
     if (!backgroundTransformer) {
         const currentConfig = get(backgroundConfigStore);
-        const transformer = createBackgroundTransformer(currentConfig, (error) => {
+        const transformer = await createBackgroundTransformer(currentConfig, (error) => {
             if (backgroundTransformer !== transformer) {
                 return;
             }
@@ -1094,6 +1094,7 @@ async function runLocalVideoTrackUpdate(
             lastBackgroundConfig = undefined;
             backgroundConfigStore.reset();
         });
+        // eslint-disable-next-line require-atomic-updates -- runLocalVideoTrackUpdate only ever runs through the serialized localStreamUpdateQueue, so no concurrent run can interleave with the await above; staleness is additionally guarded by setIfCurrent/abort.
         backgroundTransformer = transformer;
     }
 

@@ -13,6 +13,9 @@
 import { NG_API_URL } from "../Enum/EnvironmentVariable";
 import { ngCelebrate } from "./GinoStore";
 
+/** Requirement 17: weak devices — one gentle request per minute at most. */
+export const NG_ACHIEVEMENTS_POLL_MS = 60_000;
+
 const NG_TOKEN_KEY = "ng-token";
 const NG_SEEN_KEY = "ng-achievements-seen";
 
@@ -74,7 +77,7 @@ async function pollOnce(apiUrl: string): Promise<void> {
 export function ngAchievementsStart(options?: { apiUrl?: string; intervalMs?: number }): void {
     const apiUrl = options?.apiUrl ?? NG_API_URL;
     if (!apiUrl || timer) return;
-    const intervalMs = options?.intervalMs ?? 60_000; // requirement 17: weak devices, low polling
+    const intervalMs = options?.intervalMs ?? NG_ACHIEVEMENTS_POLL_MS;
     timer = setInterval(() => {
         pollOnce(apiUrl).catch((e) => console.warn(e));
     }, intervalMs);

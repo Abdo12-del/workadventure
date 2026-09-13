@@ -455,7 +455,9 @@ function addExit(map, layers, x, y, exitUrl, spawnName, spawnX, spawnY) {
 }
 
 function writeJson(file, obj) {
-  writeFileSync(join(HERE, file), JSON.stringify(obj, null, 2) + "\n", "utf-8");
+  // Phase 9 (weak devices): maps are runtime assets fetched by the browser —
+  // write them minified (the pretty-printed entrance map was 294KB vs ~57KB).
+  writeFileSync(join(HERE, file), JSON.stringify(obj) + "\n", "utf-8");
 }
 
 /* ------------------------------------------------------------------ *
