@@ -4,15 +4,19 @@
  * into the portal; the router redirects them away (requirement 12).
  */
 import { get, writable } from "svelte/store";
-import { NG_PORTAL_TOKEN_KEY, NgApiError, portalApi, type NgMe } from "./api";
+import {
+  NgApiError,
+  ngReadToken,
+  ngStoreToken,
+  portalApi,
+  type NgMe,
+} from "./api";
 
-export const ngToken = writable<string | null>(
-  window.localStorage.getItem(NG_PORTAL_TOKEN_KEY),
-);
+export const ngToken = writable<string | null>(ngReadToken());
 export const ngMe = writable<NgMe | null>(null);
 
 export async function ngLoginWithToken(token: string): Promise<NgMe> {
-  window.localStorage.setItem(NG_PORTAL_TOKEN_KEY, token);
+  ngStoreToken(token);
   ngToken.set(token);
   const me = await portalApi.me();
   ngMe.set(me);
@@ -33,7 +37,7 @@ export async function ngRefreshMe(): Promise<void> {
 }
 
 export function ngLogout(): void {
-  window.localStorage.removeItem(NG_PORTAL_TOKEN_KEY);
+  ngStoreToken(null);
   ngToken.set(null);
   ngMe.set(null);
 }

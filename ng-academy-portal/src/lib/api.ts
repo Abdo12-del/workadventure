@@ -8,6 +8,34 @@
 
 export const NG_PORTAL_TOKEN_KEY = "ng-portal-token";
 
+/* Embedded-frame resilience: some browsers give cross-origin iframes (like the
+ * Arena live-preview pane) blocked or ephemeral localStorage. The session
+ * token therefore lives in memory for the tab's lifetime and is mirrored to
+ * localStorage best-effort so a reload keeps the session when storage works. */
+let memoryToken: string | null = null;
+
+function safeGetToken(): string | null {
+  try {
+    return window.localStorage.getItem(NG_PORTAL_TOKEN_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function ngStoreToken(token: string | null): void {
+  memoryToken = token;
+  try {
+    if (token) window.localStorage.setItem(NG_PORTAL_TOKEN_KEY, token);
+    else window.localStorage.removeItem(NG_PORTAL_TOKEN_KEY);
+  } catch {
+    // storage unavailable (embedded frame): the in-memory copy carries the session
+  }
+}
+
+export function ngReadToken(): string | null {
+  return memoryToken ?? safeGetToken();
+}
+
 export interface NgMe {
   id: string;
   email: string;
@@ -328,6 +356,4 @@ export class NgPortalApi {
 }
 
 /** The single portal-wide client: same-origin, token from localStorage. */
-export const portalApi = new NgPortalApi("", () =>
-  window.localStorage.getItem(NG_PORTAL_TOKEN_KEY),
-);
+export const portalApi = new NgPortalApi("", () => ngReadToken());
