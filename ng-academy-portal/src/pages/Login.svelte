@@ -15,6 +15,7 @@
     let busy = $state(false);
     let error = $state("");
     let info = $state("");
+    let demo = $state(false);
 
     async function verify(token: string): Promise<void> {
         busy = true;
@@ -48,7 +49,34 @@
         }
     }
 
+    async function demoLogin(role: "parent" | "teacher" | "admin" | "owner"): Promise<void> {
+        busy = true;
+        error = "";
+        try {
+            const response = await fetch("/ng/dev/magic-link", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ role }),
+            });
+            if (!response.ok) throw new Error("demo unavailable");
+            const { token } = (await response.json()) as { token: string };
+            await verify(token);
+        } catch {
+            error = "وضع العرض غير متاح هنا.";
+        } finally {
+            busy = false;
+        }
+    }
+
     onMount(() => {
+        // Demo back door (devServer only): its mere presence unlocks the
+        // one-click buttons below; production never registers the route.
+        fetch("/ng/dev/magic-link")
+            .then((r) => {
+                demo = r.ok;
+            })
+            .catch(() => {});
+
         // The magic-link email lands here with #/login?token=… (hash query —
         // the token never touches server logs). Consume it immediately.
         const hashQuery = window.location.hash.split("?")[1] ?? "";
@@ -80,6 +108,25 @@
 
     {#if info}<p class="ng-msg ok">{info}</p>{/if}
     {#if error}<p class="ng-msg err">{error}</p>{/if}
+
+    {#if demo}
+        <hr style="border: none; border-top: 1px solid var(--ng-line);" />
+        <p class="ng-muted">وضع العرض (بيئة البناء): دخول فوري بلا بريد ولا رموز.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <button type="button" class="ng-btn" onclick={() => demoLogin("owner")} disabled={busy}>
+                دخول فوري — المالك
+            </button>
+            <button type="button" class="ng-btn" onclick={() => demoLogin("parent")} disabled={busy}>
+                ولي أمر
+            </button>
+            <button type="button" class="ng-btn" onclick={() => demoLogin("teacher")} disabled={busy}>
+                أستاذة
+            </button>
+            <button type="button" class="ng-btn" onclick={() => demoLogin("admin")} disabled={busy}>
+                إدارة
+            </button>
+        </div>
+    {/if}
 
     {#if sent}
         <hr style="border: none; border-top: 1px solid var(--ng-line);" />

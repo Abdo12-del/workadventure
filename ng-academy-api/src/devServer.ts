@@ -8,7 +8,9 @@
  */
 import { buildApp } from "./app.js";
 import { loadConfig } from "./config.js";
-import { LogEmailTransport } from "./auth/magicLink.js";
+import { randomBytes } from "node:crypto";
+import { z } from "zod";
+import { hashToken, LogEmailTransport } from "./auth/magicLink.js";
 import { MemoryRepository } from "./db/memory.js";
 
 const config = loadConfig();
@@ -34,6 +36,13 @@ repo.addUser({
   email: "admin@ng.example",
   role: "admin",
   displayName: "مدير الأكاديمية",
+  createdAt: now,
+});
+repo.addUser({
+  id: "u-owner",
+  email: "owner@ng.example",
+  role: "owner",
+  displayName: "مالك الأكاديمية",
   createdAt: now,
 });
 const student = repo.addUser({
@@ -78,6 +87,37 @@ repo.addSchedule({
 });
 
 const app = await buildApp({ config, repo, email: new LogEmailTransport() });
+
+/* ------------------------------------------------------------------ *
+ * Demo-only back door: one-click entry while the school is still being
+ * built. devServer.ts is NEVER the production entry (server.ts is), so
+ * these routes cannot exist in a real deployment; the portal only shows
+ * its demo buttons when GET /ng/dev/magic-link answers, which happens
+ * exclusively here.
+ * ------------------------------------------------------------------ */
+const DEMO_EMAILS: Record<"parent" | "teacher" | "admin" | "owner", string> = {
+  parent: "parent@ng.example",
+  teacher: "hasiba@ng.example",
+  admin: "admin@ng.example",
+  owner: "owner@ng.example",
+};
+
+app.get("/ng/dev/magic-link", async () => ({ demo: true }));
+
+app.post("/ng/dev/magic-link", async (req, reply) => {
+  const body = z
+    .object({ role: z.enum(["parent", "teacher", "admin", "owner"]) })
+    .safeParse(req.body);
+  if (!body.success) return reply.code(400).send({ error: "bad role" });
+  const token = randomBytes(24).toString("base64url");
+  await repo.createMagicToken(
+    hashToken(token),
+    DEMO_EMAILS[body.data.role],
+    Date.now() + config.MAGIC_LINK_TTL_MS,
+  );
+  return reply.send({ token });
+});
+
 await app.listen({ port: config.PORT, host: "0.0.0.0" });
 console.info(
   `ng-academy-api (memory demo) on :${config.PORT} — magic links are printed here.\n` +
