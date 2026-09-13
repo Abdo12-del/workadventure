@@ -4,36 +4,10 @@
  * (daily / weekly / micro tasks) granted by teachers — never by competition
  * between children, and never exposed as a ranking.
  */
-import type { FastifyInstance, FastifyRequest } from "fastify";
+import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import type { AppDeps } from "../app.js";
-import type { NgRole } from "../config.js";
-import { verifyJwt, type NgJwtPayload } from "../auth/jwt.js";
-import type { UserRow } from "../db/types.js";
-
-async function authenticate(
-  req: FastifyRequest,
-  deps: AppDeps,
-): Promise<{ user: UserRow; jwt: NgJwtPayload } | null> {
-  const header = req.headers.authorization;
-  if (!header?.startsWith("Bearer ")) return null;
-  const payload = verifyJwt(
-    header.slice("Bearer ".length),
-    deps.config.JWT_SECRET,
-  );
-  if (!payload) return null;
-  const user = await deps.repo.getUserById(payload.sub);
-  if (!user) return null;
-  return { user, jwt: payload };
-}
-
-function requireRole(
-  auth: { user: UserRow } | null,
-  roles: NgRole[],
-): UserRow | null {
-  if (!auth) return null;
-  return roles.includes(auth.user.role) ? auth.user : null;
-}
+import { authenticate, requireRole } from "./access.js";
 
 export function registerActivitiesRoutes(
   app: FastifyInstance,

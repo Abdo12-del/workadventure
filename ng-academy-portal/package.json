@@ -1,0 +1,24 @@
+{
+  "name": "ng-academy-portal",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "NG Academy — بوابة ولي الأمر ولوحة الإدارة (خارج عالم الطفل)",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit && svelte-check --threshold error",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^7.1.2",
+    "@tsconfig/svelte": "^5.0.8",
+    "jsdom": "^29.1.1",
+    "svelte": "^5.55.9",
+    "svelte-check": "^4.4.8",
+    "typescript": "^5.9.3",
+    "vite": "^8.1.4",
+    "vitest": "^4.1.7"
+  }
+}

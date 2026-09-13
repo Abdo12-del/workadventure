@@ -54,7 +54,9 @@ export async function requestMagicLink(
   }
   const token = randomBytes(24).toString("base64url");
   await repo.createMagicToken(hashToken(token), address, Date.now() + ttlMs);
-  const link = `${appUrl}/#/ng-login?token=${token}`;
+  const base = appUrl.endsWith("/") ? appUrl : `${appUrl}/`;
+  // Hash query: the token never reaches any server log on the way in.
+  const link = `${base}#/login?token=${token}`;
   await email.send(
     address,
     "رابط دخول أكاديمية الجيل الجديد",

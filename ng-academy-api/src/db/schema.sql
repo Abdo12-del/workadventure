@@ -108,6 +108,16 @@ CREATE TABLE IF NOT EXISTS child_progress (
     UNIQUE (student_id, metric)
 );
 
+CREATE TABLE IF NOT EXISTS teacher_notes (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id      UUID NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    teacher_user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    note            TEXT NOT NULL,
+    visibility      TEXT NOT NULL DEFAULT 'parent' CHECK (visibility IN ('parent','admin')),
+    at              TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS teacher_notes_student_idx ON teacher_notes (student_id);
+
 CREATE TABLE IF NOT EXISTS virtual_rooms (
     id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name        TEXT NOT NULL,

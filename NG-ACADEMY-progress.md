@@ -363,8 +363,65 @@
 
 ---
 
-## التالي: المرحلة 8 — بوابتا ولي الأمر والإدارة
+## المرحلة 8 — بوابة ولي الأمر + لوحة الإدارة ✅
 
-- بوابة ولي الأمر (خارج العالم): الحضور، الفصول، التقدم، الشارات، ملاحظات المعلم.
-- لوحة الإدارة: الطلاب/المعلمون/الدورات/مناطق العالم/الإنجازات.
-- تصميم تقليدي (جداول/إحصاءات) مسموح هنا فقط — واجهة الطفل تبقى العالم نفسه.
+**الهدف (البندان 12 و13)**: تطبيقان/مساران منفصلان بتصميم «تقليدي» للكبار فقط،
+بعيدًا عن واجهة الطفل — العالم يبقى الصفحة الرئيسية للطفل (البند 19).
+
+### ‏`ng-academy-api` — طبقة البيانات
+
+- مساعدات وصول مشتركة `routes/access.ts` (authenticate/requireRole/canAccessStudent)
+  أعيد استخدامها في school/activities/portal (معلم الفصل يصل طلابه عبر القائمة أو الحضور).
+- ‏`Repository` + Memory + Pg: ‏`listUsers/createUser/linkChild/createCourse/createClass/
+addClassStudents/listClassStudents/addNote/listNotes/listVirtualRooms/createVirtualRoom/
+createActivity`، وجدول `teacher_notes` جديد في `schema.sql`.
+- مسارات `routes/portal.ts`:
+  - قائمة الفصل `GET /ng/classes/:id/students` — **كبار فقط** (الطفل لا يتصفح القوائم، بند 11).
+  - ملاحظات المعلم `GET|POST /ng/students/:id/notes` — الكتابة معلم+، والقراءة
+    ولي الأمر/المعلم/الإدارة؛ ملاحظات `visibility=admin` لا تصل لولي الأمر، والطفل محجوب.
+  - شارات الطفل `GET /ng/students/:id/achievements` (حراسة canAccessStudent).
+  - إدارة: ‏`/ng/admin/overview` (عدّادات)، ‏`/ng/admin/users` (سرد/إنشاء + ربط طفل
+    بولي أمر، 409 للبريد المكرر)، ‏`/ng/admin/courses`، ‏`/ng/admin/classes`
+    (إنشاء فصل + ربط معلم + طلاب — بوابة قبول المرحلة)، ‏`/ng/admin/classes/:id/students`،
+    ‏`/ng/admin/activities`، ‏`/ng/admin/rooms` (سرد/إنشاء مناطق العالم).
+- **تقديم البوابة من الـAPI**: ‏`PORTAL_DIST` → `@fastify/static` تحت `/portal/`
+  (نطاق واحد، بلا سطح CORS إضافي).
+- الرابط السحري صار يشير إلى البوابة: ‏`NG_PORTAL_URL` + الصيغة `#/login?token=…`
+  (الرمز في الـhash — لا يلمس سجلات الخوادم).
+- ‏`npm run dev:memory`: خادم تطوير بذاكرة مزروعة (عائلة/معلمة/مدير/فصل/أنشطة)
+  وروابط الدخول تُطبع في الطرفية — بلا Postgres ولا SMTP.
+
+### ‏`ng-academy-portal` — workspace جديد (Svelte 5 + Vite)
+
+- ≈**24KB مضغوط** (بند 17): راوتر hash صغير بلا اعتماديات، 4 شاشات فقط:
+  ‏`#/login` (رابط سحري + استهلاك تلقائي لـ`?token=`)، `#/parent` (لمحة/حضور/شارات/
+  ملاحظات/فصول — أطفاله فقط)، `#/teacher` (قوائم الفصل + حضور + شارة + نشاط + ملاحظة)،
+  ‏`#/admin` (تبويبات: نظرة عامة/مستخدمون/فصول ودورات/أنشطة/مناطق العالم).
+- تصميم تقليدي هادئ RTL (جداول/بطاقات، أزرق ناضج `#0369a1`) — **مختلف جذريًا** عن
+  عالم الطفل المرح (بند 14). بلا بيانات شخصية: أسماء أولى فقط (بند 11).
+- الجلسة JWT في `ng-portal-token` (منفصل عن `ng-token` الخاص بالطفل)؛
+  كل الحراسات تُفرض في الخادم والواجهة تعرض فقط.
+- ‏`vite.config.ts`: ‏`base=/portal/`، proxy ‏`/ng`→‏`NG_API_PROXY` (في compose:
+  ‏`ng-academy-api:3100`)، ‏`allowedHosts:true` لمعاينات التطوير.
+- docker-compose: خدمة `ng-academy-portal` (vite dev على
+  ‏`ng-portal.workadventure.localhost`) + ‏`PORTAL_DIST`/`NG_PORTAL_URL` لخدمة الـAPI.
+
+### بوابة قبول المرحلة 8
+
+- ‏`ng-academy-api` vitest — **27/27 ✅** (ملف `portal.test.ts` جديد: قائمة الفصل
+  للكبار فقط، شارات الطفل لولي أمره دون الغريب، الملاحظات تصل ولي الأمر وتخفي
+  الإدارية وتحجب الطفل، سيناريو الإدارة الكامل «دورة + معلم + طلاب» حتى ظهور
+  الطفل الجديد في `/ng/me` لولي أمره، 409/400/403، الأنشطة والمناطق، وتقديم
+  البوابة الثابتة تحت `/portal/`). typecheck ✅.
+- ‏`ng-academy-portal` vitest — **10/10 ✅** (عميل API: مسارات نسبية + Bearer +
+  NgApiError + تهريب المعرفات؛ الجلسة: حفظ/إسقاط صامت عند 401/بلا طلب بلا رمز/
+  توجيه الأدوار — الطالب بلا بوابة؛ الراوتر: التحليل والسقوط إلى `/login`).
+  ‏typecheck + svelte-check 0/0 ✅ | `vite build` ✅ (68KB خام/24KB gzip).
+- ‏`play` لم تُمسّ في هذه المرحلة.
+
+---
+
+## التالي: المرحلة 9 — الأداء على الأجهزة الضعيفة
+
+- ميزانية أصول، أطلس tileset واحد، lazy loading، تعطيل TF.js/MediaPipe عند عدم الحاجة،
+  ‏`MAX_DISPLAYED_VIDEOS`، وفحص زمن التحميل وFPS على هاتف متوسط.

@@ -16,8 +16,14 @@ const configSchema = z.object({
   NG_MAPS_BASE_URL: z
     .string()
     .default("http://maps.workadventure.localhost/ng-academy"),
-  /** Public URL of the play front, used in magic-link emails. */
+  /** Public URL of the play front (the child's world). */
   NG_APP_URL: z.string().default("http://play.workadventure.localhost"),
+  /** Public URL of the parent/admin portal — magic-link emails land here. */
+  NG_PORTAL_URL: z
+    .string()
+    .default("http://ng-portal.workadventure.localhost/portal/"),
+  /** When set, the built portal (ng-academy-portal/dist) is served at /portal/. */
+  PORTAL_DIST: z.string().default(""),
   /** Magic-link lifetime in milliseconds (15 minutes). */
   MAGIC_LINK_TTL_MS: z.coerce.number().default(15 * 60 * 1000),
   NODE_ENV: z

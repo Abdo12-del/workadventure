@@ -8,14 +8,18 @@ import { fileURLToPath } from "node:url";
 import pg from "pg";
 import type {
   AchievementRow,
+  ActivityKind,
   ActivityRow,
   AttendanceKind,
   AttendanceRow,
   ClassRow,
+  CourseRow,
+  NoteRow,
   ProgressRow,
   Repository,
   ScheduleRow,
   UserRow,
+  VirtualRoomRow,
 } from "./types.js";
 import type { NgRole } from "../config.js";
 
@@ -277,6 +281,18 @@ export class PgRepository implements Repository {
     }));
   }
 
+  async createActivity(input: {
+    title: string;
+    kind: ActivityKind;
+    points: number;
+  }): Promise<ActivityRow> {
+    const res = await this.pool.query(
+      `INSERT INTO activities (title, kind, points) VALUES ($1, $2, $3) RETURNING id`,
+      [input.title, input.kind, input.points],
+    );
+    return { id: res.rows[0].id, ...input };
+  }
+
   async completeActivity(input: {
     activityId: string;
     studentUserId: string;
@@ -304,6 +320,230 @@ export class PgRepository implements Repository {
       activity.points;
     await this.upsertProgress(input.studentUserId, "points", points, input.at);
     return { achievement, points };
+  }
+
+  async listUsers(role?: NgRole): Promise<UserRow[]> {
+    const res = role
+      ? await this.pool.query(
+          `SELECT id, email, role, display_name, created_at FROM users WHERE role = $1 ORDER BY created_at`,
+          [role],
+        )
+      : await this.pool.query(
+          `SELECT id, email, role, display_name, created_at FROM users ORDER BY created_at`,
+        );
+    return res.rows.map(toUser);
+  }
+
+  async createUser(input: {
+    email: string;
+    role: NgRole;
+    displayName: string;
+    createdAt: string;
+  }): Promise<UserRow> {
+    const res = await this.pool.query(
+      `INSERT INTO users (email, role, display_name, created_at) VALUES ($1, $2, $3, $4)
+       ON CONFLICT (email) DO NOTHING
+       RETURNING id, email, role, display_name, created_at`,
+      [input.email, input.role, input.displayName, input.createdAt],
+    );
+    const row = res.rows[0];
+    if (!row) throw new Error("duplicate email");
+    return toUser(row);
+  }
+
+  async linkChild(parentUserId: string, studentUserId: string): Promise<void> {
+    await this.pool.query(
+      `INSERT INTO parents (user_id) VALUES ($1) ON CONFLICT (user_id) DO NOTHING`,
+      [parentUserId],
+    );
+    await this.pool.query(
+      `INSERT INTO students (user_id) VALUES ($1) ON CONFLICT (user_id) DO NOTHING`,
+      [studentUserId],
+    );
+    await this.pool.query(
+      `INSERT INTO parent_students (parent_id, student_id)
+       SELECT p.id, s.id FROM parents p, students s WHERE p.user_id = $1 AND s.user_id = $2
+       ON CONFLICT DO NOTHING`,
+      [parentUserId, studentUserId],
+    );
+  }
+
+  async createCourse(input: {
+    title: string;
+    subject: string;
+  }): Promise<CourseRow> {
+    const res = await this.pool.query(
+      `INSERT INTO courses (title, subject) VALUES ($1, $2) RETURNING id, title, subject`,
+      [input.title, input.subject],
+    );
+    return res.rows[0] as CourseRow;
+  }
+
+  async createClass(input: {
+    name: string;
+    subject: string;
+    teacherUserId: string | undefined;
+    studentUserIds: string[];
+    roomUrl: string;
+    livekitRoom: string;
+  }): Promise<ClassRow> {
+    const client = await this.pool.connect();
+    try {
+      await client.query("BEGIN");
+      let courseId = (
+        await client.query(
+          `SELECT id FROM courses WHERE subject = $1 LIMIT 1`,
+          [input.subject],
+        )
+      ).rows[0]?.id as string | undefined;
+      if (!courseId) {
+        courseId = (
+          await client.query(
+            `INSERT INTO courses (title, subject) VALUES ($1, $2) RETURNING id`,
+            [input.subject, input.subject],
+          )
+        ).rows[0].id as string;
+      }
+      let teacherId: string | undefined;
+      if (input.teacherUserId) {
+        teacherId = (
+          await client.query(
+            `INSERT INTO teachers (user_id, subject) VALUES ($1, $2)
+             ON CONFLICT (user_id) DO UPDATE SET subject = EXCLUDED.subject RETURNING id`,
+            [input.teacherUserId, input.subject],
+          )
+        ).rows[0].id as string;
+      }
+      const classId = (
+        await client.query(
+          `INSERT INTO classes (name, course_id, teacher_id, room_url, livekit_room)
+           VALUES ($1, $2, $3, $4, $5) RETURNING id`,
+          [
+            input.name,
+            courseId,
+            teacherId ?? null,
+            input.roomUrl,
+            input.livekitRoom,
+          ],
+        )
+      ).rows[0].id as string;
+      for (const studentUserId of input.studentUserIds) {
+        await client.query(
+          `INSERT INTO students (user_id, class_id) VALUES ($1, $2)
+           ON CONFLICT (user_id) DO UPDATE SET class_id = EXCLUDED.class_id`,
+          [studentUserId, classId],
+        );
+      }
+      await client.query("COMMIT");
+      return {
+        id: classId,
+        name: input.name,
+        subject: input.subject,
+        teacherUserId: input.teacherUserId,
+        roomUrl: input.roomUrl,
+        livekitRoom: input.livekitRoom,
+      };
+    } catch (e) {
+      await client.query("ROLLBACK");
+      throw e;
+    } finally {
+      client.release();
+    }
+  }
+
+  async addClassStudents(
+    classId: string,
+    studentUserIds: string[],
+  ): Promise<void> {
+    for (const studentUserId of studentUserIds) {
+      await this.pool.query(
+        `INSERT INTO students (user_id, class_id) VALUES ($1, $2)
+         ON CONFLICT (user_id) DO UPDATE SET class_id = EXCLUDED.class_id`,
+        [studentUserId, classId],
+      );
+    }
+  }
+
+  async listClassStudents(classId: string): Promise<UserRow[]> {
+    const res = await this.pool.query(
+      `SELECT u.id, u.email, u.role, u.display_name, u.created_at
+         FROM students s JOIN users u ON u.id = s.user_id WHERE s.class_id = $1`,
+      [classId],
+    );
+    return res.rows.map(toUser);
+  }
+
+  async addNote(input: {
+    studentUserId: string;
+    teacherUserId: string | undefined;
+    note: string;
+    visibility: "parent" | "admin";
+    at: string;
+  }): Promise<NoteRow> {
+    const res = await this.pool.query(
+      `INSERT INTO teacher_notes (student_id, teacher_user_id, note, visibility, at)
+       SELECT s.id, $2, $3, $4, $5 FROM students s
+       ON CONFLICT DO NOTHING
+       RETURNING id, student_id, teacher_user_id, note, visibility, at`,
+      [
+        input.studentUserId,
+        input.teacherUserId ?? null,
+        input.note,
+        input.visibility,
+        input.at,
+      ],
+    );
+    const row = res.rows[0];
+    if (!row) throw new Error(`no student row for user ${input.studentUserId}`);
+    return {
+      id: row.id,
+      studentUserId: input.studentUserId,
+      teacherUserId: row.teacher_user_id ?? undefined,
+      note: row.note,
+      visibility: row.visibility,
+      at: row.at.toISOString(),
+    };
+  }
+
+  async listNotes(studentUserId: string): Promise<NoteRow[]> {
+    const res = await this.pool.query(
+      `SELECT n.id, n.teacher_user_id, n.note, n.visibility, n.at
+         FROM teacher_notes n JOIN students s ON s.id = n.student_id JOIN users u ON u.id = s.user_id
+         WHERE u.id = $1 ORDER BY n.at DESC`,
+      [studentUserId],
+    );
+    return res.rows.map((r) => ({
+      id: r.id,
+      studentUserId,
+      teacherUserId: r.teacher_user_id ?? undefined,
+      note: r.note,
+      visibility: r.visibility,
+      at: r.at.toISOString(),
+    }));
+  }
+
+  async listVirtualRooms(): Promise<VirtualRoomRow[]> {
+    const res = await this.pool.query(
+      `SELECT id, name, wam_url, purpose FROM virtual_rooms ORDER BY name`,
+    );
+    return res.rows.map((r) => ({
+      id: r.id,
+      name: r.name,
+      wamUrl: r.wam_url,
+      purpose: r.purpose,
+    }));
+  }
+
+  async createVirtualRoom(input: {
+    name: string;
+    wamUrl: string;
+    purpose: string;
+  }): Promise<VirtualRoomRow> {
+    const res = await this.pool.query(
+      `INSERT INTO virtual_rooms (name, wam_url, purpose) VALUES ($1, $2, $3) RETURNING id`,
+      [input.name, input.wamUrl, input.purpose],
+    );
+    return { id: res.rows[0].id, ...input };
   }
 
   async createMagicToken(

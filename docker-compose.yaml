@@ -535,32 +535,32 @@ services:
       MATRIX_ADMIN_PASSWORD: MySecretPassword
       JWT_SECRET: "$SECRET_KEY"
 
-#  coturn:
-#    image: coturn/coturn:4.5.2
-#    command:
-#      - turnserver
-#      #- -c=/etc/coturn/turnserver.conf
-#      - --log-file=stdout
-#      - --external-ip=$$(detect-external-ip)
-#      - --listening-port=3478
-#      - --min-port=10000
-#      - --max-port=10010
-#      - --tls-listening-port=5349
-#      - --listening-ip=0.0.0.0
-#      - --realm=coturn.workadventure.localhost
-#      - --server-name=coturn.workadventure.localhost
-#      - --lt-cred-mech
-#      # Enable Coturn "REST API" to validate temporary passwords.
-#      #- --use-auth-secret
-#      #- --static-auth-secret=SomeStaticAuthSecret
-#      #- --userdb=/var/lib/turn/turndb
-#      - --user=workadventure:WorkAdventure123
-#      # use real-valid certificate/privatekey files
-#      #- --cert=/root/letsencrypt/fullchain.pem
-#      #- --pkey=/root/letsencrypt/privkey.pem
-#    network_mode: host
-#volumes:
-#  synapsedata:
+  #  coturn:
+  #    image: coturn/coturn:4.5.2
+  #    command:
+  #      - turnserver
+  #      #- -c=/etc/coturn/turnserver.conf
+  #      - --log-file=stdout
+  #      - --external-ip=$$(detect-external-ip)
+  #      - --listening-port=3478
+  #      - --min-port=10000
+  #      - --max-port=10010
+  #      - --tls-listening-port=5349
+  #      - --listening-ip=0.0.0.0
+  #      - --realm=coturn.workadventure.localhost
+  #      - --server-name=coturn.workadventure.localhost
+  #      - --lt-cred-mech
+  #      # Enable Coturn "REST API" to validate temporary passwords.
+  #      #- --use-auth-secret
+  #      #- --static-auth-secret=SomeStaticAuthSecret
+  #      #- --userdb=/var/lib/turn/turndb
+  #      - --user=workadventure:WorkAdventure123
+  #      # use real-valid certificate/privatekey files
+  #      #- --cert=/root/letsencrypt/fullchain.pem
+  #      #- --pkey=/root/letsencrypt/privkey.pem
+  #    network_mode: host
+  #volumes:
+  #  synapsedata:
 
   # ---------------------------------------------------------------------------
   # NG Academy — أكاديمية الجيل الجديد (phase 5)
@@ -597,6 +597,8 @@ services:
       ADMIN_API_TOKEN: "${ADMIN_API_TOKEN:-ng-academy-admin-token}"
       NG_MAPS_BASE_URL: "${NG_MAPS_BASE_URL:-http://maps.workadventure.localhost/ng-academy}"
       NG_APP_URL: "${NG_APP_URL:-http://play.workadventure.localhost}"
+      NG_PORTAL_URL: "${NG_PORTAL_URL:-http://ng-portal.workadventure.localhost/portal/}"
+      PORTAL_DIST: "/usr/src/app/ng-academy-portal/dist"
       NODE_ENV: development
       STARTUP_COMMAND_1: "cd /usr/src/app && npm install --workspace ng-academy-api --include-workspace-root --ignore-scripts"
     depends_on:
@@ -606,6 +608,26 @@ services:
       traefik.enable: true
       traefik.http.routers.ng-academy-api.rule: Host("ng-api.workadventure.localhost")
       traefik.http.services.ng-academy-api.loadbalancer.server.port: "3100"
+
+  # NG Academy — parent/teacher/admin portal (vite dev server; in production the
+  # API serves the built dist under /portal/ instead).
+  ng-academy-portal:
+    image: ghcr.io/thecodingmachine/nodejs:v2-24-trixie
+    command: npm run dev --workspace ng-academy-portal
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    tmpfs: /tmp
+    environment:
+      NG_API_PROXY: "http://ng-academy-api:3100"
+      NODE_ENV: development
+      STARTUP_COMMAND_1: "cd /usr/src/app && npm install --workspace ng-academy-portal --include-workspace-root --ignore-scripts"
+    depends_on:
+      - ng-academy-api
+    labels:
+      traefik.enable: true
+      traefik.http.routers.ng-academy-portal.rule: Host("ng-portal.workadventure.localhost")
+      traefik.http.services.ng-academy-portal.loadbalancer.server.port: "3200"
 
 volumes:
   ng-pgdata:

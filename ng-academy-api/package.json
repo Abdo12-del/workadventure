@@ -7,12 +7,14 @@
   "main": "./src/server.ts",
   "scripts": {
     "dev": "tsx watch src/server.ts",
+    "dev:memory": "tsx watch src/devServer.ts",
     "start": "tsx src/server.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
   "dependencies": {
     "@anatine/zod-openapi": "^2.2.8",
+    "@fastify/static": "^10.1.3",
     "@workadventure/messages": "*",
     "fastify": "^5.12.4",
     "pg": "^8.16.3",

@@ -20,6 +20,7 @@
     "back",
     "map-storage",
     "ng-academy-api",
+    "ng-academy-portal",
     "libs/*",
     "benchmark",
     "uploader",

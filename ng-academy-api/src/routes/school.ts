@@ -4,36 +4,10 @@
  * role guards. Children (students) never see attendance or other children's data;
  * parents only ever see their own children (requirements 10, 11, 12).
  */
-import type { FastifyInstance, FastifyRequest } from "fastify";
+import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import type { AppDeps } from "../app.js";
-import type { NgRole } from "../config.js";
-import { verifyJwt, type NgJwtPayload } from "../auth/jwt.js";
-import type { UserRow } from "../db/types.js";
-
-async function authenticate(
-  req: FastifyRequest,
-  deps: AppDeps,
-): Promise<{ user: UserRow; jwt: NgJwtPayload } | null> {
-  const header = req.headers.authorization;
-  if (!header?.startsWith("Bearer ")) return null;
-  const payload = verifyJwt(
-    header.slice("Bearer ".length),
-    deps.config.JWT_SECRET,
-  );
-  if (!payload) return null;
-  const user = await deps.repo.getUserById(payload.sub);
-  if (!user) return null;
-  return { user, jwt: payload };
-}
-
-function requireRole(
-  auth: { user: UserRow } | null,
-  roles: NgRole[],
-): UserRow | null {
-  if (!auth) return null;
-  return roles.includes(auth.user.role) ? auth.user : null;
-}
+import { authenticate, canAccessStudent, requireRole } from "./access.js";
 
 export function registerSchoolRoutes(
   app: FastifyInstance,
@@ -133,27 +107,4 @@ export function registerSchoolRoutes(
     ]);
     return reply.send({ achievements, progress });
   });
-}
-
-/** Parent: own children only. Teacher: own classes' students (via class list). Admin/owner: all. */
-async function canAccessStudent(
-  deps: AppDeps,
-  caller: UserRow,
-  studentId: string,
-): Promise<boolean> {
-  if (caller.role === "admin" || caller.role === "owner") return true;
-  if (caller.id === studentId) return true; // a student may read their own progress
-  if (caller.role === "parent") {
-    const children = await deps.repo.listChildren(caller.id);
-    return children.some((c) => c.id === studentId);
-  }
-  if (caller.role === "teacher") {
-    const classes = await deps.repo.listClassesForUser(caller);
-    for (const klass of classes) {
-      const attendance = await deps.repo.listAttendance(studentId);
-      if (attendance.some((a) => a.classId === klass.id)) return true;
-    }
-    return false;
-  }
-  return false;
 }

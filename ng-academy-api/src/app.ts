@@ -13,6 +13,7 @@ import { registerAdminApiRoutes } from "./routes/adminApi.js";
 import { registerAuthRoutes } from "./routes/auth.js";
 import { registerSchoolRoutes } from "./routes/school.js";
 import { registerActivitiesRoutes } from "./routes/activities.js";
+import { registerPortalRoutes } from "./routes/portal.js";
 
 export interface AppDeps {
   config: NgConfig;
@@ -45,10 +46,21 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
     reply.header("Access-Control-Allow-Origin", "*");
   });
 
+  // Phase 8: the parent/admin portal is a static Svelte build; serving it from
+  // the API keeps one origin (no extra CORS surface) in production.
+  if (deps.config.PORTAL_DIST) {
+    const fastifyStatic = (await import("@fastify/static")).default;
+    await app.register(fastifyStatic, {
+      root: deps.config.PORTAL_DIST,
+      prefix: "/portal/",
+    });
+  }
+
   registerAdminApiRoutes(app, deps);
   registerAuthRoutes(app, deps);
   registerSchoolRoutes(app, deps);
   registerActivitiesRoutes(app, deps);
+  registerPortalRoutes(app, deps);
 
   return app;
 }

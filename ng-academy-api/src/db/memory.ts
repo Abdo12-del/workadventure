@@ -2,17 +2,22 @@
  * NG Academy — أكاديمية الجيل الجديد
  * In-memory repository: unit/integration tests and local demos without Postgres.
  */
+import type { NgRole } from "../config.js";
 import type {
   AchievementRow,
+  ActivityKind,
   ActivityRow,
   AttendanceKind,
   AttendanceRow,
   ClassRow,
+  CourseRow,
   MagicTokenRow,
+  NoteRow,
   ProgressRow,
   Repository,
   ScheduleRow,
   UserRow,
+  VirtualRoomRow,
 } from "./types.js";
 
 let seq = 0;
@@ -28,6 +33,9 @@ export class MemoryRepository implements Repository {
   progress: ProgressRow[] = [];
   tokens = new Map<string, MagicTokenRow>();
   activities = new Map<string, ActivityRow>();
+  notes: NoteRow[] = [];
+  courses = new Map<string, CourseRow>();
+  rooms = new Map<string, VirtualRoomRow>();
 
   addUser(user: UserRow): UserRow {
     this.users.set(user.id, user);
@@ -147,6 +155,16 @@ export class MemoryRepository implements Repository {
     return [...this.activities.values()];
   }
 
+  async createActivity(input: {
+    title: string;
+    kind: ActivityKind;
+    points: number;
+  }): Promise<ActivityRow> {
+    const row: ActivityRow = { id: nextId(), ...input };
+    this.activities.set(row.id, row);
+    return row;
+  }
+
   async completeActivity(input: {
     activityId: string;
     studentUserId: string;
@@ -168,6 +186,112 @@ export class MemoryRepository implements Repository {
       activity.points;
     await this.upsertProgress(input.studentUserId, "points", points, input.at);
     return { achievement, points };
+  }
+
+  async listUsers(role?: NgRole): Promise<UserRow[]> {
+    const all = [...this.users.values()];
+    return role ? all.filter((u) => u.role === role) : all;
+  }
+
+  async createUser(input: {
+    email: string;
+    role: NgRole;
+    displayName: string;
+    createdAt: string;
+  }): Promise<UserRow> {
+    if ([...this.users.values()].some((u) => u.email === input.email)) {
+      throw new Error("duplicate email");
+    }
+    const row: UserRow = { id: nextId(), ...input };
+    this.users.set(row.id, row);
+    return row;
+  }
+
+  async linkChild(parentUserId: string, studentUserId: string): Promise<void> {
+    const kids = this.children.get(parentUserId) ?? [];
+    if (!kids.includes(studentUserId)) kids.push(studentUserId);
+    this.children.set(parentUserId, kids);
+  }
+
+  async createCourse(input: {
+    title: string;
+    subject: string;
+  }): Promise<CourseRow> {
+    const row: CourseRow = { id: nextId(), ...input };
+    this.courses.set(row.id, row);
+    return row;
+  }
+
+  async createClass(input: {
+    name: string;
+    subject: string;
+    teacherUserId: string | undefined;
+    studentUserIds: string[];
+    roomUrl: string;
+    livekitRoom: string;
+  }): Promise<ClassRow> {
+    const row: ClassRow = {
+      id: nextId(),
+      name: input.name,
+      subject: input.subject,
+      teacherUserId: input.teacherUserId,
+      roomUrl: input.roomUrl,
+      livekitRoom: input.livekitRoom,
+    };
+    this.classes.set(row.id, {
+      ...row,
+      studentUserIds: [...input.studentUserIds],
+    });
+    return row;
+  }
+
+  async addClassStudents(
+    classId: string,
+    studentUserIds: string[],
+  ): Promise<void> {
+    const klass = this.classes.get(classId);
+    if (!klass) throw new Error(`unknown class ${classId}`);
+    for (const id of studentUserIds) {
+      if (!klass.studentUserIds.includes(id)) klass.studentUserIds.push(id);
+    }
+  }
+
+  async listClassStudents(classId: string): Promise<UserRow[]> {
+    const klass = this.classes.get(classId);
+    if (!klass) return [];
+    return klass.studentUserIds
+      .map((id) => this.users.get(id))
+      .filter((u): u is UserRow => u !== undefined);
+  }
+
+  async addNote(input: {
+    studentUserId: string;
+    teacherUserId: string | undefined;
+    note: string;
+    visibility: "parent" | "admin";
+    at: string;
+  }): Promise<NoteRow> {
+    const row: NoteRow = { id: nextId(), ...input };
+    this.notes.push(row);
+    return row;
+  }
+
+  async listNotes(studentUserId: string): Promise<NoteRow[]> {
+    return this.notes.filter((n) => n.studentUserId === studentUserId);
+  }
+
+  async listVirtualRooms(): Promise<VirtualRoomRow[]> {
+    return [...this.rooms.values()];
+  }
+
+  async createVirtualRoom(input: {
+    name: string;
+    wamUrl: string;
+    purpose: string;
+  }): Promise<VirtualRoomRow> {
+    const row: VirtualRoomRow = { id: nextId(), ...input };
+    this.rooms.set(row.id, row);
+    return row;
   }
 
   async createMagicToken(

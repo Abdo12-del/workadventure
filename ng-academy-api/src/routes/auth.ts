@@ -23,7 +23,7 @@ export function registerAuthRoutes(app: FastifyInstance, deps: AppDeps): void {
       repo,
       email,
       body.data.email,
-      config.NG_APP_URL,
+      config.NG_PORTAL_URL,
       config.MAGIC_LINK_TTL_MS,
     );
     return reply

@@ -66,6 +66,28 @@ export interface ActivityRow {
   points: number;
 }
 
+export interface NoteRow {
+  id: string;
+  studentUserId: string;
+  teacherUserId: string | undefined;
+  note: string;
+  visibility: "parent" | "admin";
+  at: string;
+}
+
+export interface CourseRow {
+  id: string;
+  title: string;
+  subject: string;
+}
+
+export interface VirtualRoomRow {
+  id: string;
+  name: string;
+  wamUrl: string;
+  purpose: string;
+}
+
 export interface MagicTokenRow {
   hash: string;
   email: string;
@@ -106,12 +128,52 @@ export interface Repository {
   listProgress(studentUserId: string): Promise<ProgressRow[]>;
   /* activities & encouragement (requirement 9: encourage, never compete) */
   listActivities(): Promise<ActivityRow[]>;
+  createActivity(input: {
+    title: string;
+    kind: ActivityKind;
+    points: number;
+  }): Promise<ActivityRow>;
   completeActivity(input: {
     activityId: string;
     studentUserId: string;
     byUserId: string | undefined;
     at: string;
   }): Promise<{ achievement: AchievementRow; points: number }>;
+
+  /* portal (phase 8): parent overview, teacher notes, admin management */
+  listUsers(role?: NgRole): Promise<UserRow[]>;
+  createUser(input: {
+    email: string;
+    role: NgRole;
+    displayName: string;
+    createdAt: string;
+  }): Promise<UserRow>; // throws on duplicate email
+  linkChild(parentUserId: string, studentUserId: string): Promise<void>;
+  createCourse(input: { title: string; subject: string }): Promise<CourseRow>;
+  createClass(input: {
+    name: string;
+    subject: string;
+    teacherUserId: string | undefined;
+    studentUserIds: string[];
+    roomUrl: string;
+    livekitRoom: string;
+  }): Promise<ClassRow>;
+  addClassStudents(classId: string, studentUserIds: string[]): Promise<void>;
+  listClassStudents(classId: string): Promise<UserRow[]>;
+  addNote(input: {
+    studentUserId: string;
+    teacherUserId: string | undefined;
+    note: string;
+    visibility: "parent" | "admin";
+    at: string;
+  }): Promise<NoteRow>;
+  listNotes(studentUserId: string): Promise<NoteRow[]>;
+  listVirtualRooms(): Promise<VirtualRoomRow[]>;
+  createVirtualRoom(input: {
+    name: string;
+    wamUrl: string;
+    purpose: string;
+  }): Promise<VirtualRoomRow>;
 
   /* magic links */
   createMagicToken(

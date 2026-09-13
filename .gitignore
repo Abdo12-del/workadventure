@@ -29,3 +29,6 @@ play/src/i18n/ko-KR/*.backup
 
 # Local protoc/ts-proto toolchain downloaded by ./bootstrap.sh
 .bootstrap-tools/
+
+# NG Academy portal build output
+ng-academy-portal/dist/

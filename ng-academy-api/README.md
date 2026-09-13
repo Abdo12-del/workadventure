@@ -54,3 +54,20 @@ npm test -w ng-academy-api   # 14 اختبارًا: تدفق الرابط الس
 - الـAPI يرسل رؤوس CORS (`Access-Control-Allow-Origin: *` + معالجة OPTIONS) حتى
   يستطيع متصفح الطفل الاستطلاع من نطاق الواجهة (متغير `NG_API_URL` في pusher).
 - لإضافة مهام في Postgres:‏ `INSERT INTO activities (title, kind, points) VALUES ('...', 'daily', 2);`
+
+## مسارات البوابة (المرحلة 8)
+
+- ‏`GET /ng/classes/:classId/students` — قائمة فصل للكبار فقط (معلم الفصل/ولي أمر طفله/إدارة).
+- ‏`GET|POST /ng/students/:studentId/notes` — ملاحظات المعلم لولي الأمر
+  (`visibility: parent|admin`)؛ القراءة لولي الأمر/المعلم/الإدارة، والكتابة للمعلم+،
+  والطفل لا يراها أبدًا. ملاحظات `admin` لا تصل لولي الأمر.
+- ‏`GET /ng/students/:studentId/achievements` — شارات الطفل (الطفل نفسه/ولي أمره/المعلمون/الإدارة).
+- ‏`GET /ng/admin/overview` — عدّادات لوحة الإدارة.
+- ‏`GET|POST /ng/admin/users` (+`parentUserId` لربط الطفل بولي أمره)،
+  ‏`POST /ng/admin/courses`، ‏`POST /ng/admin/classes` (إنشاء فصل + ربط معلم + إضافة طلاب)،
+  ‏`POST /ng/admin/classes/:classId/students`، ‏`POST /ng/admin/activities`،
+  ‏`GET|POST /ng/admin/rooms` — كلها للإدارة/المالك فقط.
+- ‏`PORTAL_DIST`: عند ضبطه يقدّم الـAPI بوابة `ng-academy-portal` المبنية تحت `/portal/`.
+- ‏`NG_PORTAL_URL`: رابط الدخول السحري في البريد صار `…/portal/#/login?token=…`
+  (الرمز في الـhash فلا يلمس سجلات الخوادم).
+- للتجربة بلا Postgres: ‏`npm run dev:memory` (بيانات مزروعة + الروابط تُطبع في الطرفية).

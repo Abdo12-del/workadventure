@@ -17,6 +17,7 @@ export interface Seed {
   otherParent: UserRow;
   teacher: UserRow;
   student: UserRow;
+  admin: UserRow;
   classId: string;
 }
 
@@ -51,6 +52,13 @@ export async function seedSchool(): Promise<Seed> {
     email: "child@ng.example",
     role: "student",
     displayName: "ياسمين",
+    createdAt: new Date().toISOString(),
+  });
+  const admin = repo.addUser({
+    id: "u-admin",
+    email: "admin@ng.example",
+    role: "admin",
+    displayName: "مدير الأكاديمية",
     createdAt: new Date().toISOString(),
   });
   repo.children.set(parent.id, [student.id]);
@@ -98,6 +106,7 @@ export async function seedSchool(): Promise<Seed> {
     otherParent,
     teacher,
     student,
+    admin,
     classId,
   };
 }
