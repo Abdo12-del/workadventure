@@ -54,6 +54,9 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
       root: deps.config.PORTAL_DIST,
       prefix: "/portal/",
     });
+    // Preview-friendliness: opening the API root lands on the portal instead
+    // of a bare 404 (single-origin design: API + portal share one host).
+    app.get("/", async (_req, reply) => reply.redirect("/portal/"));
   }
 
   registerAdminApiRoutes(app, deps);
