@@ -18,7 +18,7 @@
     } from "./NgAdminApi";
     import { ngIdentity } from "./NgSession";
 
-    export let onClose: () => void = () => {};
+    let { onClose = () => {} }: { onClose?: () => void } = $props();
 
     type Tab = "overview" | "users" | "classes" | "activities" | "rooms";
     let tab = $state<Tab>("overview");
