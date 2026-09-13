@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import Ajv from "ajv";
@@ -34,7 +34,12 @@ interface TiledMapJson {
     width: number;
     height: number;
     layers: TiledLayer[];
-    tilesets: { image: string; firstgid: number; tilecount: number }[];
+    tilesets: {
+        image: string;
+        firstgid: number;
+        tilecount: number;
+        properties?: { name: string; value: string }[];
+    }[];
 }
 
 function readJson<T>(path: string): T {
@@ -296,5 +301,33 @@ describe("NG Academy school world — the math classroom (rooms, first batch)", 
         expect(count(furniture, 20)).toBe(1); // posterShapes
         expect(count(furniture, 21)).toBe(1); // posterNumbers
         expect(count(floor, 22)).toBe(12); // rugMath 3×4 under the corner
+    });
+});
+
+describe("NG Academy school world — curated LimeZu tilesets (look upgrade)", () => {
+    it("every external tileset is credited and trimmed tiny (weak devices)", () => {
+        for (const [wamFile, tmj] of tmjs) {
+            for (const tileset of tmj.tilesets) {
+                if (!tileset.image.includes("ng-school-")) continue;
+                const copyright = tmj.tilesets
+                    .find((t) => t.image === tileset.image)
+                    ?.properties?.find((pr) => pr.name === "tilesetCopyright");
+                expect(copyright?.value, `${wamFile} ${tileset.image} copyright`).toContain("LimeZu");
+                const png = join(MAPS_DIR, dirname(String(wams.get(wamFile)?.mapUrl)), tileset.image);
+                expect(statSync(png).size, `${tileset.image} must stay trimmed`).toBeLessThanOrEqual(4096);
+                expect(tileset.tilecount).toBeLessThanOrEqual(32);
+            }
+        }
+    });
+
+    it("decorates every room: each map uses at least one curated tile", () => {
+        for (const [wamFile, tmj] of tmjs) {
+            const external = tmj.tilesets.filter((t) => t.image.includes("ng-school-"));
+            expect(external.length, wamFile).toBeGreaterThanOrEqual(1);
+            const gids = new Set<number>();
+            for (const t of external) for (let id = 0; id < t.tilecount; id++) gids.add(t.firstgid + id);
+            const used = tmj.layers.some((l) => l.data?.some((g) => gids.has(g)));
+            expect(used, `${wamFile} should show its curated tiles`).toBe(true);
+        }
     });
 });

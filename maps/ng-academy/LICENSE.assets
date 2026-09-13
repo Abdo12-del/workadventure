@@ -1,0 +1,35 @@
+ASSETS LICENSE
+
+(Notice)
+Assets distributed with a map are subject to different licenses.
+The license attributed to each tileset can be found or have to be added in the "tilesetCopyright" property of each tileset in the map.
+In addition, you have to add a section below with the specific license of the asset you want to use.
+
+
+WORKADVENTURE SPECIFIC RESOURCES LICENSE
+
+The User shall handle assets with the WorkAdventure specific resources license as follows:
+
+1. These Assets may be used only in maps produced for WorkAdventure (SAAS or self-hosted version).
+
+2. These Assets may be modified (colors or size changed, inverted, trimmed, etc.) only for purposes of use in maps produced for WorkAdventure (SAAS or self-hosted version).
+
+3. These Assets or those modified pursuant to the previous item may undergo Distribution, etc. with maps produced for WorkAdventure. Furthermore, the User may not perform Distribution, etc. of individual Assets or those modified, or Distribution, etc. in combination with programs, etc. other than the map. However, the User may duplicate, transfer, publicly transmit, or enable transmission of personally-modified Assets to other Authorized Users free of charge.
+
+
+NG ACADEMY — ATTRIBUTION FOR BUNDLED TILESETS
+The following tileset images are bundled in this folder and used, unmodified,
+in maps produced for WorkAdventure (self-hosted NG Academy deployment), as
+permitted by the WorkAdventure specific resources license above:
+
+- ng-school-classroom.png  (trimmed from "5_Classroom_and_library_32x32.png")
+- ng-school-generic.png    (trimmed from "1_Generic_32x32.png")
+- ng-school-musicsport.png (trimmed from "LimeZu_6_Music_and_sport_32x32.png")
+
+The NG sheets are trimmed subsets (13/25/15 tiles) produced at authoring time
+with the sources listed above; trimming is permitted by item 2 of the
+WorkAdventure specific resources license. Original sources are NOT bundled.
+
+Copyright: LimeZu — "Modern Interiors" series (limezu.itch.io), distributed with
+the WorkAdventure map starter kit / wam-preset-school (github.com/workadventure).
+Each map references these tilesets with a "tilesetCopyright" property as well.

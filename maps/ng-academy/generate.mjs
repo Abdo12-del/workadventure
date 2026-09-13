@@ -385,30 +385,206 @@ function buildTilesetPng() {
  * Tiled helpers
  * ------------------------------------------------------------------ */
 const NG = (id) => id + 1; // ng-tileset firstgid = 1
-const SZ = (id) => id + 25; // Special_Zones firstgid = 25 (after 24 ng tiles)
-const SZ_BLOCK = SZ(0);
-const SZ_START = SZ(1);
-const SZ_SILENT = SZ(2);
-const SZ_EXIT = SZ(8);
 
-const TILESETS = [
-  {
-    columns: 8,
-    firstgid: 1,
-    image: "assets/ng-tileset.png",
-    imageheight: 96,
-    imagewidth: 256,
-    margin: 0,
-    name: "ng-tileset",
-    spacing: 0,
-    tilecount: 24,
-    tileheight: 32,
-    tilewidth: 32,
-    type: "tileset",
+/* External curated tilesets (LimeZu "Modern Interiors", bundled under the
+ * WorkAdventure specific resources license — see LICENSE.assets). Each map
+ * references only the sheets it actually uses; firstgids are computed per map
+ * in the fixed order ng → classroom → generic → musicsport → Special_Zones. */
+const EXTERNAL_SHEETS = {
+  // Curated (trimmed) LimeZu sheets: only the tiles NG Academy actually uses,
+  // extracted at authoring time from the bundled sources (LICENSE.assets).
+  classroom: {
+    image: "assets/ng-school-classroom.png",
+    columns: 16,
+    tilecount: 13,
+    imagewidth: 512,
+    imageheight: 32,
   },
-  {
+  generic: {
+    image: "assets/ng-school-generic.png",
+    columns: 16,
+    tilecount: 25,
+    imagewidth: 512,
+    imageheight: 64,
+  },
+  musicsport: {
+    image: "assets/ng-school-musicsport.png",
+    columns: 16,
+    tilecount: 15,
+    imagewidth: 512,
+    imageheight: 32,
+  },
+};
+const TILESET_COPYRIGHT =
+  "LimeZu — Modern Interiors series (limezu.itch.io), trimmed subset via WorkAdventure wam-preset-school; WorkAdventure specific resources license (maps/ng-academy/LICENSE.assets)";
+
+const OFF = { ng: 1, classroom: 0, generic: 0, musicsport: 0, sz: 25 };
+let USED_SHEETS = [];
+
+function beginSheets(sheets) {
+  USED_SHEETS = sheets;
+  let next = 25; // after the 24 ng tiles
+  for (const key of ["classroom", "generic", "musicsport"]) {
+    if (sheets.includes(key)) {
+      OFF[key] = next;
+      next += EXTERNAL_SHEETS[key].tilecount;
+    } else {
+      OFF[key] = 0;
+    }
+  }
+  OFF.sz = next;
+  SZ_BLOCK = SZ(0);
+  SZ_START = SZ(1);
+  SZ_SILENT = SZ(2);
+  SZ_EXIT = SZ(8);
+}
+
+const SZ = (id) => id + OFF.sz;
+let SZ_BLOCK = SZ(0);
+let SZ_START = SZ(1);
+let SZ_SILENT = SZ(2);
+let SZ_EXIT = SZ(8);
+
+/* Curated tile indices: source row,col on the original 16-wide LimeZu sheet
+ * → index inside the trimmed NG sheet (verified by contact sheet). */
+const CURATED = {
+  generic: {
+    "5,10": 0,
+    "11,9": 1,
+    "11,10": 2,
+    "12,10": 3,
+    "14,0": 4,
+    "14,1": 5,
+    "14,3": 6,
+    "43,7": 7,
+    "43,9": 8,
+    "45,6": 9,
+    "45,7": 10,
+    "45,8": 11,
+    "46,6": 12,
+    "46,7": 13,
+    "46,8": 14,
+    "54,4": 15,
+    "54,5": 16,
+    "54,6": 17,
+    "55,4": 18,
+    "55,5": 19,
+    "55,6": 20,
+    "56,6": 21,
+    "57,6": 22,
+    "25,14": 23,
+    "26,14": 24,
+  },
+  classroom: {
+    "1,13": 0,
+    "2,13": 1,
+    "11,2": 2,
+    "11,3": 3,
+    "11,4": 4,
+    "13,0": 5,
+    "14,0": 6,
+    "15,0": 7,
+    "7,4": 8,
+    "8,4": 9,
+    "9,4": 10,
+    "13,13": 11,
+    "13,14": 12,
+  },
+  musicsport: {
+    "19,0": 0,
+    "19,1": 1,
+    "19,2": 2,
+    "22,6": 3,
+    "23,6": 4,
+    "26,0": 5,
+    "26,1": 6,
+    "26,2": 7,
+    "27,0": 8,
+    "27,1": 9,
+    "27,2": 10,
+    "0,6": 11,
+    "1,6": 12,
+    "25,3": 13,
+    "26,3": 14,
+  },
+};
+function pick(sheet, r, c) {
+  const idx = CURATED[sheet][`${r},${c}`];
+  if (idx === undefined)
+    throw new Error(`tile ${sheet} ${r},${c} is not in the curated sheet`);
+  return OFF[sheet] + idx;
+}
+const CL = (r, c) => pick("classroom", r, c);
+const GE = (r, c) => pick("generic", r, c);
+const MS = (r, c) => pick("musicsport", r, c);
+
+/* Decor helpers ------------------------------------------------------------ */
+function vtile(g, map, x, y, gids) {
+  gids.forEach((gid, i) => map.set(g, x, y + i, gid));
+}
+function htile(g, map, x, y, gids) {
+  gids.forEach((gid, i) => map.set(g, x + i, y, gid));
+}
+function block(map, layers, x, y, w, h) {
+  map.rect(layers.collisions, x, y, w, h, SZ_BLOCK);
+}
+function plant(map, layers, furniture, x, y) {
+  vtile(furniture, map, x, y, [GE(56, 6), GE(57, 6)]);
+  block(map, layers, x, y, 1, 2);
+}
+function palm(map, layers, furniture, x, y) {
+  vtile(furniture, map, x, y, [GE(25, 14), GE(26, 14)]);
+  block(map, layers, x, y, 1, 2);
+}
+function wallDeco(map, layers, x, gid) {
+  // paintings / windows / medals hang on the (already solid) perimeter wall
+  map.set(layers.walls, x, 0, gid);
+}
+function rug(map, floor, x, y, gid = 0) {
+  map.set(floor, x, y, gid === 0 ? GE(5, 10) : gid);
+}
+
+function buildTilesets() {
+  const list = [
+    {
+      columns: 8,
+      firstgid: 1,
+      image: "assets/ng-tileset.png",
+      imageheight: 96,
+      imagewidth: 256,
+      margin: 0,
+      name: "ng-tileset",
+      spacing: 0,
+      tilecount: 24,
+      tileheight: 32,
+      tilewidth: 32,
+      type: "tileset",
+    },
+  ];
+  for (const key of ["classroom", "generic", "musicsport"]) {
+    if (!USED_SHEETS.includes(key)) continue;
+    const sh = EXTERNAL_SHEETS[key];
+    list.push({
+      columns: sh.columns,
+      firstgid: OFF[key],
+      image: sh.image,
+      imageheight: sh.imageheight,
+      imagewidth: sh.imagewidth,
+      margin: 0,
+      name: `limezu-${key}`,
+      spacing: 0,
+      tilecount: sh.tilecount,
+      tileheight: 32,
+      tilewidth: 32,
+      properties: [
+        { name: "tilesetCopyright", type: "string", value: TILESET_COPYRIGHT },
+      ],
+      type: "tileset",
+    });
+  }
+  list.push({
     columns: 6,
-    firstgid: 25,
+    firstgid: OFF.sz,
     image: "../assets/Special_Zones.png",
     imageheight: 64,
     imagewidth: 192,
@@ -422,8 +598,9 @@ const TILESETS = [
       { id: 0, properties: [{ name: "collides", type: "bool", value: true }] },
     ],
     type: "tileset",
-  },
-];
+  });
+  return list;
+}
 
 class TiledMap {
   constructor(w, h) {
@@ -492,7 +669,7 @@ class TiledMap {
       renderorder: "right-down",
       tiledversion: "1.11.2",
       tileheight: 32,
-      tilesets: TILESETS,
+      tilesets: buildTilesets(),
       tilewidth: 32,
       type: "map",
       version: "1.10",
@@ -601,6 +778,7 @@ function writeJson(file, obj) {
  * 1) Entrance hub (المدخل + الاستقبال + الساحة)
  * ------------------------------------------------------------------ */
 function buildEntrance() {
+  beginSheets(["generic"]);
   const W = 34;
   const H = 26;
   const map = new TiledMap(W, H);
@@ -634,6 +812,21 @@ function buildEntrance() {
   map.set(furniture, 27, 20, NG(14));
   map.set(furniture, 30, 20, NG(14));
 
+  // ── NG look upgrade (LimeZu, see LICENSE.assets): reception display counter,
+  // palms in the yard, wall art + windows, welcome mats
+  htile(furniture, map, 16, 20, [GE(54, 4), GE(54, 5), GE(54, 6)]);
+  htile(furniture, map, 16, 21, [GE(55, 4), GE(55, 5), GE(55, 6)]);
+  block(map, layers, 16, 20, 3, 2);
+  plant(map, layers, furniture, 8, 19);
+  palm(map, layers, furniture, 27, 5);
+  palm(map, layers, furniture, 30, 16);
+  for (const x of [8, 9, 18, 19]) wallDeco(map, layers, x, GE(43, 7));
+  wallDeco(map, layers, 5, GE(14, 0));
+  wallDeco(map, layers, 15, GE(14, 1));
+  wallDeco(map, layers, 21, GE(14, 3));
+  rug(map, floor, 15, 12, GE(11, 9));
+  rug(map, floor, 16, 12);
+  rug(map, floor, 17, 12, GE(12, 10));
   map.addLayer("floor", floor);
   map.addLayer("walls", layers.walls);
   map.addLayer("furniture", furniture);
@@ -733,6 +926,7 @@ const CLASSROOMS = [
 ];
 
 function buildClassroom([file, title, roomName, lessonLabel]) {
+  beginSheets(["classroom", "generic"]);
   const W = 18;
   const H = 14;
   const map = new TiledMap(W, H);
@@ -803,6 +997,34 @@ function buildClassroom([file, title, roomName, lessonLabel]) {
     }
   }
 
+  // ── NG look upgrade: bright windows + wall art, plants, a soft mat, and a
+  // subject corner (globe / bookshelf / computer bench) per classroom
+  {
+    const subject = file.replace("classroom-", "");
+    for (const x of [3, 14]) wallDeco(map, layers, x, GE(43, 7));
+    wallDeco(map, layers, 8, GE(14, subject === "chess" ? 3 : 0));
+    if (isMath) {
+      // keep the number-line strip (y=11) fully visible
+      plant(map, layers, furniture, 2, 4);
+      plant(map, layers, furniture, 15, 4);
+    } else {
+      plant(map, layers, furniture, 2, 11);
+      plant(map, layers, furniture, 15, 11);
+    }
+    rug(map, floor, 8, 6, GE(11, 10));
+    if (subject === "science") {
+      vtile(furniture, map, 14, 2, [CL(1, 13), CL(2, 13)]);
+      block(map, layers, 14, 2, 1, 2);
+    }
+    if (subject === "reading" || subject === "arabic") {
+      vtile(furniture, map, 1, 2, [CL(13, 0), CL(14, 0), CL(15, 0)]);
+      block(map, layers, 1, 2, 1, 3);
+    }
+    if (subject === "english" || subject === "communication") {
+      htile(furniture, map, 12, 2, [CL(11, 2), CL(11, 3), CL(11, 4)]);
+      block(map, layers, 12, 2, 3, 1);
+    }
+  }
   map.addLayer("floor", floor);
   map.addLayer("walls", layers.walls);
   map.addLayer("furniture", furniture);
@@ -866,6 +1088,7 @@ function buildClassroom([file, title, roomName, lessonLabel]) {
  * 3) Library (المكتبة — منطقة صامتة)
  * ------------------------------------------------------------------ */
 function buildLibrary() {
+  beginSheets(["classroom", "generic"]);
   const W = 18;
   const H = 14;
   const map = new TiledMap(W, H);
@@ -894,6 +1117,19 @@ function buildLibrary() {
   map.set(furniture, 2, 11, NG(11));
   map.set(furniture, 15, 11, NG(11));
 
+  // ── NG look upgrade: tall bookshelves, a reading podium, plants, rug
+  for (const x of [4, 9, 14]) wallDeco(map, layers, x, GE(43, 9));
+  vtile(furniture, map, 1, 2, [CL(7, 4), CL(8, 4), CL(9, 4)]);
+  block(map, layers, 1, 2, 1, 3);
+  vtile(furniture, map, 1, 6, [CL(7, 4), CL(8, 4), CL(9, 4)]);
+  block(map, layers, 1, 6, 1, 3);
+  vtile(furniture, map, 16, 2, [CL(13, 0), CL(14, 0), CL(15, 0)]);
+  block(map, layers, 16, 2, 1, 3);
+  htile(furniture, map, 8, 2, [CL(13, 13), CL(13, 14)]);
+  block(map, layers, 8, 2, 2, 1);
+  plant(map, layers, furniture, 16, 10);
+  rug(map, floor, 8, 7);
+  rug(map, floor, 9, 7, GE(11, 9));
   map.addLayer("floor", floor);
   map.addLayer("walls", layers.walls);
   map.addLayer("furniture", furniture);
@@ -936,6 +1172,7 @@ function buildLibrary() {
  * 4) Science lab (مختبر العلوم)
  * ------------------------------------------------------------------ */
 function buildScienceLab() {
+  beginSheets(["classroom", "generic"]);
   const W = 18;
   const H = 14;
   const map = new TiledMap(W, H);
@@ -962,6 +1199,16 @@ function buildScienceLab() {
   map.set(furniture, 15, 2, NG(11));
   for (let x = 7; x <= 10; x++) map.set(furniture, x, 1, NG(9));
 
+  // ── NG look upgrade: globes on both sides, plants, windows, mat
+  vtile(furniture, map, 2, 2, [CL(1, 13), CL(2, 13)]);
+  block(map, layers, 2, 2, 1, 2);
+  vtile(furniture, map, 15, 2, [CL(1, 13), CL(2, 13)]);
+  block(map, layers, 15, 2, 1, 2);
+  plant(map, layers, furniture, 2, 10);
+  plant(map, layers, furniture, 15, 10);
+  for (const x of [6, 12]) wallDeco(map, layers, x, GE(43, 7));
+  wallDeco(map, layers, 9, GE(14, 1));
+  rug(map, floor, 8, 8, GE(11, 10));
   map.addLayer("floor", floor);
   map.addLayer("walls", layers.walls);
   map.addLayer("furniture", furniture);
@@ -1002,6 +1249,7 @@ function buildScienceLab() {
  * 5) Theater (المسرح)
  * ------------------------------------------------------------------ */
 function buildTheater() {
+  beginSheets(["generic", "musicsport"]);
   const W = 22;
   const H = 16;
   const map = new TiledMap(W, H);
@@ -1024,6 +1272,15 @@ function buildTheater() {
   map.set(furniture, 2, 2, NG(11));
   map.set(furniture, 19, 2, NG(11));
 
+  // ── NG look upgrade: red stage curtain on the back wall + speakers
+  htile(layers.walls, map, 7, 0, [GE(45, 6), GE(45, 7), GE(45, 8)]);
+  htile(layers.walls, map, 7, 1, [GE(46, 6), GE(46, 7), GE(46, 8)]);
+  vtile(furniture, map, 4, 2, [MS(0, 6), MS(1, 6)]);
+  block(map, layers, 4, 2, 1, 2);
+  vtile(furniture, map, 17, 2, [MS(0, 6), MS(1, 6)]);
+  block(map, layers, 17, 2, 1, 2);
+  rug(map, floor, 10, 9);
+  rug(map, floor, 11, 9, GE(11, 9));
   map.addLayer("floor", floor);
   map.addLayer("walls", layers.walls);
   map.addLayer("furniture", furniture);
@@ -1065,6 +1322,7 @@ function buildTheater() {
  * 6) Creativity hall (قاعة الإبداع)
  * ------------------------------------------------------------------ */
 function buildCreativity() {
+  beginSheets(["generic"]);
   const W = 18;
   const H = 14;
   const map = new TiledMap(W, H);
@@ -1091,6 +1349,15 @@ function buildCreativity() {
   map.set(furniture, 2, 6, NG(11));
   map.set(furniture, 15, 6, NG(11));
 
+  // ── NG look upgrade: gallery wall of paintings, plants, colourful mats
+  wallDeco(map, layers, 4, GE(14, 0));
+  wallDeco(map, layers, 7, GE(14, 1));
+  wallDeco(map, layers, 10, GE(14, 3));
+  wallDeco(map, layers, 13, GE(14, 0));
+  plant(map, layers, furniture, 2, 10);
+  plant(map, layers, furniture, 15, 10);
+  rug(map, floor, 8, 7, GE(11, 9));
+  rug(map, floor, 9, 7, GE(12, 10));
   map.addLayer("floor", floor);
   map.addLayer("walls", layers.walls);
   map.addLayer("furniture", furniture);
@@ -1131,6 +1398,7 @@ function buildCreativity() {
  * 7) Achievements hall (قاعة الإنجازات)
  * ------------------------------------------------------------------ */
 function buildAchievements() {
+  beginSheets(["generic", "musicsport"]);
   const W = 18;
   const H = 14;
   const map = new TiledMap(W, H);
@@ -1151,6 +1419,24 @@ function buildAchievements() {
   map.set(furniture, 4, 10, NG(11));
   map.set(furniture, 13, 10, NG(11));
 
+  // ── NG look upgrade: medals on the wall, trophy columns, winners podium,
+  // framed certificates in a display case
+  wallDeco(map, layers, 6, MS(19, 0));
+  wallDeco(map, layers, 7, MS(19, 1));
+  wallDeco(map, layers, 8, MS(19, 2));
+  vtile(furniture, map, 3, 2, [MS(22, 6), MS(23, 6)]);
+  block(map, layers, 3, 2, 1, 2);
+  vtile(furniture, map, 14, 2, [MS(22, 6), MS(23, 6)]);
+  block(map, layers, 14, 2, 1, 2);
+  htile(furniture, map, 7, 6, [MS(26, 0), MS(26, 1), MS(26, 2)]);
+  htile(furniture, map, 7, 7, [MS(27, 0), MS(27, 1), MS(27, 2)]);
+  block(map, layers, 7, 6, 3, 2);
+  map.set(furniture, 11, 2, MS(25, 3));
+  map.set(furniture, 12, 2, MS(26, 3));
+  block(map, layers, 11, 2, 2, 1);
+  plant(map, layers, furniture, 2, 10);
+  plant(map, layers, furniture, 15, 10);
+  rug(map, floor, 8, 10);
   map.addLayer("floor", floor);
   map.addLayer("walls", layers.walls);
   map.addLayer("furniture", furniture);
