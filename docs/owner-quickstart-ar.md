@@ -21,7 +21,19 @@ git checkout arena/01a096db-workadventure
 `bootstrap.sh` ينشئ `.env` من `.env.template` (خريطة المدرسة صارت الغرفة الافتراضية
 جاهزًا)، ويثبّت الحزم، ويولّد ملفات protobuf اللازمة للبناء.
 
-## 2) تشغيل حزمة العالم
+## 2) تشغيل العالم بدون docker (الطريقة الأسرع)
+
+بدل حزمة docker كاملة يمكنك تشغيل العالم بأمر واحد (node فقط):
+
+```bash
+npm run world:native
+```
+
+يشغّل الأمر أربع عمليات (خادم خرائط ساكن، map-storage، back، play) ويفتح العالم على
+`http://localhost:3104` — اختر اسمًا وأفاتارًا كرتونيًا وامشِ داخل المدرسة.
+لا يحتاج Redis ولا Postgres ولا LiveKit (فقاعات الصوت تُفعَّل لاحقًا عند ضبط LiveKit).
+
+## 2ب) أو تشغيل حزمة docker الكاملة
 
 ```bash
 docker compose up -d

@@ -19,6 +19,10 @@ export default defineConfig(({ mode }) => {
         server: {
             host: "0.0.0.0",
             port: 8080,
+            // Dev servers are often reached through reverse proxies / preview
+            // hosts (docker traefik, sandbox previews, `npm run world:native`
+            // behind a tunnel). Allow them; production builds are static.
+            allowedHosts: true,
             ws: {
                 // workaround for development in docker
                 clientPort: 80,
