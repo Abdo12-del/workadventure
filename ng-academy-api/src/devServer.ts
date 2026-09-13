@@ -86,6 +86,59 @@ repo.addSchedule({
   endsAt: "2026-09-14T08:45:00.000Z",
 });
 
+/* The school itself: the 13 generated maps, pre-registered as managed world
+ * zones so the admin/owner dashboard shows the real world out of the box. */
+const NG_ROOMS: [string, string, string][] = [
+  [
+    "entrance.wam",
+    "المدخل والاستقبال",
+    "بوابة المدرسة والساحة ونقطة تجمع صف جينو.",
+  ],
+  ["classroom-arabic.wam", "فصل اللغة العربية", "حصة صوتية مشرفة + ركن قراءة."],
+  [
+    "classroom-english.wam",
+    "فصل اللغة الإنجليزية",
+    "حصة صوتية مشرفة + طاولة حواسيب.",
+  ],
+  [
+    "classroom-math.wam",
+    "فصل الحساب",
+    "حصة صوتية + ركن المعداد التفاعلي لكل طالب.",
+  ],
+  ["classroom-science.wam", "فصل العلوم", "حصة صوتية + كرات أرضية ومجسمات."],
+  [
+    "classroom-chess.wam",
+    "فصل الشطرنج",
+    "حصة صوتية + طاولات الشطرنج (قريبًا: منافسة ودّية).",
+  ],
+  [
+    "classroom-reading.wam",
+    "فصل القراءة والكتابة",
+    "حصة صوتية + رفوف ومنطقة قراءة.",
+  ],
+  [
+    "classroom-communication.wam",
+    "فصل مهارات التواصل",
+    "حصة صوتية + طاولة عرض وتقديم.",
+  ],
+  ["library.wam", "المكتبة", "منطقة صامتة للقراءة الحرة."],
+  ["science-lab.wam", "مختبر العلوم", "استكشاف وتجارب بإشراف الأستاذ."],
+  ["theater.wam", "المسرح", "خشبة وستارة وعروض الصف."],
+  ["creativity-hall.wam", "قاعة الإبداع", "مشاريع وفن وأنشطة حرة مشرفة."],
+  [
+    "achievements-hall.wam",
+    "قاعة الإنجازات",
+    "شارات وميداليات ومنصة تتويج ودّية.",
+  ],
+];
+for (const [file, name, purpose] of NG_ROOMS) {
+  await repo.createVirtualRoom({
+    name,
+    wamUrl: `http://map-storage.workadventure.localhost/ng-academy/${file}`,
+    purpose,
+  });
+}
+
 const app = await buildApp({ config, repo, email: new LogEmailTransport() });
 
 /* ------------------------------------------------------------------ *
