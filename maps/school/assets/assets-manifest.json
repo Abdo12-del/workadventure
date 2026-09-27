@@ -1,0 +1,622 @@
+{
+  "version": 1,
+  "description": "Uploaded NG Academy school sheets, organized without scaling and cut on a 32x32 grid.",
+  "sourceRoot": "assets/source-sheets",
+  "processedRoot": "assets/source-sheets/processed",
+  "tileSize": 32,
+  "backgroundRemoval": {
+    "method": "corner flood-fill",
+    "fuzz": "12%",
+    "preservesInteriorPixels": true
+  },
+  "sheets": [
+    {
+      "key": "hall_a",
+      "source": "assets/source-sheets/أصول قاعة النجوم ورقة A — الأرضيات والجدران والمسرح .png",
+      "processed": "assets/source-sheets/processed/أصول قاعة النجوم ورقة A — الأرضيات والجدران والمسرح .png",
+      "originalFilename": "أصول قاعة النجوم ورقة A — الأرضيات والجدران والمسرح .png",
+      "category": "hall / floors, walls, stage",
+      "background": "magenta",
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "channelsBeforeProcessing": "srgb",
+      "colorspace": "sRGB",
+      "tileSize": 32,
+      "columns": 48,
+      "rows": 32,
+      "nonEmptyTiles": 822,
+      "transparentAfterProcessing": true,
+      "sha256Source": "9a51ab2a4edc7629e1ec402064c805dc98e31abfdbfe3c218e8bc63da6698dc8",
+      "firstgid": 215,
+      "tilecount": 1536
+    },
+    {
+      "key": "chess",
+      "source": "assets/source-sheets/اصول فصل الشطرنج.png",
+      "processed": "assets/source-sheets/processed/اصول فصل الشطرنج.png",
+      "originalFilename": "اصول فصل الشطرنج.png",
+      "category": "chess room",
+      "background": "magenta",
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "channelsBeforeProcessing": "srgb",
+      "colorspace": "sRGB",
+      "tileSize": 32,
+      "columns": 48,
+      "rows": 32,
+      "nonEmptyTiles": 1113,
+      "transparentAfterProcessing": true,
+      "sha256Source": "f2e94af158679d3fdd478cb04282026419e35ee4a614953e242ef57b493f09af",
+      "firstgid": 1751,
+      "tilecount": 1536
+    },
+    {
+      "key": "math_b",
+      "source": "assets/source-sheets/الحساب الذهني ورقة B — الوسائل التعليمية والتخزين وركن التحدي.png",
+      "processed": "assets/source-sheets/processed/الحساب الذهني ورقة B — الوسائل التعليمية والتخزين وركن التحدي.png",
+      "originalFilename": "الحساب الذهني ورقة B — الوسائل التعليمية والتخزين وركن التحدي.png",
+      "category": "mental math / manipulatives and storage",
+      "background": "blue",
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "channelsBeforeProcessing": "srgb",
+      "colorspace": "sRGB",
+      "tileSize": 32,
+      "columns": 48,
+      "rows": 32,
+      "nonEmptyTiles": 840,
+      "transparentAfterProcessing": true,
+      "sha256Source": "30b5f2d08884a4dadd9b5a8f0d7b8937855fb7baca26ce1f905dad3d5ff585ec",
+      "firstgid": 3287,
+      "tilecount": 1536
+    },
+    {
+      "key": "seating",
+      "source": "assets/source-sheets/المقاعد والردهة والإخراج.png",
+      "processed": "assets/source-sheets/processed/المقاعد والردهة والإخراج.png",
+      "originalFilename": "المقاعد والردهة والإخراج.png",
+      "category": "seating, lobby, production",
+      "background": "magenta",
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "channelsBeforeProcessing": "srgb",
+      "colorspace": "sRGB",
+      "tileSize": 32,
+      "columns": 48,
+      "rows": 32,
+      "nonEmptyTiles": 807,
+      "transparentAfterProcessing": true,
+      "sha256Source": "4ec1d53d8de03ddd3dfa93b9509f5628f6bd7cca85364e3dee2a2e3c714a4552",
+      "firstgid": 4823,
+      "tilecount": 1536
+    },
+    {
+      "key": "library_a",
+      "source": "assets/source-sheets/المكتبة ورقة A — الأرضيات، الجدران، الرفوف، مكتب أمين المكتبة.png",
+      "processed": "assets/source-sheets/processed/المكتبة ورقة A — الأرضيات، الجدران، الرفوف، مكتب أمين المكتبة.png",
+      "originalFilename": "المكتبة ورقة A — الأرضيات، الجدران، الرفوف، مكتب أمين المكتبة.png",
+      "category": "library / floors, walls, shelves, librarian",
+      "background": "cream",
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "channelsBeforeProcessing": "srgb",
+      "colorspace": "sRGB",
+      "tileSize": 32,
+      "columns": 48,
+      "rows": 32,
+      "nonEmptyTiles": 938,
+      "transparentAfterProcessing": true,
+      "sha256Source": "021c43d038671bcb460bc590da0de63164537d725196aff88d9bb79c192e7f56",
+      "firstgid": 6359,
+      "tilecount": 1536
+    },
+    {
+      "key": "stage",
+      "source": "assets/source-sheets/عناصر المسرح والاحتفالات.png",
+      "processed": "assets/source-sheets/processed/عناصر المسرح والاحتفالات.png",
+      "originalFilename": "عناصر المسرح والاحتفالات.png",
+      "category": "stage and celebrations",
+      "background": "magenta",
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "channelsBeforeProcessing": "srgb",
+      "colorspace": "sRGB",
+      "tileSize": 32,
+      "columns": 48,
+      "rows": 32,
+      "nonEmptyTiles": 822,
+      "transparentAfterProcessing": true,
+      "sha256Source": "b7973113aaba9c56b29d7c9f0ce9ba2d5090303096691c0862055953a75b32f8",
+      "firstgid": 7895,
+      "tilecount": 1536
+    },
+    {
+      "key": "math_a",
+      "source": "assets/source-sheets/فصل الحساب الذهني ورقة A — الأرضيات، الجدران، طاولات الأطفال، منطقة المدرب.png",
+      "processed": "assets/source-sheets/processed/فصل الحساب الذهني ورقة A — الأرضيات، الجدران، طاولات الأطفال، منطقة المدرب.png",
+      "originalFilename": "فصل الحساب الذهني ورقة A — الأرضيات، الجدران، طاولات الأطفال، منطقة المدرب.png",
+      "category": "mental math / classroom and trainer",
+      "background": "blue",
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "channelsBeforeProcessing": "srgb",
+      "colorspace": "sRGB",
+      "tileSize": 32,
+      "columns": 48,
+      "rows": 32,
+      "nonEmptyTiles": 855,
+      "transparentAfterProcessing": true,
+      "sha256Source": "7d15ae1f172dd32be1ee34b3f4509888f5373acfcfd14aff62daca5cbecffdda",
+      "firstgid": 9431,
+      "tilecount": 1536
+    },
+    {
+      "key": "fixed_style",
+      "source": "assets/source-sheets/كتلة  الأسلوب الثابتة.png",
+      "processed": "assets/source-sheets/processed/كتلة  الأسلوب الثابتة.png",
+      "originalFilename": "كتلة  الأسلوب الثابتة.png",
+      "category": "fixed style primitives",
+      "background": "magenta",
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "channelsBeforeProcessing": "srgb",
+      "colorspace": "sRGB",
+      "tileSize": 32,
+      "columns": 48,
+      "rows": 32,
+      "nonEmptyTiles": 1472,
+      "transparentAfterProcessing": true,
+      "sha256Source": "ebc86c4dfb8f28f0d914cef8f80238a794a0360c6899486f43419edddd417f5d",
+      "firstgid": 10967,
+      "tilecount": 1536
+    },
+    {
+      "key": "director_b",
+      "source": "assets/source-sheets/مكت المدير ورقة B — الأرشيف، طاولة الاجتماعات، الباب المزدوج، الديكور.png",
+      "processed": "assets/source-sheets/processed/مكت المدير ورقة B — الأرشيف، طاولة الاجتماعات، الباب المزدوج، الديكور.png",
+      "originalFilename": "مكت المدير ورقة B — الأرشيف، طاولة الاجتماعات، الباب المزدوج، الديكور.png",
+      "category": "director office / archive, meeting table, doors",
+      "background": "cream",
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "channelsBeforeProcessing": "srgb",
+      "colorspace": "sRGB",
+      "tileSize": 32,
+      "columns": 48,
+      "rows": 32,
+      "nonEmptyTiles": 947,
+      "transparentAfterProcessing": true,
+      "sha256Source": "72f1cf3cb6ece022f50b131bbba9e5e0a92ebe6602771181194ee6a0f0b7fcb4",
+      "firstgid": 12503,
+      "tilecount": 1536
+    },
+    {
+      "key": "director_a",
+      "source": "assets/source-sheets/مكتب المدير ورقة A — الأرضيات، الجدران، المكتب الرئيسي وأدواته.png",
+      "processed": "assets/source-sheets/processed/مكتب المدير ورقة A — الأرضيات، الجدران، المكتب الرئيسي وأدواته.png",
+      "originalFilename": "مكتب المدير ورقة A — الأرضيات، الجدران، المكتب الرئيسي وأدواته.png",
+      "category": "director office / executive desk and tools",
+      "background": "cream",
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "channelsBeforeProcessing": "srgb",
+      "colorspace": "sRGB",
+      "tileSize": 32,
+      "columns": 48,
+      "rows": 32,
+      "nonEmptyTiles": 941,
+      "transparentAfterProcessing": true,
+      "sha256Source": "bea66ceae2db3321400aec8dad06843ba23486be493c565704723a0bfa1e19d3",
+      "firstgid": 14039,
+      "tilecount": 1536
+    },
+    {
+      "key": "library_b",
+      "source": "assets/source-sheets/مكتبة ورقة B — طاولات القراءة، ركن القصص، ركن الحاسوب، الديكور.png",
+      "processed": "assets/source-sheets/processed/مكتبة ورقة B — طاولات القراءة، ركن القصص، ركن الحاسوب، الديكور.png",
+      "originalFilename": "مكتبة ورقة B — طاولات القراءة، ركن القصص، ركن الحاسوب، الديكور.png",
+      "category": "library / reading, story and computer corners",
+      "background": "cream",
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "channelsBeforeProcessing": "srgb",
+      "colorspace": "sRGB",
+      "tileSize": 32,
+      "columns": 48,
+      "rows": 32,
+      "nonEmptyTiles": 950,
+      "transparentAfterProcessing": true,
+      "sha256Source": "487e5f787ff75f911b5e2d9965fc04b59616a5c9ceea6ea8506e0d4a1729970f",
+      "firstgid": 15575,
+      "tilecount": 1536
+    },
+    {
+      "key": "club_a",
+      "source": "assets/source-sheets/نادي المبدعين الصغار ورقة A — الأرضيات، الجدران، دائرة الحوار.png",
+      "processed": "assets/source-sheets/processed/نادي المبدعين الصغار ورقة A — الأرضيات، الجدران، دائرة الحوار.png",
+      "originalFilename": "نادي المبدعين الصغار ورقة A — الأرضيات، الجدران، دائرة الحوار.png",
+      "category": "creative club / floors, walls, dialogue circle",
+      "background": "cream",
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "channelsBeforeProcessing": "srgb",
+      "colorspace": "sRGB",
+      "tileSize": 32,
+      "columns": 48,
+      "rows": 32,
+      "nonEmptyTiles": 866,
+      "transparentAfterProcessing": true,
+      "sha256Source": "29406a75e641edacf67958039fd3c3eba1d054b06d1419a920db63ed616dcb85",
+      "firstgid": 17111,
+      "tilecount": 1536
+    },
+    {
+      "key": "club_b",
+      "source": "assets/source-sheets/نادي المبدعين ورقة B — الرفوف، ألعاب التفكير، ركن القصص، الديكور.png",
+      "processed": "assets/source-sheets/processed/نادي المبدعين ورقة B — الرفوف، ألعاب التفكير، ركن القصص، الديكور.png",
+      "originalFilename": "نادي المبدعين ورقة B — الرفوف، ألعاب التفكير، ركن القصص، الديكور.png",
+      "category": "creative club / shelves, games and story corner",
+      "background": "cream",
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "channelsBeforeProcessing": "srgb",
+      "colorspace": "sRGB",
+      "tileSize": 32,
+      "columns": 48,
+      "rows": 32,
+      "nonEmptyTiles": 900,
+      "transparentAfterProcessing": true,
+      "sha256Source": "9d47f333d8a3f645ed0cd95218da40c285c0d106d6c32278bcd10d92cfe28ab4",
+      "firstgid": 18647,
+      "tilecount": 1536
+    },
+    {
+      "key": "outdoor",
+      "source": "assets/source-sheets/ورقة  العناصر الخارجية.png",
+      "processed": "assets/source-sheets/processed/ورقة  العناصر الخارجية.png",
+      "originalFilename": "ورقة  العناصر الخارجية.png",
+      "category": "outdoor campus and play area",
+      "background": "magenta",
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "channelsBeforeProcessing": "srgb",
+      "colorspace": "sRGB",
+      "tileSize": 32,
+      "columns": 48,
+      "rows": 32,
+      "nonEmptyTiles": 1008,
+      "transparentAfterProcessing": true,
+      "sha256Source": "490b2c0f9515dad898058440af56e2ce585388e27ee3b6eb041d28ddc1b4f4af",
+      "firstgid": 20183,
+      "tilecount": 1536
+    },
+    {
+      "key": "science_a",
+      "source": "assets/source-sheets/ورقة A — الأرضيات، الجدران، طاولات المختبر، منطقة المدرب.png",
+      "processed": "assets/source-sheets/processed/ورقة A — الأرضيات، الجدران، طاولات المختبر، منطقة المدرب.png",
+      "originalFilename": "ورقة A — الأرضيات، الجدران، طاولات المختبر، منطقة المدرب.png",
+      "category": "science / floors, walls, lab benches, trainer",
+      "background": "blue",
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "channelsBeforeProcessing": "srgb",
+      "colorspace": "sRGB",
+      "tileSize": 32,
+      "columns": 48,
+      "rows": 32,
+      "nonEmptyTiles": 878,
+      "transparentAfterProcessing": true,
+      "sha256Source": "7e9c6ed2e0788c4583e654bd0ee64e5fc287180d4e8580822daaf5f188b0e5d0",
+      "firstgid": 21719,
+      "tilecount": 1536
+    },
+    {
+      "key": "science_b",
+      "source": "assets/source-sheets/ورقة B — الحوض والسلامة والتخزين وركن الاستكشاف.png",
+      "processed": "assets/source-sheets/processed/ورقة B — الحوض والسلامة والتخزين وركن الاستكشاف.png",
+      "originalFilename": "ورقة B — الحوض والسلامة والتخزين وركن الاستكشاف.png",
+      "category": "science / sink, safety, storage and discovery",
+      "background": "blue",
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "channelsBeforeProcessing": "srgb",
+      "colorspace": "sRGB",
+      "tileSize": 32,
+      "columns": 48,
+      "rows": 32,
+      "nonEmptyTiles": 988,
+      "transparentAfterProcessing": true,
+      "sha256Source": "085eab2705745850a484a6a0ac31b17cc87471e2cc642089a0c0b1131c25f166",
+      "firstgid": 23255,
+      "tilecount": 1536
+    },
+    {
+      "key": "classroom_furniture",
+      "source": "assets/source-sheets/ورقة أثاث الفصول والممرات.png",
+      "processed": "assets/source-sheets/processed/ورقة أثاث الفصول والممرات.png",
+      "originalFilename": "ورقة أثاث الفصول والممرات.png",
+      "category": "classrooms and corridors furniture",
+      "background": "magenta",
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "channelsBeforeProcessing": "srgb",
+      "colorspace": "sRGB",
+      "tileSize": 32,
+      "columns": 48,
+      "rows": 32,
+      "nonEmptyTiles": 1039,
+      "transparentAfterProcessing": true,
+      "sha256Source": "a4272cb838ec2ac0be309da29a12d29bcd96ec9c3ac85a38ca945999c3913b9d",
+      "firstgid": 24791,
+      "tilecount": 1536
+    },
+    {
+      "key": "floors",
+      "source": "assets/source-sheets/ورقة الأرضيات.png",
+      "processed": "assets/source-sheets/processed/ورقة الأرضيات.png",
+      "originalFilename": "ورقة الأرضيات.png",
+      "category": "shared floors and paths",
+      "background": "magenta",
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "channelsBeforeProcessing": "srgb",
+      "colorspace": "sRGB",
+      "tileSize": 32,
+      "columns": 48,
+      "rows": 32,
+      "nonEmptyTiles": 1150,
+      "transparentAfterProcessing": true,
+      "sha256Source": "efdb3c9311d40b0da4b7f63c2f920eaa60da94a65fd8a7e57a2ba7c4b256f552",
+      "firstgid": 26327,
+      "tilecount": 1536
+    },
+    {
+      "key": "walls",
+      "source": "assets/source-sheets/ورقة الجدران والأبواب والنوافذ.png",
+      "processed": "assets/source-sheets/processed/ورقة الجدران والأبواب والنوافذ.png",
+      "originalFilename": "ورقة الجدران والأبواب والنوافذ.png",
+      "category": "shared walls, doors and windows",
+      "background": "magenta",
+      "width": 1536,
+      "height": 1024,
+      "format": "PNG",
+      "channelsBeforeProcessing": "srgb",
+      "colorspace": "sRGB",
+      "tileSize": 32,
+      "columns": 48,
+      "rows": 32,
+      "nonEmptyTiles": 1036,
+      "transparentAfterProcessing": true,
+      "sha256Source": "c96fa535f650ceaf90151ad6adfdaf604abf6c14824893c9c9ee5604150244d8",
+      "firstgid": 27863,
+      "tilecount": 1536
+    }
+  ],
+  "curatedTiles": {
+    "floor_grass": {
+      "gid": 26473,
+      "sheet": "floors",
+      "sourceTile": {
+        "column": 2,
+        "row": 3
+      },
+      "image": "assets/source-sheets/processed/ورقة الأرضيات.png"
+    },
+    "floor_grass_flowers": {
+      "gid": 26479,
+      "sheet": "floors",
+      "sourceTile": {
+        "column": 8,
+        "row": 3
+      },
+      "image": "assets/source-sheets/processed/ورقة الأرضيات.png"
+    },
+    "floor_stone_path": {
+      "gid": 26491,
+      "sheet": "floors",
+      "sourceTile": {
+        "column": 20,
+        "row": 3
+      },
+      "image": "assets/source-sheets/processed/ورقة الأرضيات.png"
+    },
+    "floor_pale_tile": {
+      "gid": 27055,
+      "sheet": "floors",
+      "sourceTile": {
+        "column": 8,
+        "row": 15
+      },
+      "image": "assets/source-sheets/processed/ورقة الأرضيات.png"
+    },
+    "floor_wood": {
+      "gid": 27061,
+      "sheet": "floors",
+      "sourceTile": {
+        "column": 14,
+        "row": 15
+      },
+      "image": "assets/source-sheets/processed/ورقة الأرضيات.png"
+    },
+    "floor_red_carpet": {
+      "gid": 27090,
+      "sheet": "floors",
+      "sourceTile": {
+        "column": 43,
+        "row": 15
+      },
+      "image": "assets/source-sheets/processed/ورقة الأرضيات.png"
+    },
+    "floor_blue_rug": {
+      "gid": 27072,
+      "sheet": "floors",
+      "sourceTile": {
+        "column": 25,
+        "row": 15
+      },
+      "image": "assets/source-sheets/processed/ورقة الأرضيات.png"
+    },
+    "floor_sand": {
+      "gid": 27349,
+      "sheet": "floors",
+      "sourceTile": {
+        "column": 14,
+        "row": 21
+      },
+      "image": "assets/source-sheets/processed/ورقة الأرضيات.png"
+    },
+    "wall_cap": {
+      "gid": 27963,
+      "sheet": "walls",
+      "sourceTile": {
+        "column": 4,
+        "row": 2
+      },
+      "image": "assets/source-sheets/processed/ورقة الجدران والأبواب والنوافذ.png"
+    },
+    "wall_body": {
+      "gid": 28011,
+      "sheet": "walls",
+      "sourceTile": {
+        "column": 4,
+        "row": 3
+      },
+      "image": "assets/source-sheets/processed/ورقة الجدران والأبواب والنوافذ.png"
+    },
+    "wall_base": {
+      "gid": 28059,
+      "sheet": "walls",
+      "sourceTile": {
+        "column": 4,
+        "row": 4
+      },
+      "image": "assets/source-sheets/processed/ورقة الجدران والأبواب والنوافذ.png"
+    },
+    "wall_window": {
+      "gid": 28048,
+      "sheet": "walls",
+      "sourceTile": {
+        "column": 41,
+        "row": 3
+      },
+      "image": "assets/source-sheets/processed/ورقة الجدران والأبواب والنوافذ.png"
+    },
+    "door_wood": {
+      "gid": 28682,
+      "sheet": "walls",
+      "sourceTile": {
+        "column": 3,
+        "row": 17
+      },
+      "image": "assets/source-sheets/processed/ورقة الجدران والأبواب والنوافذ.png"
+    },
+    "window_double": {
+      "gid": 28927,
+      "sheet": "walls",
+      "sourceTile": {
+        "column": 8,
+        "row": 22
+      },
+      "image": "assets/source-sheets/processed/ورقة الجدران والأبواب والنوافذ.png"
+    },
+    "fence": {
+      "gid": 29258,
+      "sheet": "walls",
+      "sourceTile": {
+        "column": 3,
+        "row": 29
+      },
+      "image": "assets/source-sheets/processed/ورقة الجدران والأبواب والنوافذ.png"
+    },
+    "office_desk": {
+      "gid": 14815,
+      "sheet": "director_a",
+      "sourceTile": {
+        "column": 8,
+        "row": 16
+      },
+      "image": "assets/source-sheets/processed/مكتب المدير ورقة A — الأرضيات، الجدران، المكتب الرئيسي وأدواته.png"
+    },
+    "library_shelf": {
+      "gid": 7079,
+      "sheet": "library_a",
+      "sourceTile": {
+        "column": 0,
+        "row": 15
+      },
+      "image": "assets/source-sheets/processed/المكتبة ورقة A — الأرضيات، الجدران، الرفوف، مكتب أمين المكتبة.png"
+    },
+    "lab_bench": {
+      "gid": 22443,
+      "sheet": "science_a",
+      "sourceTile": {
+        "column": 4,
+        "row": 15
+      },
+      "image": "assets/source-sheets/processed/ورقة A — الأرضيات، الجدران، طاولات المختبر، منطقة المدرب.png"
+    },
+    "lab_trainer": {
+      "gid": 22775,
+      "sheet": "science_a",
+      "sourceTile": {
+        "column": 0,
+        "row": 22
+      },
+      "image": "assets/source-sheets/processed/ورقة A — الأرضيات، الجدران، طاولات المختبر، منطقة المدرب.png"
+    },
+    "chess_table": {
+      "gid": 2476,
+      "sheet": "chess",
+      "sourceTile": {
+        "column": 5,
+        "row": 15
+      },
+      "image": "assets/source-sheets/processed/اصول فصل الشطرنج.png"
+    },
+    "math_table": {
+      "gid": 10156,
+      "sheet": "math_a",
+      "sourceTile": {
+        "column": 5,
+        "row": 15
+      },
+      "image": "assets/source-sheets/processed/فصل الحساب الذهني ورقة A — الأرضيات، الجدران، طاولات الأطفال، منطقة المدرب.png"
+    },
+    "club_circle": {
+      "gid": 17838,
+      "sheet": "club_a",
+      "sourceTile": {
+        "column": 7,
+        "row": 15
+      },
+      "image": "assets/source-sheets/processed/نادي المبدعين الصغار ورقة A — الأرضيات، الجدران، دائرة الحوار.png"
+    },
+    "hall_seat": {
+      "gid": 940,
+      "sheet": "hall_a",
+      "sourceTile": {
+        "column": 5,
+        "row": 15
+      },
+      "image": "assets/source-sheets/processed/أصول قاعة النجوم ورقة A — الأرضيات والجدران والمسرح .png"
+    }
+  }
+}
