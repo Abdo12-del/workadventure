@@ -15,8 +15,23 @@ ASSETS = os.path.join(ROOT, "assets")
 W, H, T = 136, 72, 32
 
 GIDS = json.load(open(os.path.join(HERE, "tile_gids.json")))
+UPLOADED = json.load(open(os.path.join(HERE, "uploaded_tile_gids.json")))
+ASSET_MANIFEST = json.load(open(os.path.join(ASSETS, "assets-manifest.json")))
+SOURCE_SHEETS = {sheet["key"]: sheet for sheet in ASSET_MANIFEST["sheets"]}
+
 def g(name):
     return GIDS[name]
+
+def ug(name):
+    """Return the global GID of a curated tile cut from an uploaded sheet."""
+    return UPLOADED[name]["gid"]
+
+def source_gid(sheet_key, col, row):
+    """Return a global GID for any 32x32 cell in a processed source sheet."""
+    sheet = SOURCE_SHEETS[sheet_key]
+    if not (0 <= col < sheet["columns"] and 0 <= row < sheet["rows"]):
+        raise ValueError(f"source tile outside {sheet_key}: {col},{row}")
+    return sheet["firstgid"] + row * sheet["columns"] + col
 
 # ---------------------------------------------------------------- grids
 layers_def = [
@@ -28,12 +43,20 @@ layers_def = [
 ]
 GRID = {n: [[0] * W for _ in range(H)] for n in layers_def}
 
-def stamp(layer, name, x, y, w=1, h=1):
-    gid = g(name)
+def stamp_gid(layer, gid, x, y, w=1, h=1):
     for yy in range(y, y + h):
         for xx in range(x, x + w):
             if 0 <= xx < W and 0 <= yy < H:
                 GRID[layer][yy][xx] = gid
+
+def stamp(layer, name, x, y, w=1, h=1):
+    stamp_gid(layer, g(name), x, y, w, h)
+
+def stamp_source_rect(layer, sheet_key, source_col, source_row, w, h, x, y):
+    """Place an unscaled rectangular cut from a processed 32px source sheet."""
+    for dy in range(h):
+        for dx in range(w):
+            stamp_gid(layer, source_gid(sheet_key, source_col + dx, source_row + dy), x + dx, y + dy)
 
 def solid(name, x, y, w=1, h=1, layer="furniture"):
     """Stamp + mark collisions."""
@@ -44,7 +67,13 @@ DOOR_CELLS = []
 
 def wall(name, x, y, w=1, h=1, door=False):
     layer = "walls"
-    stamp(layer, name, x, y, w, h)
+    # The generic architectural wall now uses the uploaded wall sheet.  The
+    # named doors, glass, acoustic and room-specific accents remain on the
+    # established NG tiles so their geometry and logic do not move.
+    if name == "wall":
+        stamp_gid(layer, ug("wall_body"), x, y, w, h)
+    else:
+        stamp(layer, name, x, y, w, h)
     if door:
         for yy in range(y, y + h):
             for xx in range(x, x + w):
@@ -54,6 +83,9 @@ def wall(name, x, y, w=1, h=1, door=False):
 
 def fill(layer, name, x, y, w=1, h=1):
     stamp(layer, name, x, y, w, h)
+
+def fill_gid(layer, gid, x, y, w=1, h=1):
+    stamp_gid(layer, gid, x, y, w, h)
 
 # ================================================================ FLOORS
 fill("floor", "floor_grass", 4, 23, 64, 40)                    # courtyard base
@@ -670,6 +702,47 @@ solid("plant_s", 119, 31); solid("plant_s", 130, 31)
 solid("trophy", 130, 42)                                         # كأس أسرع عقل في الفصل
 solid("bin", 119, 42)
 
+# ================================================================ UPLOADED VISUAL PASS
+# The geometry above is intentionally unchanged. This pass swaps the
+# material skin for 32px cells cut from the uploaded sheets and places three
+# complete multi-tile props (desk, bookshelf, lab bench). Logic layers and
+# interaction object coordinates remain the same.
+fill_gid("floor", ug("floor_grass"), 4, 23, 64, 40)
+fill_gid("floor", ug("floor_grass"), 0, 0, 88, 3)
+fill_gid("floor", ug("floor_grass"), 0, 3, 4, 60)
+fill_gid("floor", ug("floor_grass"), 84, 3, 4, 60)
+fill_gid("floor", ug("floor_pale_tile"), 5, 4, 9, 11)
+fill_gid("floor", ug("floor_pale_tile"), 15, 4, 7, 11)
+fill_gid("floor", ug("floor_wood"), 23, 4, 7, 11)
+fill_gid("floor", ug("floor_pale_tile"), 31, 4, 7, 11)
+fill_gid("floor", ug("floor_pale_tile"), 49, 4, 7, 11)
+fill_gid("floor", ug("floor_wood"), 57, 4, 7, 11)
+fill_gid("floor", ug("floor_pale_tile"), 65, 4, 7, 11)
+fill_gid("floor", ug("floor_pale_tile"), 73, 4, 10, 11)
+fill_gid("floor", ug("floor_pale_tile"), 39, 4, 10, 18)
+fill_gid("floor", ug("floor_pale_tile"), 4, 16, 35, 6)
+fill_gid("floor", ug("floor_pale_tile"), 49, 16, 34, 6)
+fill_gid("floor", ug("floor_pale_tile"), 13, 23, 5, 40)
+fill_gid("floor", ug("floor_pale_tile"), 5, 24, 8, 7)
+fill_gid("floor", ug("floor_blue_rug"), 5, 32, 8, 7)
+fill_gid("floor", ug("floor_blue_rug"), 5, 40, 8, 7)
+fill_gid("floor", ug("floor_wood"), 5, 48, 8, 8)
+fill_gid("floor", ug("floor_red_carpet"), 5, 57, 8, 5)
+fill_gid("floor", ug("floor_wood"), 70, 23, 14, 40)
+fill_gid("floor", ug("floor_wood"), 70, 35, 13, 18)
+fill_gid("floor", ug("floor_red_carpet"), 76, 35, 3, 17)
+fill_gid("floor", ug("floor_blue_rug"), 85, 3, 33, 60)
+fill_gid("floor", ug("floor_red_carpet"), 87, 15, 28, 43)
+fill_gid("floor", ug("floor_wood"), 87, 4, 18, 9)
+fill_gid("floor", ug("floor_blue_rug"), 119, 15, 12, 11)
+fill_gid("floor", ug("floor_blue_rug"), 119, 31, 12, 13)
+
+# Multi-cell source props are placed at native resolution (no resampling).
+# Their collision footprints are already represented by the original map.
+stamp_source_rect("furniture", "director_a", 7, 15, 8, 5, 75, 25)
+stamp_source_rect("furniture", "library_a", 0, 15, 4, 5, 5, 49)
+stamp_source_rect("furniture", "science_a", 4, 14, 4, 5, 7, 41)
+
 # ================================================================ ABOVE PLAYER
 stamp("abovePlayer1", "can_ul", 27, 40); stamp("abovePlayer1", "can_ur", 28, 40)
 stamp("abovePlayer1", "can_ll", 27, 41); stamp("abovePlayer1", "can_lr", 28, 41)
@@ -947,6 +1020,28 @@ tileset = {
     "tiledversion": "1.10.2",
 }
 
+# Each original sheet is registered as its own 32px Tiled tileset. Keeping
+# sheets separate preserves provenance and avoids a huge, opaque merged atlas.
+uploaded_tilesets = [
+    {
+        "columns": sheet["columns"],
+        "firstgid": sheet["firstgid"],
+        "image": sheet["processed"],
+        "imageheight": sheet["height"],
+        "imagewidth": sheet["width"],
+        "margin": 0,
+        "name": "uploaded-" + sheet["key"],
+        "spacing": 0,
+        "tilecount": sheet["tilecount"],
+        "tileheight": T,
+        "tilewidth": T,
+        "type": "tileset",
+        "version": "1.10",
+        "tiledversion": "1.10.2",
+    }
+    for sheet in ASSET_MANIFEST["sheets"]
+]
+
 tmap = {
     "compressionlevel": -1,
     "height": H,
@@ -962,7 +1057,7 @@ tmap = {
     "renderorder": "right-down",
     "tiledversion": "1.10.2",
     "tileheight": T,
-    "tilesets": [tileset],
+    "tilesets": [tileset] + uploaded_tilesets,
     "tilewidth": T,
     "type": "map",
     "version": "1.10",
@@ -974,10 +1069,28 @@ with open(os.path.join(ROOT, "map.json"), "w") as f:
 print("map.json written:", W, "x", H, "| layers:", len(layers), "| objects:", len(objects))
 
 # ================================================================ PREVIEW
-sheet = ts_img
-def gid_xy(gid):
-    i = gid - 1
-    return (i % 16) * 32, (i // 16) * 32
+# Render both the generated atlas and the uploaded source tilesets. This
+# keeps preview.png useful for seam checks after a source-sheet edit.
+tile_sources = [
+    (1, len(GIDS), ts_img.convert("RGBA"), 16),
+]
+for sheet in ASSET_MANIFEST["sheets"]:
+    tile_sources.append(
+        (
+            sheet["firstgid"],
+            sheet["firstgid"] + sheet["tilecount"] - 1,
+            Image.open(os.path.join(ASSETS, sheet["processed"].replace("assets/", ""))).convert("RGBA"),
+            sheet["columns"],
+        )
+    )
+
+def tile_image_for_gid(gid):
+    for firstgid, lastgid, source_image, columns in tile_sources:
+        if firstgid <= gid <= lastgid:
+            i = gid - firstgid
+            sx, sy = (i % columns) * T, (i // columns) * T
+            return source_image.crop((sx, sy, sx + T, sy + T))
+    return None
 
 prev = Image.new("RGBA", (W * T, H * T), (250, 250, 250, 255))
 order = ["floor", "walls", "furniture", "abovePlayer1", "abovePlayer2"]
@@ -987,8 +1100,8 @@ for name in order:
         for xx in range(W):
             gid = gd[yy][xx]
             if gid:
-                sx, sy = gid_xy(gid)
-                tile_img = sheet.crop((sx, sy, sx + 32, sy + 32))
-                prev.alpha_composite(tile_img, (xx * T, yy * T))
+                tile_img = tile_image_for_gid(gid)
+                if tile_img is not None:
+                    prev.alpha_composite(tile_img, (xx * T, yy * T))
 prev.convert("RGB").save(os.path.join(ROOT, "preview.png"))
 print("preview.png written")

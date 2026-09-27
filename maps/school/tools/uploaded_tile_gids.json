@@ -1,0 +1,209 @@
+{
+  "floor_grass": {
+    "gid": 26473,
+    "sheet": "floors",
+    "sourceTile": {
+      "column": 2,
+      "row": 3
+    },
+    "image": "assets/source-sheets/processed/ورقة الأرضيات.png"
+  },
+  "floor_grass_flowers": {
+    "gid": 26479,
+    "sheet": "floors",
+    "sourceTile": {
+      "column": 8,
+      "row": 3
+    },
+    "image": "assets/source-sheets/processed/ورقة الأرضيات.png"
+  },
+  "floor_stone_path": {
+    "gid": 26491,
+    "sheet": "floors",
+    "sourceTile": {
+      "column": 20,
+      "row": 3
+    },
+    "image": "assets/source-sheets/processed/ورقة الأرضيات.png"
+  },
+  "floor_pale_tile": {
+    "gid": 27055,
+    "sheet": "floors",
+    "sourceTile": {
+      "column": 8,
+      "row": 15
+    },
+    "image": "assets/source-sheets/processed/ورقة الأرضيات.png"
+  },
+  "floor_wood": {
+    "gid": 27061,
+    "sheet": "floors",
+    "sourceTile": {
+      "column": 14,
+      "row": 15
+    },
+    "image": "assets/source-sheets/processed/ورقة الأرضيات.png"
+  },
+  "floor_red_carpet": {
+    "gid": 27090,
+    "sheet": "floors",
+    "sourceTile": {
+      "column": 43,
+      "row": 15
+    },
+    "image": "assets/source-sheets/processed/ورقة الأرضيات.png"
+  },
+  "floor_blue_rug": {
+    "gid": 27072,
+    "sheet": "floors",
+    "sourceTile": {
+      "column": 25,
+      "row": 15
+    },
+    "image": "assets/source-sheets/processed/ورقة الأرضيات.png"
+  },
+  "floor_sand": {
+    "gid": 27349,
+    "sheet": "floors",
+    "sourceTile": {
+      "column": 14,
+      "row": 21
+    },
+    "image": "assets/source-sheets/processed/ورقة الأرضيات.png"
+  },
+  "wall_cap": {
+    "gid": 27963,
+    "sheet": "walls",
+    "sourceTile": {
+      "column": 4,
+      "row": 2
+    },
+    "image": "assets/source-sheets/processed/ورقة الجدران والأبواب والنوافذ.png"
+  },
+  "wall_body": {
+    "gid": 28011,
+    "sheet": "walls",
+    "sourceTile": {
+      "column": 4,
+      "row": 3
+    },
+    "image": "assets/source-sheets/processed/ورقة الجدران والأبواب والنوافذ.png"
+  },
+  "wall_base": {
+    "gid": 28059,
+    "sheet": "walls",
+    "sourceTile": {
+      "column": 4,
+      "row": 4
+    },
+    "image": "assets/source-sheets/processed/ورقة الجدران والأبواب والنوافذ.png"
+  },
+  "wall_window": {
+    "gid": 28048,
+    "sheet": "walls",
+    "sourceTile": {
+      "column": 41,
+      "row": 3
+    },
+    "image": "assets/source-sheets/processed/ورقة الجدران والأبواب والنوافذ.png"
+  },
+  "door_wood": {
+    "gid": 28682,
+    "sheet": "walls",
+    "sourceTile": {
+      "column": 3,
+      "row": 17
+    },
+    "image": "assets/source-sheets/processed/ورقة الجدران والأبواب والنوافذ.png"
+  },
+  "window_double": {
+    "gid": 28927,
+    "sheet": "walls",
+    "sourceTile": {
+      "column": 8,
+      "row": 22
+    },
+    "image": "assets/source-sheets/processed/ورقة الجدران والأبواب والنوافذ.png"
+  },
+  "fence": {
+    "gid": 29258,
+    "sheet": "walls",
+    "sourceTile": {
+      "column": 3,
+      "row": 29
+    },
+    "image": "assets/source-sheets/processed/ورقة الجدران والأبواب والنوافذ.png"
+  },
+  "office_desk": {
+    "gid": 14815,
+    "sheet": "director_a",
+    "sourceTile": {
+      "column": 8,
+      "row": 16
+    },
+    "image": "assets/source-sheets/processed/مكتب المدير ورقة A — الأرضيات، الجدران، المكتب الرئيسي وأدواته.png"
+  },
+  "library_shelf": {
+    "gid": 7079,
+    "sheet": "library_a",
+    "sourceTile": {
+      "column": 0,
+      "row": 15
+    },
+    "image": "assets/source-sheets/processed/المكتبة ورقة A — الأرضيات، الجدران، الرفوف، مكتب أمين المكتبة.png"
+  },
+  "lab_bench": {
+    "gid": 22443,
+    "sheet": "science_a",
+    "sourceTile": {
+      "column": 4,
+      "row": 15
+    },
+    "image": "assets/source-sheets/processed/ورقة A — الأرضيات، الجدران، طاولات المختبر، منطقة المدرب.png"
+  },
+  "lab_trainer": {
+    "gid": 22775,
+    "sheet": "science_a",
+    "sourceTile": {
+      "column": 0,
+      "row": 22
+    },
+    "image": "assets/source-sheets/processed/ورقة A — الأرضيات، الجدران، طاولات المختبر، منطقة المدرب.png"
+  },
+  "chess_table": {
+    "gid": 2476,
+    "sheet": "chess",
+    "sourceTile": {
+      "column": 5,
+      "row": 15
+    },
+    "image": "assets/source-sheets/processed/اصول فصل الشطرنج.png"
+  },
+  "math_table": {
+    "gid": 10156,
+    "sheet": "math_a",
+    "sourceTile": {
+      "column": 5,
+      "row": 15
+    },
+    "image": "assets/source-sheets/processed/فصل الحساب الذهني ورقة A — الأرضيات، الجدران، طاولات الأطفال، منطقة المدرب.png"
+  },
+  "club_circle": {
+    "gid": 17838,
+    "sheet": "club_a",
+    "sourceTile": {
+      "column": 7,
+      "row": 15
+    },
+    "image": "assets/source-sheets/processed/نادي المبدعين الصغار ورقة A — الأرضيات، الجدران، دائرة الحوار.png"
+  },
+  "hall_seat": {
+    "gid": 940,
+    "sheet": "hall_a",
+    "sourceTile": {
+      "column": 5,
+      "row": 15
+    },
+    "image": "assets/source-sheets/processed/أصول قاعة النجوم ورقة A — الأرضيات والجدران والمسرح .png"
+  }
+}
